@@ -46,3 +46,9 @@ app.*.map.json
 
 # Linux
 /linux/**
+
+# VSCode
+.vscode/settings.json
+.vscode/browse.vc.db-shm
+.vscode/browse.vc.db-wal
+.vscode/browse.vc.db
