@@ -5,6 +5,7 @@ values of the topics and services of our ros2 projects.
 ### Overview
 - [Installation](#Installation)
 - [Usage](#Usage)
+    - [Running the ROSbridge](#Running-the-ROSbridge)
 - [How it works](#How-it-works)
 
 ### Installation
@@ -17,8 +18,30 @@ sudo apt-get install ros-<rosdistro>-rosbridge-server
 4. Unzip the frontend build, move into the new folder and launch the frontend build
 
 ### Usage
+###### Running the ROSbridge
+Since the install already includes a launch file, you can run the bridge as follows:
+```
+source /opt/ros/<rosdistro>/setup.bash
+ros2 launch rosbridge_server rosbridge_websocket_launch.xml
+```
+*The default port is 9090.*
+###### Running the launch node
+TODO
+
+####### Running the Frontend
 TODO
 
 ### How it works
 This is how the communication between your robot and the frontend works:
+```
+ros2 nodes
+|
+| DDS
+|
+WebSocket server (ROSbridge)
+|
+| JSON
+|
+Frontend
+```
 
