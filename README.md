@@ -1,4 +1,6 @@
 # PenGUIn
+PenGUIn is a custom frontend for the ros2 framework, which is used to launch all available nodes and control the
+values of the topics and services of our ros2 projects.
 
 ### Overview
 - [Installation](#Installation)
