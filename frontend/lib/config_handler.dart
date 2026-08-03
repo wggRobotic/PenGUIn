@@ -50,7 +50,8 @@ class NodesConfigHandler {
         final map = e as Map<String, dynamic>;
 
         return NodeDatamodell(
-          name: (map['name'] as String?) ?? 'No name provided',
+          executableName: (map['executableName'] as String?) ?? 'No name provided',
+          packageName: (map['packageName'] as String?) ?? '',
           description: (map['description'] as String?) ?? '',
           documentationLink: (map['documentationLink'] as String?) ?? '',
           isSelected: (map['isSelected'] == "true") ? true : false,
@@ -59,7 +60,7 @@ class NodesConfigHandler {
     } catch (e) {
       // Show an error message
       ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: e.toString().trim()));
-      return [NodeDatamodell(name: "")];
+      return [NodeDatamodell(executableName: "", packageName: "")];
     }
   }
 }

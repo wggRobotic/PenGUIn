@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/custom_provider.dart';
+import 'package:frontend/rosbridge_connector.dart';
 import 'package:provider/provider.dart';
 
 class NodesTab extends StatelessWidget{
@@ -20,7 +21,7 @@ class NodesTab extends StatelessWidget{
           separatorBuilder: (context, index) => const SizedBox(height: 8),
           itemBuilder: (context, index) {
             return ListTile(
-              title: Text(nodes[index].name),
+              title: Text(nodes[index].executableName),
               subtitle: Text(nodes[index].description),
               tileColor: theme.surfaceContainer,
               leading: IconButton(
@@ -36,6 +37,7 @@ class NodesTab extends StatelessWidget{
                     context.read<NodeProvider>().runNode(index, false);
                   } else {
                     context.read<NodeProvider>().runNode(index, true);
+                    RosbridgeConnector().startSingleNode(context, nodes[index].executableName, nodes[index].packageName);
                   }
                 },
               ),
@@ -44,8 +46,11 @@ class NodesTab extends StatelessWidget{
               contentPadding: EdgeInsets.all(4.0),
               selected: nodes[index].isSelected,
               onTap: () {
+                // Simplify (un-)selection
                 if (nodes[index].isSelected) {
                   context.read<NodeProvider>().selectNode(index, false);
+                } else if (nodeIsSelected) {
+                  context.read<NodeProvider>().selectNode(index, true);
                 }
               },
               onLongPress: () {

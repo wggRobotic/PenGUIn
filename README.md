@@ -32,7 +32,7 @@ ros2 launch rosbridge_server rosbridge_websocket_launch.xml
 ###### Running the launch node
 TODO
 
-####### Running the Frontend
+###### Running the Frontend
 TODO
 
 ### Configuration
@@ -43,7 +43,8 @@ Inside this folder open the `nodes_config.json` file and edit it like this:
 {
     "nodes": [
         {
-            "name": "exampleNode",   // The executable name of your node
+            "executableName": "",    // The executable name of your node
+            "packageName": "",       // The package name
             "description": "",       // Optional: A short description
             "documentationLink": "", // Optional: A link to the official documentation
             "isSelected": "true/false"         // Optional: Whether it will be selected or not

@@ -1,7 +1,8 @@
 {
     "nodes": [
         {
-            "name": "exampleNode",
+            "executableName": "exampleNode",
+            "packageName": "examplePackage",
             "description": "",
             "documentationLink": "",
             "isSelected": "false"
