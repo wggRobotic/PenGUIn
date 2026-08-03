@@ -12,7 +12,7 @@ class ErrorSnackbar{
     return SnackBar(
       behavior: SnackBarBehavior.floating,
       backgroundColor: (context.mounted)
-        ? theme.colorScheme.onErrorContainer
+        ? theme.colorScheme.errorContainer
         : Color(0xff250700),
       elevation: 6.0,
       shape: RoundedRectangleBorder(
