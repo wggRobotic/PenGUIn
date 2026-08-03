@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/config_handler.dart';
 import 'package:frontend/custom_provider.dart';
 import 'package:frontend/tabs/analytics_tab.dart';
 import 'package:frontend/tabs/nodes_tab.dart';
@@ -7,6 +8,8 @@ import 'package:provider/provider.dart';
 
 void main() {
   final nodeProvider = NodeProvider();
+
+  NodesConfigHandler().applyNodeConfiguration();
 
   runApp(
     MultiProvider(
@@ -26,6 +29,9 @@ class PenGUIn extends StatelessWidget {
   Widget build(BuildContext context) {
     TextTheme textTheme = TextTheme();
 
+    // Apply the configuration
+    loadConfig(context);
+
     return MaterialApp(
       title: 'PenGUIn',
       // Define the color theme of the frontend
@@ -35,6 +41,10 @@ class PenGUIn extends StatelessWidget {
       highContrastDarkTheme: PenGUInTheme(textTheme).theme(PenGUInTheme.darkHighContrastScheme()),
       home: const MyHomePage(),
     );
+  }
+
+  void loadConfig(BuildContext context) async {
+    context.read<NodeProvider>().updateNodeList(await NodesConfigHandler().applyNodeConfiguration());
   }
 }
 
@@ -47,8 +57,8 @@ class MyHomePage extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const TabBar(
-            tabs: [
+          title: TabBar(
+            tabs: const [
               Tab(
                 icon: Icon(Icons.code_outlined),
                 text: "Nodes"
@@ -58,6 +68,12 @@ class MyHomePage extends StatelessWidget {
                 text: "Analytics"
               ),
             ],
+            // Apply the configuration
+            onTap: (index) async {
+              if (index == 1) {
+                 context.read<NodeProvider>().updateNodeList(await NodesConfigHandler().applyNodeConfiguration());
+              }
+            },
           ),
         ),
         body: const TabBarView(
