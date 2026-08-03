@@ -4,6 +4,7 @@ import 'package:frontend/datamodells.dart';
 // Store the nodes and handle them
 class NodeProvider extends ChangeNotifier {
   List<NodeDatamodell> nodes = [];
+  bool get nodeIsSelected => nodes.any((n) => n.isSelected);
 
   void updateNodeList(List<NodeDatamodell> newNodes) {
     nodes = newNodes;
