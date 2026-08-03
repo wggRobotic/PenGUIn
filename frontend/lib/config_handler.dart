@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/datamodells.dart';
+import 'package:frontend/error_snackbar.dart';
 import 'package:path/path.dart' as path;
 
 class NodesConfigHandler {
@@ -31,7 +33,7 @@ class NodesConfigHandler {
   }
 
   // Read the config
-  Future<List<NodeDatamodell>> applyNodeConfiguration() async {
+  Future<List<NodeDatamodell>> applyNodeConfiguration(context) async {
     final configPath = getRelativeConfigPath();
 
     // Make sure it exists
@@ -54,7 +56,8 @@ class NodesConfigHandler {
         );
       }).toList();
     } catch (e) {
-      // TODO: Show an error message
+      // Show an error message
+      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: e.toString().trim()));
       return [NodeDatamodell(name: "")];
     }
   }

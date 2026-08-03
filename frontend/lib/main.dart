@@ -9,8 +9,6 @@ import 'package:provider/provider.dart';
 void main() {
   final nodeProvider = NodeProvider();
 
-  NodesConfigHandler().applyNodeConfiguration();
-
   runApp(
     MultiProvider(
       providers: [
@@ -29,9 +27,6 @@ class PenGUIn extends StatelessWidget {
   Widget build(BuildContext context) {
     TextTheme textTheme = TextTheme();
 
-    // Apply the configuration
-    loadConfig(context);
-
     return MaterialApp(
       title: 'PenGUIn',
       // Define the color theme of the frontend
@@ -43,9 +38,7 @@ class PenGUIn extends StatelessWidget {
     );
   }
 
-  void loadConfig(BuildContext context) async {
-    context.read<NodeProvider>().updateNodeList(await NodesConfigHandler().applyNodeConfiguration());
-  }
+  
 }
 
 class MyHomePage extends StatelessWidget {
@@ -53,6 +46,10 @@ class MyHomePage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+
+    // Apply the configuration
+    loadConfig(context);
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -70,8 +67,8 @@ class MyHomePage extends StatelessWidget {
             ],
             // Apply the configuration
             onTap: (index) async {
-              if (index == 1) {
-                 context.read<NodeProvider>().updateNodeList(await NodesConfigHandler().applyNodeConfiguration());
+              if (index == 0) {
+                 context.read<NodeProvider>().updateNodeList(await NodesConfigHandler().applyNodeConfiguration(context));
               }
             },
           ),
@@ -84,5 +81,9 @@ class MyHomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void loadConfig(BuildContext context) async {
+    context.read<NodeProvider>().updateNodeList(await NodesConfigHandler().applyNodeConfiguration(context));
   }
 }
