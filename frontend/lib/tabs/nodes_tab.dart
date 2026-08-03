@@ -21,13 +21,37 @@ class NodesTab extends StatelessWidget{
             title: Text(nodes[index].name),
             tileColor: theme.surfaceContainer,
             leading: IconButton(
-              icon: Icon(Icons.play_circle_outlined),
-              onPressed: () {},
+              icon: nodes[index].isRunning
+                      ? Icon(Icons.pause_circle_outlined)
+                      : Icon(Icons.play_circle_outlined),
+              tooltip: nodes[index].isRunning
+                      ? "Stop"
+                      : "Run",
+              onPressed: () {
+                // Run or stop a node
+                if (nodes[index].isRunning) {
+                  context.read<NodeProvider>().runNode(index, false);
+                } else {
+                  context.read<NodeProvider>().runNode(index, true);
+                }
+              },
             ),
             selectedTileColor: theme.secondaryContainer,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
             contentPadding: EdgeInsets.all(4.0),
-            selected: false,
+            selected: nodes[index].isSelected,
+            onTap: () {
+              if (nodes[index].isSelected) {
+                context.read<NodeProvider>().selectNode(index, false);
+              }
+            },
+            onLongPress: () {
+              if (nodes[index].isSelected) {
+                context.read<NodeProvider>().selectNode(index, false);
+              } else {
+                context.read<NodeProvider>().selectNode(index, true);
+              }
+            },
           );
         },
       ),
@@ -37,6 +61,4 @@ class NodesTab extends StatelessWidget{
 
 // TODO: Implement selection
 // TODO: Launch a node
-//        => Provider handling selection state
-//        => Datamodell defining a node (make sure it matches the JSON)
 //        => Connect to the server
