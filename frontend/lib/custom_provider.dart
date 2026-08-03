@@ -3,11 +3,7 @@ import 'package:frontend/datamodells.dart';
 
 // Store the nodes and handle them
 class NodeProvider extends ChangeNotifier {
-  List<NodeDatamodell> nodes = [
-    NodeDatamodell(name: "name"),
-    NodeDatamodell(name: "name"),
-    NodeDatamodell(name: "name")
-  ];
+  List<NodeDatamodell> nodes = [];
 
   void updateNodeList(List<NodeDatamodell> newNodes) {
     nodes = newNodes;
