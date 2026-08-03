@@ -15,10 +15,11 @@ class RosbridgeConnector {
   Future<void> connect(BuildContext context) async {
     try {
       channel = WebSocketChannel.connect(Uri.parse("ws://localhost:9090"));
+      await channel.ready;
       isConnected = true;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: e.toString().trim()));
-      rethrow;
+      return;
     }
   }
 
@@ -33,7 +34,7 @@ class RosbridgeConnector {
   // -------------------------------------------------------------------------------------------------------------------------------
   // Start a node by publishing to a certain topic
   // Auf einem Topic publishen
-  void startSingleNode(BuildContext context, String executableName, String packageName) {
+  void startSingleNode(BuildContext context, String executableName, String packageName, int id) {
     if (!isConnected) {
       connect(context);
     }
@@ -46,7 +47,7 @@ class RosbridgeConnector {
       "type": "interface_package/msg/Single",
       "msg": {
         "cmd": cmd,
-        "id": 1
+        "id": id
       },
     };
 

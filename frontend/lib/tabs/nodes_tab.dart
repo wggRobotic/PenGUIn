@@ -37,7 +37,7 @@ class NodesTab extends StatelessWidget{
                     context.read<NodeProvider>().runNode(index, false);
                   } else {
                     context.read<NodeProvider>().runNode(index, true);
-                    RosbridgeConnector().startSingleNode(context, nodes[index].executableName, nodes[index].packageName);
+                    RosbridgeConnector().startSingleNode(context, nodes[index].executableName, nodes[index].packageName, index);
                   }
                 },
               ),
