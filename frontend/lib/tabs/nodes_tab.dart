@@ -18,7 +18,7 @@ class NodesTab extends StatelessWidget{
         separatorBuilder: (context, index) => const SizedBox(height: 8),
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text(nodes[index]),
+            title: Text(nodes[index].name),
             tileColor: theme.surfaceContainer,
             leading: IconButton(
               icon: Icon(Icons.play_circle_outlined),

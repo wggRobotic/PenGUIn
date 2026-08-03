@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/datamodells.dart';
 
 // Store the nodes and handle them
 class NodeProvider extends ChangeNotifier {
-  List<String> nodes = ["test1", "test2", "test3", "test4", "..."];
+  List<NodeDatamodell> nodes = [
+    NodeDatamodell(name: "name"),
+    NodeDatamodell(name: "name"),
+    NodeDatamodell(name: "name")
+  ];
 
-  void updateNodeList(List<String> newNodes) {
+  void updateNodeList(List<NodeDatamodell> newNodes) {
     nodes = newNodes;
     notifyListeners();
   }
