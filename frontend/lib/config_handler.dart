@@ -41,16 +41,21 @@ class NodesConfigHandler {
     String jsonConfig = await File(configPath).readAsString();
 
     // Parse it to the datamodell and return it
-    Map<String, dynamic> decodedConfig = jsonDecode(jsonConfig) as Map<String, dynamic>;
-    List<dynamic> nodesList = (decodedConfig['nodes'] as List<dynamic>? ?? []);
-    return nodesList.map((e) {
-      final map = e as Map<String, dynamic>;
+    try {
+      Map<String, dynamic> decodedConfig = jsonDecode(jsonConfig) as Map<String, dynamic>;
+      List<dynamic> nodesList = (decodedConfig['nodes'] as List<dynamic>? ?? []);
+      return nodesList.map((e) {
+        final map = e as Map<String, dynamic>;
 
-      return NodeDatamodell(
-        name: (map['name'] as String?) ?? 'No name provided',
-        description: (map['description'] as String?) ?? '',
-        documentationLink: (map['documentationLink'] as String?) ?? '',
-      );
-    }).toList();
+        return NodeDatamodell(
+          name: (map['name'] as String?) ?? 'No name provided',
+          description: (map['description'] as String?) ?? '',
+          documentationLink: (map['documentationLink'] as String?) ?? '',
+        );
+      }).toList();
+    } catch (e) {
+      // TODO: Show an error message
+      return [NodeDatamodell(name: "")];
+    }
   }
 }
