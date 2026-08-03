@@ -6,6 +6,10 @@ values of the topics and services of our ros2 projects.
 - [Installation](#Installation)
 - [Usage](#Usage)
     - [Running the ROSbridge](#Running-the-ROSbridge)
+- [Configuration](#Configuration)
+    - [Configure nodes](#Configure-nodes)
+    - [Configure topics](#Configure-topics)
+    - [Configure services](#Configure-services)
 - [How it works](#How-it-works)
 
 ### Installation
@@ -29,6 +33,30 @@ ros2 launch rosbridge_server rosbridge_websocket_launch.xml
 TODO
 
 ####### Running the Frontend
+TODO
+
+### Configuration
+###### Configure nodes
+In order to add a node, which you want to launch via this frontend, to the list of available node, navigate to the install folder of the frontend and look for `/config`.
+Inside this folder open the `nodes_config.json` file and edit it like this:
+```
+{
+    "nodes": [
+        {
+            "name": "exampleNode",   // The executable name of your node
+            "description": "",       // Optional: A short description
+            "documentationLink": "", // Optional: A link to the official documentation
+            "isSelected": "true/false"         // Optional: Whether it will be selected or not
+        }
+    ]
+}
+
+```
+
+###### Configure topics
+TODO
+
+###### Configure services
 TODO
 
 ### How it works
