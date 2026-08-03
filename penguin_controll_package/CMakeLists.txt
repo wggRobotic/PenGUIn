@@ -30,6 +30,7 @@ target_link_libraries(
   penGUIn_controller PUBLIC
   rclcpp::rclcpp
   std_msgs::std_msgs
+  penguin_interface_package::penguin_interface_package
 )
 
 target_include_directories(penGUIn_controller PUBLIC

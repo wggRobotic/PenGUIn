@@ -43,9 +43,10 @@ class RosbridgeConnector {
     final json = {
       "op": "publish",
       "topic": "penGUIn/start_single",
-      "type": "std_msgs/msg/String",
+      "type": "interface_package/msg/Single",
       "msg": {
-        "data": cmd
+        "cmd": cmd,
+        "id": 1
       },
     };
 
