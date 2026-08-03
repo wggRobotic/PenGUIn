@@ -3,7 +3,8 @@
         {
             "name": "exampleNode",
             "description": "",
-            "documentationLink": ""
+            "documentationLink": "",
+            "isSelected": "false"
         }
     ]
 }

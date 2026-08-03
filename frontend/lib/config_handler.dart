@@ -53,6 +53,7 @@ class NodesConfigHandler {
           name: (map['name'] as String?) ?? 'No name provided',
           description: (map['description'] as String?) ?? '',
           documentationLink: (map['documentationLink'] as String?) ?? '',
+          isSelected: (map['isSelected'] == "true") ? true : false,
         );
       }).toList();
     } catch (e) {
