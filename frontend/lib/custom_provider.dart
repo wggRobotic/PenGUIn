@@ -14,7 +14,13 @@ class NodeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void selectNode (int position) {
-    // TODO
+  void selectNode(int position, bool selectionState) {
+    nodes[position].isSelected = selectionState;
+    notifyListeners();
+  }
+
+  void runNode(int position, bool runState) {
+    nodes[position].isRunning = runState;
+    notifyListeners();
   }
 }
