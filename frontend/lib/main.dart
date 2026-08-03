@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/custom_provider.dart';
 import 'package:frontend/tabs/analytics_tab.dart';
 import 'package:frontend/tabs/nodes_tab.dart';
 import 'package:frontend/theme/theme.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const PenGUIn());
+  final nodeProvider = NodeProvider();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => nodeProvider),
+      ],
+      child: const PenGUIn()
+    ),
+  );
 }
 
 class PenGUIn extends StatelessWidget {
