@@ -20,6 +20,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(penguin_interface_package REQUIRED)
 
 # Add an exectuable: "add_executable(<executable_name> <relativ_path>)"
 add_executable(penGUIn_controller src/penGUIn_controller.cpp)
@@ -45,3 +46,4 @@ install (TARGETS
 )
 
 ament_package()
+

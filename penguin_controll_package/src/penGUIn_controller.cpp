@@ -1,5 +1,6 @@
 #include "rclcpp/rclcpp.hpp"
 #include "interface_package/msg/single.hpp"
+#include "std_msgs/msg/int32.hpp"
 #include <string>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -17,7 +18,12 @@ public:
             10,
             std::bind(&PenGUInController::launchSingleNodeCallBack, this, std::placeholders::_1)
         );
-        RCLCPP_INFO(this->get_logger(), "Launch Subscriber has been started");
+        stop_single_subscriber = this->create_subscription<std_msgs::msg::Int32>(
+            "penGUIn/stop_single",
+            10,
+            std::bind(&PenGUInController::stopSingleNodeCallBack, this, std::placeholders::_1)
+        );
+        RCLCPP_INFO(this->get_logger(), "All subscriber has been started");
     }
 
 private:
@@ -62,8 +68,26 @@ private:
         RCLCPP_INFO(get_logger(), "Started id='%i' pid=%d", id, pid);
     }
 
+    void stopSingleNodeCallBack(const std_msgs::msg::Int32::SharedPtr msg) {
+        int id = msg->data;
+
+        // Find the process using the id
+        auto it = procs.find(id);
+        // If it's no longer running return
+        if (it == procs.end() || !it->second.alive) {
+            RCLCPP_WARN(this->get_logger(), "No running process for id=%i", id);
+            return;
+        }
+
+        // Kill the process (Strg + C)
+        pid_t pid = it->second.pid;
+        RCLCPP_INFO(this->get_logger(), "Stopping id=%i pid=%d", id, pid);
+        kill(-pid, SIGINT);
+    }
+
     std::unordered_map<int, ProcInfo> procs; // id -> pid
     rclcpp::Subscription<interface_package::msg::Single>::SharedPtr launch_single_subscriber;
+    rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr stop_single_subscriber;
 };
 
 int main(int argc, char **argv) {
@@ -74,3 +98,4 @@ int main(int argc, char **argv) {
     return 0;
 }
 
+// TODO: Make sure a stopped node can be launched again
