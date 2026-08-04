@@ -35,6 +35,7 @@ class NodesTab extends StatelessWidget{
                   // Run or stop a node
                   if (nodes[index].isRunning) {
                     context.read<NodeProvider>().runNode(index, false);
+                    RosbridgeConnector().stopNode(context, index);
                   } else {
                     context.read<NodeProvider>().runNode(index, true);
                     RosbridgeConnector().startSingleNode(context, nodes[index].executableName, nodes[index].packageName, index);
@@ -66,11 +67,11 @@ class NodesTab extends StatelessWidget{
       ),
       floatingActionButton: nodeIsSelected
         ? FloatingActionButton(
-            child: Icon(Icons.play_circle_outlined),
             tooltip: "Run",
             onPressed: () {
               // TODO: Run all selected nodes and skip already running ones
             },
+            child: Icon(Icons.play_circle_outlined),
           )
         : null,
     );

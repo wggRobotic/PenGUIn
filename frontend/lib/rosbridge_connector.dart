@@ -33,14 +33,15 @@ class RosbridgeConnector {
   // Node data
   // -------------------------------------------------------------------------------------------------------------------------------
   // Start a node by publishing to a certain topic
-  // Auf einem Topic publishen
   void startSingleNode(BuildContext context, String executableName, String packageName, int id) {
+    // Make sure to connect with the server
     if (!isConnected) {
       connect(context);
     }
 
-    final cmd = "ros2 run $packageName $executableName";
-
+    // Publish the launch command
+    //final cmd = "ros2 run $packageName $executableName";
+    final cmd = "ros2 run controller_package wheel_controller";
     final json = {
       "op": "publish",
       "topic": "penGUIn/start_single",
@@ -50,7 +51,22 @@ class RosbridgeConnector {
         "id": id
       },
     };
+    channel.sink.add(jsonEncode(json));
+  }
 
+  void stopNode(BuildContext context, int id) {
+    // Make sure to connect with the server
+    if (!isConnected) {
+      connect(context);
+    }
+
+    // Publish the cancel command
+    final json = {
+      "op": "publish",
+      "topic": "penGUIn/stop_single",
+      "type": "std_msgs/msg/Int32",
+      "msg": {"data": id}
+    };
     channel.sink.add(jsonEncode(json));
   }
 }
