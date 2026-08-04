@@ -6,8 +6,10 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <vector>
+#include <chrono>
 
 using namespace std::placeholders;
+using namespace std::chrono_literals;
 
 class PenGUInController : public rclcpp::Node {
 public:
@@ -23,9 +25,8 @@ public:
             10,
             std::bind(&PenGUInController::stopSingleNodeCallBack, this, std::placeholders::_1)
         );
-        RCLCPP_INFO(this->get_logger(), "All subscriber has been started");
+        RCLCPP_INFO(this->get_logger(), "All subscribers have been started");
     }
-
 private:
     struct ProcInfo {
         pid_t pid;
@@ -78,16 +79,61 @@ private:
             RCLCPP_WARN(this->get_logger(), "No running process for id=%i", id);
             return;
         }
+        cancelTimer(id);
 
         // Kill the process (Strg + C)
         pid_t pid = it->second.pid;
         RCLCPP_INFO(this->get_logger(), "Stopping id=%i pid=%d", id, pid);
+        
+        // Cancel old timer
+        cancelTimer(id);
+
         kill(-pid, SIGINT);
+
+        auto timer = this->create_wall_timer(
+            std::chrono::milliseconds(500),
+            [this, id, pid]() {
+                // Stop after the first run
+                cancelTimer(id);
+
+                // Check whether it stopped or not
+                if (checkRunningState(id, pid)) {
+                    RCLCPP_WARN(this->get_logger(), "SIGINT didn't stop id=%i -> SIGKILL", id);
+                    kill(-pid, SIGKILL);
+                    (void)waitpid(pid, nullptr, 0);
+                    procs[id].alive = false;
+                }
+            }
+        );
+
+        pending_stop_kill_timers[id] = timer;
+    }
+
+    bool checkRunningState(int id, pid_t pid) {
+        int status = 0;
+        pid_t w = waitpid(pid, &status, WNOHANG);
+        if (w == 0) {
+            return true;
+        } else if (w < 0) {
+            return false;
+        }
+        procs[id].alive = false;
+        return false;        
+    }
+
+    void cancelTimer(int id) {
+        auto old = pending_stop_kill_timers.find(id);
+        if (old != pending_stop_kill_timers.end() && old->second) {
+            old->second->cancel();
+            pending_stop_kill_timers.erase(old);
+        }
     }
 
     std::unordered_map<int, ProcInfo> procs; // id -> pid
     rclcpp::Subscription<interface_package::msg::Single>::SharedPtr launch_single_subscriber;
     rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr stop_single_subscriber;
+    std::unordered_map<int, rclcpp::TimerBase::SharedPtr> pending_stop_kill_timers;
+    rclcpp::TimerBase:: SharedPtr reap_timer;
 };
 
 int main(int argc, char **argv) {
@@ -98,4 +144,5 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-// TODO: Make sure a stopped node can be launched again
+// TODO: Make sure process groups stop correctly
+
