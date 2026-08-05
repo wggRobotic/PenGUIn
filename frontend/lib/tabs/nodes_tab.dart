@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/custom_provider.dart';
+import 'package:frontend/datamodells.dart';
 import 'package:frontend/rosbridge_connector.dart';
 import 'package:provider/provider.dart';
 
@@ -69,7 +70,20 @@ class NodesTab extends StatelessWidget{
         ? FloatingActionButton(
             tooltip: "Run",
             onPressed: () {
-              // TODO: Run all selected nodes and skip already running ones
+              int nodesCount = nodes.length;
+              for (var i = 0; i < nodesCount; i++) {
+                NodeDatamodell node = nodes[i];
+                if (node.isSelected) {
+                  context.read<NodeProvider>().runNode(i, true);
+                  RosbridgeConnector().startSingleNode(context, node.executableName, node.packageName, i);
+                  context.read<NodeProvider>().selectNode(i, false);
+                }
+              }
+              for (var node in nodes) {
+                if (node.isSelected) {
+                  context.read();
+                }
+              }
             },
             child: Icon(Icons.play_circle_outlined),
           )
@@ -77,6 +91,3 @@ class NodesTab extends StatelessWidget{
     );
   }
 }
-
-// TODO: Launch a node
-//        => Connect to the server
