@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/datamodells.dart';
-import 'package:frontend/ui-elements/information_box/action_information_box.dart';
-import 'package:frontend/ui-elements/information_box/service_information_box.dart';
+import 'package:frontend/ui-elements/information_box/service_and_action_information_box.dart';
 import 'package:frontend/ui-elements/information_box/topic_information_box.dart';
 
 class InformationRightSheet {
@@ -14,10 +13,8 @@ class InformationRightSheet {
     final typeToLowerCase = item.type.toLowerCase();
     if (typeToLowerCase == "topic") {
       content = TopicInformationBox(topic: item);
-    } else if (typeToLowerCase == "service") {
+    } else if (typeToLowerCase == "service" || typeToLowerCase == "action") {
       content = ServiceInformationBox(service: item);
-    } else if (typeToLowerCase == "action") {
-      content = ActionInformationBox(action: item);
     }
 
     // Open the overlay and display the correct information

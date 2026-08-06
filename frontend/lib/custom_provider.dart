@@ -43,7 +43,7 @@ class TopicInformationProvider extends ChangeNotifier {
   }
 }
 
-class ServiceInformationProvider extends ChangeNotifier {
+class ServiceAndActionInformationProvider extends ChangeNotifier {
   String provider = "-";
   String interface = "-";
 

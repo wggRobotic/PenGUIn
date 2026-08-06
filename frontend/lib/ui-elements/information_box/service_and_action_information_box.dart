@@ -32,8 +32,8 @@ class _ServiceInformationBoxState extends State<ServiceInformationBox> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<ServiceInformationProvider>().provider;
-    final interface = context.watch<ServiceInformationProvider>().interface;
+    final provider = context.watch<ServiceAndActionInformationProvider>().provider;
+    final interface = context.watch<ServiceAndActionInformationProvider>().interface;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
