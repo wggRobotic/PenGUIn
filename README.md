@@ -73,4 +73,8 @@ WebSocket server (ROSbridge)
 |
 Frontend
 ```
+Further ressources:
+- [Running Rosbridge](https://wiki.ros.org/rosbridge_suite/Tutorials/RunningRosbridge#Running_Rosbridge)
+- [Rosbridge documentation](https://github.com/RobotWebTools/rosbridge_suite/blob/ros1/ROSBRIDGE_PROTOCOL.md)
+- [Rosapi documentation](https://github.com/RobotWebTools/rosbridge_suite/tree/ros2/rosapi)
 
