@@ -25,9 +25,9 @@ class _TopicInformationBoxState extends State<TopicInformationBox> {
     super.initState();
     // Request the desired data
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      connector.getTopicInterface(context, "rosout");
-      connector.getTopicPublishers(context, "rosout");
-      connector.getTopicSubscribers(context, "rosout");
+      connector.getTopicInterface(context, widget.topic.name);
+      connector.getTopicPublishers(context, widget.topic.name);
+      connector.getTopicSubscribers(context, widget.topic.name);
     });
   }
 
