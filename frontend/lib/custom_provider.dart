@@ -23,7 +23,6 @@ class NodeProvider extends ChangeNotifier {
 }
 
 class TopicInformationProvider extends ChangeNotifier {
-  //
   String interface = "-";
   String publisher = "-";
   String subscriber = "-";
@@ -40,6 +39,21 @@ class TopicInformationProvider extends ChangeNotifier {
 
   void setSubscribers(String newSubscriber) {
     subscriber = newSubscriber;
+    notifyListeners();
+  }
+}
+
+class ServiceInformationProvider extends ChangeNotifier {
+  String provider = "-";
+  String interface = "-";
+
+  void setProvider(String newProvider) {
+    provider = newProvider;
+    notifyListeners();
+  }
+
+  void setInterface(String newInterface) {
+    interface = newInterface;
     notifyListeners();
   }
 }
