@@ -24,8 +24,8 @@ class AnalyticsTab extends StatelessWidget{
           itemBuilder: (context, index) {
             return ListTile(
               leading: items[index].isAvailable
-                ? Icon(Icons.offline_pin_outlined)
-                : Icon(Icons.error_outline),
+                ? Icon(Icons.sync_rounded)
+                : Icon(Icons.sync_disabled_outlined),
               title: Text(items[index].name),
               subtitle: Text(items[index].description),
               trailing: Row(
@@ -54,7 +54,7 @@ class AnalyticsTab extends StatelessWidget{
                       mainAxisSize: MainAxisSize.min,
                       spacing: 4.0,
                       children: [
-                        Icon(Icons.type_specimen_outlined),
+                        Icon(Icons.lan_outlined),
                         Text(
                           items[index].type,
                           style: TextStyle(
@@ -72,7 +72,7 @@ class AnalyticsTab extends StatelessWidget{
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
               contentPadding: EdgeInsets.only(left: 12.0, bottom: 4.0, top: 4.0, right: 8.0),
               onTap: () {
-                // TODO: Open overlay and display some data
+                // Open overlay and display further information
                 InformationRightSheet.openInformationRightSheet(context, items[index]);
               },
             );
