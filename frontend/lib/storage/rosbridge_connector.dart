@@ -10,6 +10,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 class RosbridgeConnector {
   late WebSocketChannel channel;
   bool isConnected = false;
+  bool connecting = false;
   bool listening = false;
   final Map<String, Completer<Map<String, dynamic>>> pending = {};
 
@@ -24,8 +25,8 @@ class RosbridgeConnector {
     }
 
     // Publish the launch command
-    //final cmd = "ros2 run $packageName $executableName";
-    final cmd = "ros2 run controller_package wheel_controller";
+    final cmd = "ros2 run $packageName $executableName";
+    //final cmd = "ros2 run controller_package wheel_controller";
     final json = {
       "op": "publish",
       "topic": "penGUIn/start_single",
@@ -97,9 +98,10 @@ class RosbridgeConnector {
     // Get the topic interface
     final r1 = await callServiceAndWait(context, "topic_type", {"topic": topicName}, "getTopicInterface_1");
 
-    final interface = r1["values"]["type"] as String? ?? "-";
-    if (interface == "-") {
-      context.read<TopicInformationProvider>().setSubscribers(interface);
+    final interface = (r1["values"]["type"] as String?)?.trim();
+    if (interface == null || interface.isEmpty) {
+      context.read<TopicInformationProvider>().setSubscribers("-");
+      return;
     }
 
     // Get the interface definition
@@ -122,9 +124,9 @@ class RosbridgeConnector {
 
       // Assemble the final String and apply it
       final definition = lines.join("\n");
-      context.read<TopicInformationProvider>().setSubscribers("$interface \n-------\n$definition");
+      context.read<TopicInformationProvider>().setInterface("$interface \n-------\n$definition");
     } else {
-      context.read<TopicInformationProvider>().setSubscribers(interface);
+      context.read<TopicInformationProvider>().setInterface(interface);
     }
   }
 
@@ -146,38 +148,57 @@ class RosbridgeConnector {
   }
   // Connect to the WebSocket server
   Future<void> connectAndListen(BuildContext context) async {
+    // Return if this is already done and running
     if (isConnected && listening) {
       return;
     }
+    if (connecting) {
+      return;
+    }
+
+    // Mark as connecting
+    connecting = true;
 
     try {
+      // Open a Websocket channel
       channel = WebSocketChannel.connect(Uri.parse("ws://localhost:9090"));
       await channel.ready;
+
+      // Mark as connected
       isConnected = true;
 
-      // Listen to incoming data
-      channel.stream.listen((message) {
-        final data = jsonDecode(message as String) as Map<String, dynamic>;
+      // Make sure to listen to the data stream
+      if (!listening) {
+        listening = true;
 
-        // Identify responses and handle them
-        if(data["op"] == "service_response" && data["result"]) {
-          final id = data["id"]?.toString();
-          if (id != null && pending.containsKey(id)) {
-            pending[id]!.complete(data);
-            pending.remove(id);
+        // Listen to incoming data
+        channel.stream.listen((message) {
+          final data = jsonDecode(message as String) as Map<String, dynamic>;
+
+          // Identify responses and handle them
+          if(data["op"] == "service_response") {
+            final id = data["id"]?.toString();
+            if (id != null && pending.containsKey(id)) {
+              pending[id]!.complete(data);
+              pending.remove(id);
+            }
           }
-        }
-      }, onError: (e) {
-        // Handle the error
-        ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: e.toString().trim()));
-        for (final c in pending.values) {
-          c.completeError(e);
-        }
-        pending.clear();
-      });
+        }, onError: (e) {
+          // Handle the error
+          ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: e.toString().trim()));
+          for (final c in pending.values) {
+            c.completeError(e);
+          }
+          pending.clear();
+        });
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: e.toString().trim()));
+      isConnected = false;
+      listening = false;
       return;
+    } finally {
+      connecting = false;
     }
   }
   // Disconnect from the WebSocket server
