@@ -21,3 +21,25 @@ class NodeProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+class TopicInformationProvider extends ChangeNotifier {
+  //
+  String interface = "-";
+  String publisher = "-";
+  String subscriber = "-";
+
+  void setInterface(String newInterface) {
+    interface = newInterface;
+    notifyListeners();
+  }
+  
+  void setPublishers(String newPublishers) {
+    publisher = newPublishers;
+    notifyListeners();
+  }
+
+  void setSubscribers(String newSubscriber) {
+    subscriber = newSubscriber;
+    notifyListeners();
+  }
+}
