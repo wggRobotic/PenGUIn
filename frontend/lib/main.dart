@@ -46,6 +46,7 @@ class MyHomePage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).colorScheme;
 
     // Apply the configuration
     loadConfig(context);
@@ -54,7 +55,10 @@ class MyHomePage extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: theme.primaryContainer,
           title: TabBar(
+            labelColor: theme.onPrimaryContainer,
+            unselectedLabelColor: theme.surface,
             tabs: const [
               Tab(
                 icon: Icon(Icons.code_outlined),
