@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/datamodells.dart';
 import 'package:frontend/ui-elements/information_box/action_information_box.dart';
 import 'package:frontend/ui-elements/information_box/service_information_box.dart';
 import 'package:frontend/ui-elements/information_box/topic_information_box.dart';
 
 class InformationRightSheet {
   // Open the RightSheet and display some data
-  static void openInformationRightSheet(BuildContext context, String type, String name) {
+  static void openInformationRightSheet(BuildContext context, AnalyticsDatamodell item) {
     final theme = Theme.of(context).colorScheme;
 
     // Display specific information depending on the communication type
     Widget content = Placeholder();
-    final typeToLowerCase = type.toLowerCase();
+    final typeToLowerCase = item.type.toLowerCase();
     if (typeToLowerCase == "topic") {
-      content = TopicInformationBox();
+      content = TopicInformationBox(topic: item);
     } else if (typeToLowerCase == "service") {
       content = ServiceInformationBox();
     } else if (typeToLowerCase == "action") {
@@ -37,7 +38,7 @@ class InformationRightSheet {
               height: double.infinity,
               child: Scaffold(
                 appBar: AppBar(
-                  title: Text("Information (Type: $type)"),
+                  title: Text("Information (Type: ${item.type})"),
                   backgroundColor: theme.primaryContainer,
                 ),
                 body: content

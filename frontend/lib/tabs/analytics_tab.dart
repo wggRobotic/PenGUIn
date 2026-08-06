@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/datamodells.dart';
+import 'package:frontend/ui-elements/information_right_sheet.dart';
 
 class AnalyticsTab extends StatelessWidget{
   const AnalyticsTab({super.key});
@@ -8,9 +9,9 @@ class AnalyticsTab extends StatelessWidget{
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
     List<AnalyticsDatamodell> items = [
-      AnalyticsDatamodell(type: "service", name: "name", interface: "interface", category: "category", isAvailable: true),
-      AnalyticsDatamodell(type: "topic", name: "name", interface: "interface", description: "description"),
-      AnalyticsDatamodell(type: "action", name: "name", interface: "interface", description: "description"),
+      AnalyticsDatamodell(type: "service", name: "name", category: "category", isAvailable: true),
+      AnalyticsDatamodell(type: "topic", name: "name", description: "description"),
+      AnalyticsDatamodell(type: "action", name: "name", description: "description"),
     ];
 
     // Display a list containing a set of topics, services, etc. and arrange it like a column
@@ -72,10 +73,18 @@ class AnalyticsTab extends StatelessWidget{
               contentPadding: EdgeInsets.only(left: 12.0, bottom: 4.0, top: 4.0, right: 8.0),
               onTap: () {
                 // TODO: Open overlay and display some data
+                InformationRightSheet.openInformationRightSheet(context, items[index]);
               },
             );
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: "Apply filter",
+        child: Icon(Icons.filter_list_outlined),
+        onPressed: () {
+          // TOOD: Implement Filters
+        }
       ),
     );
   }
