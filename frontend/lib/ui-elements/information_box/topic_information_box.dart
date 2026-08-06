@@ -25,9 +25,9 @@ class _TopicInformationBoxState extends State<TopicInformationBox> {
     super.initState();
     // Request the desired data
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      connector.getTopicInterface(context, widget.topic.name);
-      connector.getTopicPublishers(context, widget.topic.name);
-      connector.getTopicSubscribers(context, widget.topic.name);
+      connector.getTopicInterface(context, "rosout");
+      connector.getTopicPublishers(context, "rosout");
+      connector.getTopicSubscribers(context, "rosout");
     });
   }
 
@@ -46,19 +46,33 @@ class _TopicInformationBoxState extends State<TopicInformationBox> {
           value: widget.topic.description
         ),
         CustomCard(
-          title: "Interface:",
-          value: interface
-        ),
-        CustomCard(
           title: "Implementation:",
           data: Column(
             spacing: 4.0,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Publisher: $publisher"),
-              Text("Subscriber: $subscriber"),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 8.0,
+                children: [
+                  Text("Publisher:"),
+                  Text(publisher)
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 8.0,
+                children: [
+                  Text("Subscriber:"),
+                  Text(subscriber)
+                ],
+              ),
             ],
           ),
+        ),
+        CustomCard(
+          title: "Interface:",
+          value: interface
         ),
       ],
     );
