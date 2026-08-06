@@ -63,6 +63,9 @@ class RosbridgeConnector {
       await connectAndListen(context);
     }
 
+    // Make sure the name starts with "/"
+    topicName = checkNameFormat(topicName);
+
     // Call the server
     final data = await callServiceAndWait( context, "publishers", {"topic": topicName},"getTopicPublishers");
 
@@ -79,6 +82,9 @@ class RosbridgeConnector {
       await connectAndListen(context);
     }
 
+    // Make sure the name starts with "/"
+    topicName = checkNameFormat(topicName);
+
     // Call the server
     final data = await callServiceAndWait(context, "subscribers", {"topic": topicName}, "getTopicSubscribers");
 
@@ -94,6 +100,9 @@ class RosbridgeConnector {
     if (!isConnected) {
       await connectAndListen(context);
     }
+
+    // Make sure the name starts with "/"
+    topicName = checkNameFormat(topicName);
 
     // Get the topic interface
     final r1 = await callServiceAndWait(context, "topic_type", {"topic": topicName}, "getTopicInterface_1");
@@ -206,7 +215,14 @@ class RosbridgeConnector {
     channel.sink.close();
     isConnected = false;
   }
-
+  // Make sure each name starts with a "/"
+  String checkNameFormat(String name) {
+    if (name.startsWith("/", 0)) {
+      return name;
+    } else {
+      return "/$name";
+    }
+  }
 }
 
 // TODO: Start advertising
