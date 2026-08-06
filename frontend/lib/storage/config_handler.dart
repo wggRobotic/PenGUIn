@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/datamodells.dart';
-import 'package:frontend/error_snackbar.dart';
+import 'package:frontend/ui-elements/error_snackbar.dart';
 import 'package:path/path.dart' as path;
 
 class NodesConfigHandler {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/custom_provider.dart';
 import 'package:frontend/datamodells.dart';
-import 'package:frontend/rosbridge_connector.dart';
+import 'package:frontend/storage/rosbridge_connector.dart';
 import 'package:provider/provider.dart';
 
 class NodesTab extends StatelessWidget{

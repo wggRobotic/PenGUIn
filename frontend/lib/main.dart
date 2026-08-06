@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/config_handler.dart';
+import 'package:frontend/storage/config_handler.dart';
 import 'package:frontend/custom_provider.dart';
 import 'package:frontend/tabs/analytics_tab.dart';
 import 'package:frontend/tabs/nodes_tab.dart';

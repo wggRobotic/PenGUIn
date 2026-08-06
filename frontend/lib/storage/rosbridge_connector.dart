@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/error_snackbar.dart';
+import 'package:frontend/ui-elements/error_snackbar.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class RosbridgeConnector {
@@ -70,3 +70,6 @@ class RosbridgeConnector {
     channel.sink.add(jsonEncode(json));
   }
 }
+
+// TODO: Start advertising
+// TODO: Subscribe to Topics and Services and display the data within the UI
