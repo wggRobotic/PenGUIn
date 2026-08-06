@@ -15,3 +15,21 @@ class NodeDatamodell {
     this.isRunning = false,
   });
 }
+
+class AnalyticsDatamodell{
+  String type;
+  String name;
+  String interface;
+  String description;
+  String? category;
+  bool isAvailable;
+
+  AnalyticsDatamodell({
+    required this.type,
+    required this.name,
+    required this.interface,
+    this.description =  "",
+    this.category,
+    this.isAvailable = false,
+  });
+}
