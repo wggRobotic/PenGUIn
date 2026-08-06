@@ -15,9 +15,9 @@ class InformationRightSheet {
     if (typeToLowerCase == "topic") {
       content = TopicInformationBox(topic: item);
     } else if (typeToLowerCase == "service") {
-      content = ServiceInformationBox();
+      content = ServiceInformationBox(service: item);
     } else if (typeToLowerCase == "action") {
-      content = ActionInformationBox();
+      content = ActionInformationBox(action: item);
     }
 
     // Open the overlay and display the correct information
