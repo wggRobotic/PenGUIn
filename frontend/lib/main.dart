@@ -8,11 +8,15 @@ import 'package:provider/provider.dart';
 
 void main() {
   final nodeProvider = NodeProvider();
+  final topicInformationProvider = TopicInformationProvider();
+  final serviceInformationProvider = ServiceAndActionInformationProvider();
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => nodeProvider),
+        ChangeNotifierProvider(create: (_) => topicInformationProvider),
+        ChangeNotifierProvider(create: (_) => serviceInformationProvider),
       ],
       child: const PenGUIn()
     ),
