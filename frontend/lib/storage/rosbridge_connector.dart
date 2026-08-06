@@ -64,14 +64,14 @@ class RosbridgeConnector {
     }
 
     // Make sure the name starts with "/"
-    topicName = checkNameFormat(topicName);
+    topicName = validateNameFormat(topicName);
 
     // Call the server
     final data = await callServiceAndWait( context, "publishers", {"topic": topicName},"getTopicPublishers");
 
     // Parse the response
     final publishersList = (data["values"]["publishers"] as List).cast<String>();
-    final formattedPublishers = publishersList.isEmpty ? "-" : publishersList.join('\n');
+    final formattedPublishers = publishersList.isEmpty ? "-" : publishersList.join("\n");
 
     // Apply the values
     context.read<TopicInformationProvider>().setPublishers(formattedPublishers);
@@ -83,26 +83,26 @@ class RosbridgeConnector {
     }
 
     // Make sure the name starts with "/"
-    topicName = checkNameFormat(topicName);
+    topicName = validateNameFormat(topicName);
 
     // Call the server
     final data = await callServiceAndWait(context, "subscribers", {"topic": topicName}, "getTopicSubscribers");
 
     // Parse the response
     final subscribersList = (data["values"]["subscribers"] as List).cast<String>();
-    final formattedSubscribers = subscribersList.isEmpty ? "-" : subscribersList.join('\n');
+    final formattedSubscribers = subscribersList.isEmpty ? "-" : subscribersList.join("\n");
 
     // Apply the data
     context.read<TopicInformationProvider>().setSubscribers(formattedSubscribers);
   }
-  Future<void> getTopicInterface(BuildContext context, String topicName) async {
+  void getTopicInterface(BuildContext context, String topicName) async {
     // Make sure the connection works
     if (!isConnected) {
       await connectAndListen(context);
     }
 
     // Make sure the name starts with "/"
-    topicName = checkNameFormat(topicName);
+    topicName = validateNameFormat(topicName);
 
     // Get the topic interface
     final r1 = await callServiceAndWait(context, "topic_type", {"topic": topicName}, "getTopicInterface_1");
@@ -115,28 +115,57 @@ class RosbridgeConnector {
 
     // Get the interface definition
     final r2 = await callServiceAndWait(context, "message_details", {"type": interface}, "getTopicInterface_2");
-    final typedefs = (r2["values"]?["typedefs"] as List?) ?? const [];
-
-    // Convert the definition into a String
-    if (typedefs.isNotEmpty) {
-      final t0 = typedefs.first;
-
-      final fieldnames = (t0["fieldnames"] as List?) ?? const [];
-      final fieldtypes = (t0["fieldtypes"] as List?) ?? const [];
-
-      final lines = <String>[];
-      for (int i = 0; i < fieldnames.length; i++) {
-        final name = fieldnames[i]?.toString() ?? "";
-        final type = (i < fieldtypes.length ? fieldtypes[i] : null)?.toString() ?? "";
-        lines.add("$type $name");
-      }
-
-      // Assemble the final String and apply it
-      final definition = lines.join("\n");
-      context.read<TopicInformationProvider>().setInterface("$interface \n-------\n$definition");
-    } else {
-      context.read<TopicInformationProvider>().setInterface(interface);
+    final definition = buildRos2InterfaceFromMap(r2);
+    
+    // Assemble the final String and apply it
+    context.read<TopicInformationProvider>().setInterface("$interface \n------------\n$definition");
+  }
+  void getServiceProviders(BuildContext context, String serviceName) async {
+    // Make sure the connection works
+    if (!isConnected) {
+      await connectAndListen(context);
     }
+
+    // Make sure the name starts with "/"
+    serviceName = validateNameFormat(serviceName);
+
+    // Call the server
+    final data = await callServiceAndWait(context, "service_providers", {"service": serviceName}, "getServiceProviders");
+
+    // Parse the response
+    final providerList = (data["values"]["providers"] as List).cast<String>();
+    final formattedProviders = providerList.isEmpty ? "-" : providerList.join("\n");
+
+    // Apply the data
+    context.read<ServiceInformationProvider>().setProvider(formattedProviders);
+  }
+  void getServiceInterface(BuildContext context, String serviceName) async {
+    // Make sure the connection works
+    if (!isConnected) {
+      await connectAndListen(context);
+    }
+
+    // Make sure the name starts with "/"
+    serviceName = validateNameFormat(serviceName);
+
+    // Call the server and get the interface
+    final r1 = await callServiceAndWait(context, "service_type", {"service": serviceName}, "getServiceInterface_1");
+    final interface = (r1["values"]["type"] as String?)?.trim();
+    if (interface == null || interface.isEmpty) {
+      context.read<ServiceInformationProvider>().setInterface("-");
+      return;
+    }
+
+    // Call the server and get request details
+    final r2 = await callServiceAndWait(context, "service_request_details", {"type": interface}, "getServiceInterface_2");
+    final request = buildRos2InterfaceFromMap(r2);
+
+    // Call the server and get response details
+    final r3 = await callServiceAndWait(context, "service_response_details", {"type": interface}, "getServiceInterface_3");
+    final response = buildRos2InterfaceFromMap(r3);
+
+    // Apply the definition
+    context.read<ServiceInformationProvider>().setInterface("$interface\n------------\n$request\n---\n$response");
   }
 
   // -------------------------------------------------------------------------------------------------------------------------------
@@ -216,12 +245,82 @@ class RosbridgeConnector {
     isConnected = false;
   }
   // Make sure each name starts with a "/"
-  String checkNameFormat(String name) {
+  String validateNameFormat(String name) {
     if (name.startsWith("/", 0)) {
       return name;
     } else {
       return "/$name";
     }
+  }
+
+  String buildRos2InterfaceFromMap(Map<String, dynamic> root) {
+    final lines = <String>[];
+    final values = root['values'];
+    final valuesMap = (values is Map<String, dynamic>) ? values : null;
+
+    final typedefs = (valuesMap?['typedefs'] is List) ? valuesMap!['typedefs'] as List : const [];
+
+    // Return if there're no typedefs
+    if (typedefs.isEmpty) {
+      return "-";
+    }
+
+    // Handle each typedef of the typedefs
+    for (final td in typedefs) {
+      if (td is! Map<String, dynamic>) {
+        // If typedefs is no Map
+        continue;
+      }
+
+      final fieldnamesRaw = td['fieldnames'];
+      final fieldtypesRaw = td['fieldtypes'];
+      final fieldarraylenRaw = td['fieldarraylen'];
+
+      final fieldnames = (fieldnamesRaw is List) ? fieldnamesRaw : const <dynamic>[];
+      final fieldtypes = (fieldtypesRaw is List) ? fieldtypesRaw : const <dynamic>[];
+      final fieldarraylen = (fieldarraylenRaw is List) ? fieldarraylenRaw : const <dynamic>[];
+
+      final n = fieldnames.length;
+
+      for (int i = 0; i < n; i++) {
+        final name = fieldnames[i]?.toString() ?? '';
+
+        final baseType = (i < fieldtypes.length) ? (fieldtypes[i]?.toString() ?? '') : '';
+
+        // Handle arrays
+        String arraySuffix = '';
+        if (i < fieldarraylen.length) {
+          final lenVal = fieldarraylen[i];
+
+          if (lenVal is num) {
+            if (lenVal == 0) {
+              arraySuffix = ''; // No array
+            } else if (lenVal < 0) {
+              arraySuffix = '[]'; // unbounded / variable length
+            } else {
+              arraySuffix = '[$lenVal]'; // fixed length
+            }
+          }
+        }
+
+        // Add a line to the list: <type> <name>
+        if (baseType.isNotEmpty && name.isNotEmpty) {
+          lines.add("$baseType $name$arraySuffix");
+        } else if (baseType.isNotEmpty) {
+          lines.add("$baseType $arraySuffix");
+        } else if (name.isNotEmpty) {
+          lines.add("$name$arraySuffix");
+        }
+      }
+    }
+
+    // Remove the last line
+    while (lines.isNotEmpty && lines.last.trim().isEmpty) {
+      lines.removeLast();
+    }
+
+    // Retrun the list as one single String
+    return lines.join('\n');
   }
 }
 
