@@ -73,7 +73,7 @@ class AnalyticsTab extends StatelessWidget{
               contentPadding: EdgeInsets.only(left: 12.0, bottom: 4.0, top: 4.0, right: 8.0),
               onTap: () {
                 // Open overlay and display further information
-                InformationRightSheet.openInformationRightSheet(context, items[index]);
+                InformationRightSheet.openInformationRightSheet(context, items[index], false);
               },
             );
           },
@@ -89,3 +89,5 @@ class AnalyticsTab extends StatelessWidget{
     );
   }
 }
+
+// TODO: Implement filters

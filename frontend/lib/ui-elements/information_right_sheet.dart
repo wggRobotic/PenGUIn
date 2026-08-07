@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/datamodells.dart';
+import 'package:frontend/ui-elements/information_box/node_information_box.dart';
 import 'package:frontend/ui-elements/information_box/service_and_action_information_box.dart';
 import 'package:frontend/ui-elements/information_box/topic_information_box.dart';
 
 class InformationRightSheet {
   // Open the RightSheet and display some data
-  static void openInformationRightSheet(BuildContext context, AnalyticsDatamodell item) {
+  static void openInformationRightSheet(BuildContext context, dynamic item, bool isNode) {
     final theme = Theme.of(context).colorScheme;
 
-    // Display specific information depending on the communication type
+    // Display specific information depending on the item
     Widget content = Placeholder();
-    final typeToLowerCase = item.type.toLowerCase();
-    if (typeToLowerCase == "topic") {
-      content = TopicInformationBox(topic: item);
-    } else if (typeToLowerCase == "service" || typeToLowerCase == "action") {
-      content = ServiceInformationBox(service: item);
+    if (isNode) {
+      // Display Node content
+      content = NodeInformationBox(node: item);
+    } else {
+      final typeToLowerCase = item.type.toLowerCase();
+
+      // Pick the correct analytics content
+      if (typeToLowerCase == "topic") {
+        content = TopicInformationBox(topic: item);
+      } else if (typeToLowerCase == "service" || typeToLowerCase == "action") {
+        content = ServiceInformationBox(type: item);
+      }
     }
 
     // Open the overlay and display the correct information
@@ -35,7 +42,9 @@ class InformationRightSheet {
               height: double.infinity,
               child: Scaffold(
                 appBar: AppBar(
-                  title: Text("Information (Type: ${item.type})"),
+                  title: isNode
+                    ? Text("Information (Node: ${item.executableName})")
+                    : Text("Information (Type: ${item.type})"),
                   backgroundColor: theme.primaryContainer,
                 ),
                 body: content

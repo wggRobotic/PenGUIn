@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/custom_provider.dart';
 import 'package:frontend/datamodells.dart';
 import 'package:frontend/storage/rosbridge_connector.dart';
+import 'package:frontend/ui-elements/information_right_sheet.dart';
 import 'package:provider/provider.dart';
 
 class NodesTab extends StatelessWidget{
@@ -54,6 +55,9 @@ class NodesTab extends StatelessWidget{
                 } else if (nodeIsSelected) {
                   context.read<NodeProvider>().selectNode(index, true);
                 }
+
+                // Open an information overlay
+                InformationRightSheet.openInformationRightSheet(context, nodes[index], true);
               },
               onLongPress: () {
                 if (nodes[index].isSelected) {
