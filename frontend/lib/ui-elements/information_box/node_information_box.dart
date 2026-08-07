@@ -68,6 +68,7 @@ class _NodeInformationBoxState extends State<NodeInformationBox> {
                     if (await canLaunchUrl(url)) {
                       await launchUrl(url, mode: LaunchMode.externalApplication);
                     } else {
+                      if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Could not launch $url"));
                     }
                   }

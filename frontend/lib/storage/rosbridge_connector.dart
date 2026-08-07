@@ -21,11 +21,13 @@ class RosbridgeConnector {
   void startSingleNode(BuildContext context, String executableName, String packageName, int id) async {
     // Make sure to connect with the server
     if (!isConnected) {
+      if (!context.mounted) return;
       await connectAndListen(context);
     }
 
     // Make sure the given names aren't empty
     if (executableName.isEmpty || packageName.isEmpty) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Empty package and node name"));
       return;
     }
@@ -47,6 +49,7 @@ class RosbridgeConnector {
   void stopNode(BuildContext context, int id) async {
     // Make sure to connect with the server
     if (!isConnected) {
+      if (!context.mounted) return;
       await connectAndListen(context);
     }
 
@@ -66,10 +69,12 @@ class RosbridgeConnector {
   void getNodeInformation(BuildContext context, String nodeName) async {
     // Make sure the connection works
     if (!isConnected) {
+      if (!context.mounted) return;
       await connectAndListen(context);
     }
 
     // Call the server and receive the information
+    if (!context.mounted) return;
     final data = await callServiceAndWait(context, "node_details", {"node": nodeName}, "getNodeInformation");
     final subscribingList = (data["values"]["subscribing"] as List).cast<String>();
     final publishingList = (data["values"]["publishing"] as List).cast<String>();
@@ -79,13 +84,14 @@ class RosbridgeConnector {
     final formattedSubscribingList = subscribingList.isEmpty ? "-" : subscribingList.join("\n");
     final formattedPublishingList = publishingList.isEmpty ? "-" : publishingList.join("\n");
     final formattedServiceList = serviceList.isEmpty ? "-" : serviceList.join("\n");
-
     // Apply the data to the UI
+    if (!context.mounted) return;
     context.read<NodeProvider>().setNodeInformation(formattedSubscribingList, formattedPublishingList, formattedServiceList);
   }
   void getTopicPublishers(BuildContext context, String topicName) async {
     // Make sure the connection works
     if (!isConnected) {
+      if (!context.mounted) return;
       await connectAndListen(context);
     }
 
@@ -93,6 +99,7 @@ class RosbridgeConnector {
     topicName = validateNameFormat(topicName);
 
     // Call the server
+    if (!context.mounted) return;
     final data = await callServiceAndWait( context, "publishers", {"topic": topicName},"getTopicPublishers");
 
     // Parse the response
@@ -100,11 +107,13 @@ class RosbridgeConnector {
     final formattedPublishers = publishersList.isEmpty ? "-" : publishersList.join("\n");
 
     // Apply the values
+    if (!context.mounted) return;
     context.read<TopicInformationProvider>().setPublishers(formattedPublishers);
   }
   void getTopicSubscribers(BuildContext context, String topicName) async {
     // Make sure the connection works
     if (!isConnected) {
+      if (!context.mounted) return;
       await connectAndListen(context);
     }
 
@@ -112,6 +121,7 @@ class RosbridgeConnector {
     topicName = validateNameFormat(topicName);
 
     // Call the server
+    if (!context.mounted) return;
     final data = await callServiceAndWait(context, "subscribers", {"topic": topicName}, "getTopicSubscribers");
 
     // Parse the response
@@ -119,11 +129,13 @@ class RosbridgeConnector {
     final formattedSubscribers = subscribersList.isEmpty ? "-" : subscribersList.join("\n");
 
     // Apply the data
+    if (!context.mounted) return;
     context.read<TopicInformationProvider>().setSubscribers(formattedSubscribers);
   }
   void getTopicInterface(BuildContext context, String topicName) async {
     // Make sure the connection works
     if (!isConnected) {
+      if (!context.mounted) return;
       await connectAndListen(context);
     }
 
@@ -131,24 +143,29 @@ class RosbridgeConnector {
     topicName = validateNameFormat(topicName);
 
     // Get the topic interface
+    if (!context.mounted) return;
     final r1 = await callServiceAndWait(context, "topic_type", {"topic": topicName}, "getTopicInterface_1");
 
     final interface = (r1["values"]["type"] as String?)?.trim();
     if (interface == null || interface.isEmpty) {
+      if (!context.mounted) return;
       context.read<TopicInformationProvider>().setSubscribers("-");
       return;
     }
 
     // Get the interface definition
+    if (!context.mounted) return;
     final r2 = await callServiceAndWait(context, "message_details", {"type": interface}, "getTopicInterface_2");
     final definition = buildRos2InterfaceFromMap(r2);
     
     // Assemble the final String and apply it
+    if (!context.mounted) return;
     context.read<TopicInformationProvider>().setInterface("$interface \n------------\n$definition");
   }
   void getServiceProviders(BuildContext context, String serviceName) async {
     // Make sure the connection works
     if (!isConnected) {
+      if (!context.mounted) return;
       await connectAndListen(context);
     }
 
@@ -156,6 +173,7 @@ class RosbridgeConnector {
     serviceName = validateNameFormat(serviceName);
 
     // Call the server
+    if (!context.mounted) return;
     final data = await callServiceAndWait(context, "service_providers", {"service": serviceName}, "getServiceProviders");
 
     // Parse the response
@@ -163,11 +181,13 @@ class RosbridgeConnector {
     final formattedProviders = providerList.isEmpty ? "-" : providerList.join("\n");
 
     // Apply the data
+    if (!context.mounted) return;
     context.read<ServiceAndActionInformationProvider>().setProvider(formattedProviders);
   }
   void getServiceInterface(BuildContext context, String serviceName) async {
     // Make sure the connection works
     if (!isConnected) {
+      if (!context.mounted) return;
       await connectAndListen(context);
     }
 
@@ -175,22 +195,27 @@ class RosbridgeConnector {
     serviceName = validateNameFormat(serviceName);
 
     // Call the server and get the interface
+    if (!context.mounted) return;
     final r1 = await callServiceAndWait(context, "service_type", {"service": serviceName}, "getServiceInterface_1");
     final interface = (r1["values"]["type"] as String?)?.trim();
     if (interface == null || interface.isEmpty) {
+      if (!context.mounted) return;
       context.read<ServiceAndActionInformationProvider>().setInterface("-");
       return;
     }
 
     // Call the server and get request details
+    if (!context.mounted) return;
     final r2 = await callServiceAndWait(context, "service_request_details", {"type": interface}, "getServiceInterface_2");
     final request = buildRos2InterfaceFromMap(r2);
 
     // Call the server and get response details
+    if (!context.mounted) return;
     final r3 = await callServiceAndWait(context, "service_response_details", {"type": interface}, "getServiceInterface_3");
     final response = buildRos2InterfaceFromMap(r3);
 
     // Apply the definition
+    if (!context.mounted) return;
     context.read<ServiceAndActionInformationProvider>().setInterface("$interface\n------------\n$request\n---\n$response");
   }
 
@@ -206,6 +231,7 @@ class RosbridgeConnector {
 
     return completer.future.timeout(timeout, onTimeout: () {
       pending.remove(id);
+      if (!context.mounted) return {};
       ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "No rosbridge response for id=$id"));
       return {};
     });
@@ -249,6 +275,7 @@ class RosbridgeConnector {
           }
         }, onError: (e) {
           // Handle the error
+          if (!context.mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: e.toString().trim()));
           for (final c in pending.values) {
             c.completeError(e);
@@ -257,6 +284,7 @@ class RosbridgeConnector {
         });
       }
     } catch (e) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: e.toString().trim()));
       isConnected = false;
       listening = false;
@@ -350,6 +378,5 @@ class RosbridgeConnector {
   }
 }
 
-// TODO: Make sure clients disconnect properly
 // TODO: Get Action information
-// TODO: Handle the context more proberly
+// TODO: Handle wrong configuration
