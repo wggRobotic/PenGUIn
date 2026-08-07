@@ -4,6 +4,7 @@ class NodeDatamodell {
   String nodeName;
   String description;
   String documentationLink;
+  String customCMD;
   bool isSelected;
   bool isRunning;
 
@@ -13,6 +14,7 @@ class NodeDatamodell {
     this.nodeName = "",
     this.description = "",
     this.documentationLink = "",
+    this.customCMD = "",
     this.isSelected = false,
     this.isRunning = false,
   });

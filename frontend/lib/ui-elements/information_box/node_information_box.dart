@@ -120,7 +120,7 @@ class _NodeInformationBoxState extends State<NodeInformationBox> {
                     isRunning = false;
                   });
                 } else {
-                  connector.startSingleNode(context, widget.node.executableName, widget.node.packageName, position);
+                  connector.startSingleNode(context, widget.node.executableName, widget.node.packageName, widget.node.customCMD, position);
                   setState(() {
                     isRunning = true;
                   });

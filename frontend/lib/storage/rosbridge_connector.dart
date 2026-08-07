@@ -18,7 +18,7 @@ class RosbridgeConnector {
   // PenGUIn Control Node: Control nodes
   // -------------------------------------------------------------------------------------------------------------------------------
   // Start a node by publishing to a certain topic
-  void startSingleNode(BuildContext context, String executableName, String packageName, int id) async {
+  void startSingleNode(BuildContext context, String executableName, String packageName, String cmd, int id) async {
     // Make sure to connect with the server
     if (!isConnected) {
       if (!context.mounted) return;
@@ -32,9 +32,12 @@ class RosbridgeConnector {
       return;
     }
 
+    // Pick the correct command - by default `ros2 run <pkg> <exe>`
+    if (cmd.isEmpty) {
+      cmd = "ros2 run $packageName $executableName";
+    }
+
     // Publish the launch command
-    final cmd = "ros2 run $packageName $executableName";
-    //final cmd = "ros2 run controller_package wheel_controller";
     final json = {
       "op": "publish",
       "topic": "penGUIn/start_single",

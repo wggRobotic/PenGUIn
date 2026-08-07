@@ -47,7 +47,7 @@ class _NodesTabState extends State<NodesTab> {
                     connector.stopNode(context, index);
                   } else {
                     context.read<NodeProvider>().runNode(index, true);
-                    connector.startSingleNode(context, nodes[index].executableName, nodes[index].packageName, index);
+                    connector.startSingleNode(context, nodes[index].executableName, nodes[index].packageName, nodes[index].customCMD, index);
                   }
                 },
               ),
@@ -86,7 +86,7 @@ class _NodesTabState extends State<NodesTab> {
                 NodeDatamodell node = nodes[i];
                 if (node.isSelected) {
                   context.read<NodeProvider>().runNode(i, true);
-                  connector.startSingleNode(context, node.executableName, node.packageName, i);
+                  connector.startSingleNode(context, node.executableName, node.packageName, node.customCMD, i);
                   context.read<NodeProvider>().selectNode(i, false);
                 }
               }

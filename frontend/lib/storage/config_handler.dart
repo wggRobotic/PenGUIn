@@ -33,7 +33,7 @@ class NodesConfigHandler {
   }
 
   // Read the config
-  Future<List<NodeDatamodell>> applyNodeConfiguration(context) async {
+  Future<List<NodeDatamodell>> applyNodeConfiguration(BuildContext context) async {
     final configPath = getRelativeConfigPath();
 
     // Make sure it exists
@@ -55,16 +55,17 @@ class NodesConfigHandler {
           nodeName: (map["nodeName"] as String?) ?? "",
           description: (map["description"] as String?) ?? "-",
           documentationLink: (map['documentationLink'] as String?) ?? "",
+          customCMD: (map["customCMD"] as String?) ?? "",
           isSelected: (map["isSelected"] == "true") ? true : false,
         );
       }).toList();
     } catch (e) {
       // Show an error message
+      if (!context.mounted) return [NodeDatamodell(executableName: "", packageName: "")];
       ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: e.toString().trim()));
       return [NodeDatamodell(executableName: "", packageName: "")];
     }
   }
 }
 
-// TODO: Custom commands
-// TODO: Configuration analytics
+// TODO: Configuration for analytics
