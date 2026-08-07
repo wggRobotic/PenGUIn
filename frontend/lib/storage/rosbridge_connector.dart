@@ -24,6 +24,12 @@ class RosbridgeConnector {
       await connectAndListen(context);
     }
 
+    // Make sure the given names aren't empty
+    if (executableName.isEmpty || packageName.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Empty package and node name"));
+      return;
+    }
+
     // Publish the launch command
     final cmd = "ros2 run $packageName $executableName";
     //final cmd = "ros2 run controller_package wheel_controller";
@@ -57,6 +63,8 @@ class RosbridgeConnector {
   // -------------------------------------------------------------------------------------------------------------------------------
   // RosAPI: Introspect nodes, topics, etc.
   // -------------------------------------------------------------------------------------------------------------------------------
+  void getNodeInformation(BuildContext context, String nodeName) async {
+  }
   void getTopicPublishers(BuildContext context, String topicName) async {
     // Make sure the connection works
     if (!isConnected) {
@@ -137,7 +145,7 @@ class RosbridgeConnector {
     final formattedProviders = providerList.isEmpty ? "-" : providerList.join("\n");
 
     // Apply the data
-    context.read<ServiceInformationProvider>().setProvider(formattedProviders);
+    context.read<ServiceAndActionInformationProvider>().setProvider(formattedProviders);
   }
   void getServiceInterface(BuildContext context, String serviceName) async {
     // Make sure the connection works
@@ -152,7 +160,7 @@ class RosbridgeConnector {
     final r1 = await callServiceAndWait(context, "service_type", {"service": serviceName}, "getServiceInterface_1");
     final interface = (r1["values"]["type"] as String?)?.trim();
     if (interface == null || interface.isEmpty) {
-      context.read<ServiceInformationProvider>().setInterface("-");
+      context.read<ServiceAndActionInformationProvider>().setInterface("-");
       return;
     }
 
@@ -165,7 +173,7 @@ class RosbridgeConnector {
     final response = buildRos2InterfaceFromMap(r3);
 
     // Apply the definition
-    context.read<ServiceInformationProvider>().setInterface("$interface\n------------\n$request\n---\n$response");
+    context.read<ServiceAndActionInformationProvider>().setInterface("$interface\n------------\n$request\n---\n$response");
   }
 
   // -------------------------------------------------------------------------------------------------------------------------------
@@ -324,4 +332,7 @@ class RosbridgeConnector {
   }
 }
 
-// TODO: Start advertising
+// TODO: Make sure clients disconnect properly
+// TODO: Get node information
+// TODO: Get Action information
+// TODO: Handle the context more proberly
