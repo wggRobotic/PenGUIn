@@ -64,6 +64,24 @@ class RosbridgeConnector {
   // RosAPI: Introspect nodes, topics, etc.
   // -------------------------------------------------------------------------------------------------------------------------------
   void getNodeInformation(BuildContext context, String nodeName) async {
+    // Make sure the connection works
+    if (!isConnected) {
+      await connectAndListen(context);
+    }
+
+    // Call the server and receive the information
+    final data = await callServiceAndWait(context, "node_details", {"node": nodeName}, "getNodeInformation");
+    final subscribingList = (data["values"]["subscribing"] as List).cast<String>();
+    final publishingList = (data["values"]["publishing"] as List).cast<String>();
+    final serviceList = (data["values"]["services"] as List).cast<String>();
+
+    // Convert to clear strings
+    final formattedSubscribingList = subscribingList.isEmpty ? "-" : subscribingList.join("\n");
+    final formattedPublishingList = publishingList.isEmpty ? "-" : publishingList.join("\n");
+    final formattedServiceList = serviceList.isEmpty ? "-" : serviceList.join("\n");
+
+    // Apply the data to the UI
+    context.read<NodeProvider>().setNodeInformation(formattedSubscribingList, formattedPublishingList, formattedServiceList);
   }
   void getTopicPublishers(BuildContext context, String topicName) async {
     // Make sure the connection works
@@ -333,6 +351,5 @@ class RosbridgeConnector {
 }
 
 // TODO: Make sure clients disconnect properly
-// TODO: Get node information
 // TODO: Get Action information
 // TODO: Handle the context more proberly
