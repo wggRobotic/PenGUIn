@@ -4,12 +4,14 @@ class CustomCard extends StatelessWidget{
   final String title;
   final String value;
   final Widget? data;
+  final bool alignAtTop;
 
   const CustomCard({
     super.key,
     required this.title,
     this.value = "",
     this.data,
+    this.alignAtTop = true
   });
 
   @override
@@ -26,7 +28,9 @@ class CustomCard extends StatelessWidget{
           width: 468,
           child: Row(
             spacing: 8.0,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: alignAtTop
+             ? CrossAxisAlignment.start
+             : CrossAxisAlignment.center,
             children: [
               Text(title),
               data == null
