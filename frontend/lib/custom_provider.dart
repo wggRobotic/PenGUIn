@@ -5,6 +5,9 @@ import 'package:frontend/datamodells.dart';
 class NodeProvider extends ChangeNotifier {
   List<NodeDatamodell> nodes = [];
   bool get nodeIsSelected => nodes.any((n) => n.isSelected);
+  String subscribing = "-";
+  String publishing = "-";
+  String service = "-";
 
   void updateNodeList(List<NodeDatamodell> newNodes) {
     nodes = newNodes;
@@ -18,6 +21,13 @@ class NodeProvider extends ChangeNotifier {
 
   void runNode(int position, bool runState) {
     nodes[position].isRunning = runState;
+    notifyListeners();
+  }
+
+  void setNodeInformation(String newSubsribingList, String newPublishingList, String newServiceList) {
+    subscribing = newSubsribingList;
+    publishing = newPublishingList;
+    service = newServiceList;
     notifyListeners();
   }
 }
