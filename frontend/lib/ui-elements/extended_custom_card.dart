@@ -47,7 +47,13 @@ class ExtendedCustomCard extends StatelessWidget {
                     spacing: 8.0,
                     children: [
                       Text(subtitle1),
-                      Text(value1)
+                      SizedBox(
+                        width: 312,
+                        child: Text(
+                          value1,
+                          softWrap: true,
+                        ),
+                      ),
                     ],
                   ),
                   Row(
@@ -55,7 +61,13 @@ class ExtendedCustomCard extends StatelessWidget {
                     spacing: 8.0,
                     children: [
                       Text(subtitle2),
-                      Text(value2)
+                      SizedBox(
+                        width: 312,
+                        child: Text(
+                          value2,
+                          softWrap: true,
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -67,3 +79,5 @@ class ExtendedCustomCard extends StatelessWidget {
     );
   }
 }
+
+// TODO: Make sure aech Text() colapses as expected
