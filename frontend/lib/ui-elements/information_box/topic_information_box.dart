@@ -60,4 +60,11 @@ class _TopicInformationBoxState extends State<TopicInformationBox> {
       ],
     );
   }
+
+  @override
+  void dispose() {
+    // Disconnect this client
+    connector.disconnect();
+    super.dispose();
+  }
 }

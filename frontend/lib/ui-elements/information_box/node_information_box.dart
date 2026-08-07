@@ -114,12 +114,12 @@ class _NodeInformationBoxState extends State<NodeInformationBox> {
 
                 // Start/Stop the node
                 if(isRunning) {
-                  RosbridgeConnector().stopNode(context, position);
+                  connector.stopNode(context, position);
                   setState(() {
                     isRunning = false;
                   });
                 } else {
-                  RosbridgeConnector().startSingleNode(context, widget.node.executableName, widget.node.packageName, position);
+                  connector.startSingleNode(context, widget.node.executableName, widget.node.packageName, position);
                   setState(() {
                     isRunning = true;
                   });
@@ -130,6 +130,13 @@ class _NodeInformationBoxState extends State<NodeInformationBox> {
         ),
       ]
     );
+  }
+
+  @override
+  void dispose() {
+    // Disconnect this client
+    connector.disconnect();
+    super.dispose();
   }
 }
 

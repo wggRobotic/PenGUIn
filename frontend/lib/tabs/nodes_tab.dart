@@ -5,8 +5,15 @@ import 'package:frontend/storage/rosbridge_connector.dart';
 import 'package:frontend/ui-elements/information_right_sheet.dart';
 import 'package:provider/provider.dart';
 
-class NodesTab extends StatelessWidget{
+class NodesTab extends StatefulWidget{
   const NodesTab({super.key});
+
+  @override
+  State<NodesTab> createState() => _NodesTabState();
+}
+
+class _NodesTabState extends State<NodesTab> {
+  final RosbridgeConnector connector = RosbridgeConnector();
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +44,10 @@ class NodesTab extends StatelessWidget{
                   // Run or stop a node
                   if (nodes[index].isRunning) {
                     context.read<NodeProvider>().runNode(index, false);
-                    RosbridgeConnector().stopNode(context, index);
+                    connector.stopNode(context, index);
                   } else {
                     context.read<NodeProvider>().runNode(index, true);
-                    RosbridgeConnector().startSingleNode(context, nodes[index].executableName, nodes[index].packageName, index);
+                    connector.startSingleNode(context, nodes[index].executableName, nodes[index].packageName, index);
                   }
                 },
               ),
@@ -79,7 +86,7 @@ class NodesTab extends StatelessWidget{
                 NodeDatamodell node = nodes[i];
                 if (node.isSelected) {
                   context.read<NodeProvider>().runNode(i, true);
-                  RosbridgeConnector().startSingleNode(context, node.executableName, node.packageName, i);
+                  connector.startSingleNode(context, node.executableName, node.packageName, i);
                   context.read<NodeProvider>().selectNode(i, false);
                 }
               }
@@ -93,5 +100,12 @@ class NodesTab extends StatelessWidget{
           )
         : null,
     );
+  }
+
+  @override
+  void dispose() {
+    // Disconnect from the WebSocket server
+    connector.disconnect();
+    super.dispose();
   }
 }

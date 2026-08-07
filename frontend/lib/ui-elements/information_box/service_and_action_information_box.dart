@@ -6,11 +6,11 @@ import 'package:frontend/ui-elements/custom_card.dart';
 import 'package:provider/provider.dart';
 
 class ServiceInformationBox extends StatefulWidget{
-  final AnalyticsDatamodell service;
+  final AnalyticsDatamodell type;
 
   const ServiceInformationBox({
     super.key,
-    required this.service,
+    required this.type,
   });
 
   @override
@@ -25,8 +25,12 @@ class _ServiceInformationBoxState extends State<ServiceInformationBox> {
     super.initState();
     // Request the desired data
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      connector.getServiceInterface(context, widget.service.name);
-      connector.getServiceProviders(context, widget.service.name);
+      if (widget.type.type == "service") {
+        connector.getServiceInterface(context, widget.type.name);
+        connector.getServiceProviders(context, widget.type.name);
+      } else {
+        // TODO: Get action information
+      }
     });
   }
 
@@ -40,7 +44,7 @@ class _ServiceInformationBoxState extends State<ServiceInformationBox> {
       children: [
         CustomCard(
           title: "Description:",
-          value: widget.service.description,
+          value: widget.type.description,
         ),
         CustomCard(
           title: "Provider:",
@@ -52,5 +56,12 @@ class _ServiceInformationBoxState extends State<ServiceInformationBox> {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    // Disconnect this client
+    connector.disconnect();
+    super.dispose();
   }
 }
