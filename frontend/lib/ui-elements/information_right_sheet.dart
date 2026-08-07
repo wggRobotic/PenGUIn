@@ -39,7 +39,7 @@ class InformationRightSheet {
             color: theme.surface,
             child: SizedBox(
               width: 500,
-              height: double.infinity,
+              height: MediaQuery.of(context).size.height,
               child: Scaffold(
                 appBar: AppBar(
                   title: isNode
@@ -47,7 +47,7 @@ class InformationRightSheet {
                     : Text("Information (Type: ${item.type})"),
                   backgroundColor: theme.primaryContainer,
                 ),
-                body: content
+                body: SingleChildScrollView(child: content)
               ),
             )
           )
@@ -63,5 +63,3 @@ class InformationRightSheet {
     );
   }
 }
-
-// TODO: Handle long content -> Scrolling
