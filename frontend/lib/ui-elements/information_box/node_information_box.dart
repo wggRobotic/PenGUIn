@@ -20,6 +20,7 @@ class NodeInformationBox extends StatefulWidget{
 }
 
 class _NodeInformationBoxState extends State<NodeInformationBox> {
+  final RosbridgeConnector connector = RosbridgeConnector();
   bool isRunning = false;
 
   @override
@@ -28,11 +29,16 @@ class _NodeInformationBoxState extends State<NodeInformationBox> {
     // Request the desired data
     WidgetsBinding.instance.addPostFrameCallback((_) {
       isRunning = widget.node.isRunning;
+      connector.getNodeInformation(context, "/rosbridge_websocket"); // TODO: Use the correct name
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final subscribing = context.watch<NodeProvider>().subscribing;
+    final publishing = context.watch<NodeProvider>().publishing;
+    final service = context.watch<NodeProvider>().service;
+
     return Stack(
       children: [
         Column(
@@ -85,9 +91,38 @@ class _NodeInformationBoxState extends State<NodeInformationBox> {
                 ],
               ),
             ),
+            CustomCard(
+              title: "Topic:",
+              data: Column(
+                spacing: 4.0,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 8.0,
+                    children: [
+                      Text("Subscribing:"),
+                      Text(subscribing)
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 8.0,
+                    children: [
+                      Text("Publishing:"),
+                      Text(publishing)
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            CustomCard(
+              title: "Service:",
+              value: service
+            )
           ],
         ),
-        Align(
+        Align( // Button to start/stop a node
           alignment: Alignment.bottomRight,
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -127,6 +162,4 @@ class _NodeInformationBoxState extends State<NodeInformationBox> {
   }
 }
 
-// TODO: Display data about a specfic node:
-//          - description (subscribing, publishing, services);
-//          - parameters -> Get values -> Set values -> Check them (Via configuration)
+// TODO: Display data about parameters -> Get values -> Set values -> Check them (Via configuration)
