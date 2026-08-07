@@ -29,7 +29,13 @@ class _NodeInformationBoxState extends State<NodeInformationBox> {
     // Request the desired data
     WidgetsBinding.instance.addPostFrameCallback((_) {
       isRunning = widget.node.isRunning;
-      connector.getNodeInformation(context, "/rosbridge_websocket"); // TODO: Use the correct name
+      String nodeName = widget.node.nodeName;
+      if (nodeName.isEmpty) {
+        connector.getNodeInformation(context, widget.node.executableName);
+        // TODO: Show warning dialog
+      } else {
+        connector.getNodeInformation(context, nodeName);
+      }
     });
   }
 

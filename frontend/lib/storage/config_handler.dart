@@ -50,11 +50,12 @@ class NodesConfigHandler {
         final map = e as Map<String, dynamic>;
 
         return NodeDatamodell(
-          executableName: (map['executableName'] as String?) ?? 'No name provided',
-          packageName: (map['packageName'] as String?) ?? '',
-          description: (map['description'] as String?) ?? '',
-          documentationLink: (map['documentationLink'] as String?) ?? '',
-          isSelected: (map['isSelected'] == "true") ? true : false,
+          executableName: (map["executableName"] as String?) ?? "",
+          packageName: (map["packageName"] as String?) ?? "",
+          nodeName: (map["nodeName"] as String?) ?? "",
+          description: (map["description"] as String?) ?? "-",
+          documentationLink: (map['documentationLink'] as String?) ?? "",
+          isSelected: (map["isSelected"] == "true") ? true : false,
         );
       }).toList();
     } catch (e) {
@@ -64,3 +65,6 @@ class NodesConfigHandler {
     }
   }
 }
+
+// TODO: Custom commands
+// TODO: Configuration analytics

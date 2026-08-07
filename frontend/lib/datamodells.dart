@@ -1,6 +1,7 @@
 class NodeDatamodell {
   String executableName;
   String packageName;
+  String nodeName;
   String description;
   String documentationLink;
   bool isSelected;
@@ -9,6 +10,7 @@ class NodeDatamodell {
   NodeDatamodell({
     required this.executableName,
     required this.packageName,
+    this.nodeName = "",
     this.description = "",
     this.documentationLink = "",
     this.isSelected = false,
