@@ -298,8 +298,12 @@ class RosbridgeConnector {
   }
   // Disconnect from the WebSocket server
   void disconnect() {
-    channel.sink.close();
-    isConnected = false;
+    try {
+      channel.sink.close();
+      isConnected = false;
+    } catch (e) {
+      return;
+    }
   }
   // Make sure each name starts with a "/"
   String validateNameFormat(String name) {
