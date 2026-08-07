@@ -13,7 +13,7 @@ class ErrorSnackbar{
       behavior: SnackBarBehavior.floating,
       backgroundColor: (context.mounted)
         ? theme.colorScheme.errorContainer
-        : Color(0xff250700),
+        : Color(0xff93000a),
       elevation: 6.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
@@ -31,7 +31,7 @@ class ErrorSnackbar{
               fontSize: 16,
               color: (context.mounted)
                 ? theme.colorScheme.surface
-                : Colors.grey,
+                : Color(0xfffff8f5),
             ),
           ),
           const SizedBox(height: 6),
@@ -41,7 +41,7 @@ class ErrorSnackbar{
               fontSize: 14,
               color: (context.mounted)
                 ? theme.colorScheme.surface
-                : Colors.grey.withAlpha(200),
+                : Color(0xfffff8f5).withAlpha(200),
             ),
           ),
         ],
