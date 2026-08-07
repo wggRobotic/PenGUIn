@@ -29,25 +29,26 @@ class _NodesTabState extends State<NodesTab> {
           itemCount: nodes.length,
           separatorBuilder: (context, index) => const SizedBox(height: 8),
           itemBuilder: (context, index) {
+            final node = nodes[index];
             return ListTile(
-              title: Text(nodes[index].executableName),
-              subtitle: Text(nodes[index].description),
+              title: Text(node.executableName),
+              subtitle: Text(node.description),
               tileColor: theme.surfaceContainer,
               leading: IconButton(
-                icon: nodes[index].isRunning
+                icon: node.isRunning
                   ? Icon(Icons.pause_circle_outlined)
                   : Icon(Icons.play_circle_outlined),
-                tooltip: nodes[index].isRunning
+                tooltip: node.isRunning
                   ? "Stop"
                   : "Run",
                 onPressed: () {
                   // Run or stop a node
-                  if (nodes[index].isRunning) {
+                  if (node.isRunning) {
                     context.read<NodeProvider>().runNode(index, false);
                     connector.stopNode(context, index);
                   } else {
                     context.read<NodeProvider>().runNode(index, true);
-                    connector.startSingleNode(context, nodes[index].executableName, nodes[index].packageName, nodes[index].customCMD, index);
+                    connector.startSingleNode(context, node.executableName, node.packageName, node.customCMD, index);
                   }
                 },
               ),
@@ -56,15 +57,16 @@ class _NodesTabState extends State<NodesTab> {
               contentPadding: EdgeInsets.all(4.0),
               selected: nodes[index].isSelected,
               onTap: () {
+                final node = nodes[index];
                 // Simplify (un-)selection
-                if (nodes[index].isSelected) {
+                if (node.isSelected) {
                   context.read<NodeProvider>().selectNode(index, false);
                 } else if (nodeIsSelected) {
                   context.read<NodeProvider>().selectNode(index, true);
                 }
 
                 // Open an information overlay
-                InformationRightSheet.openInformationRightSheet(context, nodes[index], true);
+                InformationRightSheet.openInformationRightSheet(context, node, true);
               },
               onLongPress: () {
                 if (nodes[index].isSelected) {

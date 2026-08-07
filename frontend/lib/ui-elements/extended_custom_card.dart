@@ -79,5 +79,3 @@ class ExtendedCustomCard extends StatelessWidget {
     );
   }
 }
-
-// TODO: Make sure aech Text() colapses as expected

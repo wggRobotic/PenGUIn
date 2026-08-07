@@ -33,7 +33,6 @@ class _NodeInformationBoxState extends State<NodeInformationBox> {
       String nodeName = widget.node.nodeName;
       if (nodeName.isEmpty) {
         connector.getNodeInformation(context, widget.node.executableName);
-        // TODO: Show warning dialog
       } else {
         connector.getNodeInformation(context, nodeName);
       }
@@ -140,5 +139,3 @@ class _NodeInformationBoxState extends State<NodeInformationBox> {
     super.dispose();
   }
 }
-
-// TODO: Display data about parameters -> Get values -> Set values -> Check them (Via configuration)

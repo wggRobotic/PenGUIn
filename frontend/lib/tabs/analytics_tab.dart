@@ -22,17 +22,18 @@ class AnalyticsTab extends StatelessWidget{
           itemCount: items.length,
           separatorBuilder: (context, index) => const SizedBox(height: 8),
           itemBuilder: (context, index) {
+            final item = items[index];
             return ListTile(
-              leading: items[index].isAvailable
+              leading: item.isAvailable
                 ? Icon(Icons.sync_rounded)
                 : Icon(Icons.sync_disabled_outlined),
-              title: Text(items[index].name),
-              subtitle: Text(items[index].description),
+              title: Text(item.name),
+              subtitle: Text(item.description),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 spacing: 24.0,
                 children: [
-                  items[index].category != null
+                  item.category != null
                   ? Row( // Display the category
                       mainAxisSize: MainAxisSize.min,
                       spacing: 4.0,
@@ -56,7 +57,7 @@ class AnalyticsTab extends StatelessWidget{
                       children: [
                         Icon(Icons.lan_outlined),
                         Text(
-                          items[index].type,
+                          item.type,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -83,11 +84,9 @@ class AnalyticsTab extends StatelessWidget{
         tooltip: "Apply filter",
         child: Icon(Icons.filter_list_outlined),
         onPressed: () {
-          // TOOD: Implement Filters
+          // TODO: Implement Filters
         }
       ),
     );
   }
 }
-
-// TODO: Implement filters
