@@ -4,6 +4,7 @@ import 'package:frontend/datamodells.dart';
 import 'package:frontend/storage/rosbridge_connector.dart';
 import 'package:frontend/ui-elements/custom_card.dart';
 import 'package:frontend/ui-elements/error_snackbar.dart';
+import 'package:frontend/ui-elements/extended_custom_card.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -72,55 +73,19 @@ class _NodeInformationBoxState extends State<NodeInformationBox> {
                   }
                 ),
               ),
-            CustomCard(
+            ExtendedCustomCard(
               title: "",
-              data: Column(
-                spacing: 4.0,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 8.0,
-                    children: [
-                      Text("Package:"),
-                      Text(widget.node.packageName)
-                    ],
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 8.0,
-                    children: [
-                      Text("Executable:"),
-                      Text(widget.node.executableName)
-                    ],
-                  ),
-                ],
-              ),
+              subtitle1: "Package:",
+              subtitle2: "Executable:",
+              value1: widget.node.packageName,
+              value2: widget.node.executableName
             ),
-            CustomCard(
+            ExtendedCustomCard(
               title: "Topic:",
-              data: Column(
-                spacing: 4.0,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 8.0,
-                    children: [
-                      Text("Subscribing:"),
-                      Text(subscribing)
-                    ],
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 8.0,
-                    children: [
-                      Text("Publishing:"),
-                      Text(publishing)
-                    ],
-                  ),
-                ],
-              ),
+              subtitle1: "Subscribing:",
+              subtitle2: "Publishing:",
+              value1: subscribing,
+              value2: publishing
             ),
             CustomCard(
               title: "Service:",

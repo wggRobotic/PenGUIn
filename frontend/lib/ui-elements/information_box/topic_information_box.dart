@@ -3,6 +3,7 @@ import 'package:frontend/custom_provider.dart';
 import 'package:frontend/datamodells.dart';
 import 'package:frontend/storage/rosbridge_connector.dart';
 import 'package:frontend/ui-elements/custom_card.dart';
+import 'package:frontend/ui-elements/extended_custom_card.dart';
 import 'package:provider/provider.dart';
 
 class TopicInformationBox extends StatefulWidget{
@@ -45,30 +46,12 @@ class _TopicInformationBoxState extends State<TopicInformationBox> {
           title: "Description:",
           value: widget.topic.description
         ),
-        CustomCard(
+        ExtendedCustomCard(
           title: "Implementation:",
-          data: Column(
-            spacing: 4.0,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 8.0,
-                children: [
-                  Text("Publisher:"),
-                  Text(publisher)
-                ],
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 8.0,
-                children: [
-                  Text("Subscriber:"),
-                  Text(subscriber)
-                ],
-              ),
-            ],
-          ),
+          subtitle1: "Publisher:",
+          subtitle2: "Subscriber:",
+          value1: publisher,
+          value2: subscriber
         ),
         CustomCard(
           title: "Interface:",
