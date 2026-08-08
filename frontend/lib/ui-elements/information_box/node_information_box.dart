@@ -45,90 +45,57 @@ class _NodeInformationBoxState extends State<NodeInformationBox> {
     final publishing = context.watch<NodeProvider>().publishing;
     final service = context.watch<NodeProvider>().service;
 
-    return Stack(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomCard( // Display the description from the config file
-              title: "Description:",
-              value: widget.node.description
-            ),
-            widget.node.documentationLink.isEmpty // Display a link to the official documentation
-              ? SizedBox.shrink()
-              : CustomCard(
-                title: "Documentation:",
-                alignAtTop: false,
-                data: TextButton(
-                  child: Text(widget.node.documentationLink),
-                  onPressed: () async {
-                    // Open the link
-                    final url = Uri.parse(widget.node.documentationLink);
-                    if (await canLaunchUrl(url)) {
-                      await launchUrl(url, mode: LaunchMode.externalApplication);
-                    } else {
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Could not launch $url"));
-                    }
-                  }
-                ),
+    return SingleChildScrollView(
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomCard( // Display the description from the config file
+                title: "Description:",
+                value: widget.node.description
               ),
-            ExtendedCustomCard(
-              title: "",
-              subtitle1: "Package:",
-              subtitle2: "Executable:",
-              value1: widget.node.packageName,
-              value2: widget.node.executableName
-            ),
-            ExtendedCustomCard(
-              title: "Topic:",
-              subtitle1: "Subscribing:",
-              subtitle2: "Publishing:",
-              value1: subscribing,
-              value2: publishing
-            ),
-            CustomCard(
-              title: "Service:",
-              value: service
-            )
-          ],
-        ),
-        Align( // Button to start/stop a node
-          alignment: Alignment.bottomRight,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: FloatingActionButton.extended(
-              icon: isRunning
-                ? Icon(Icons.pause_circle_outlined)
-                : Icon(Icons.play_circle_outlined),
-              label: isRunning
-                ? Text("Stop")
-                : Text("Run"),
-              tooltip: isRunning
-                ? "Stop"
-                : "Run",
-              onPressed: () {
-                // Get the position of the node within the list
-                final nodeList = context.read<NodeProvider>().nodes;
-                int position = nodeList.indexWhere((n) => n.executableName == widget.node.executableName && n.packageName == widget.node.packageName);
-
-                // Start/Stop the node
-                if(isRunning) {
-                  connector.stopNode(context, position);
-                  setState(() {
-                    isRunning = false;
-                  });
-                } else {
-                  connector.startSingleNode(context, widget.node.executableName, widget.node.packageName, widget.node.customCMD, position);
-                  setState(() {
-                    isRunning = true;
-                  });
-                }
-              },
-            ),
+              widget.node.documentationLink.isEmpty // Display a link to the official documentation
+                ? SizedBox.shrink()
+                : CustomCard(
+                  title: "Documentation:",
+                  alignAtTop: false,
+                  data: TextButton(
+                    child: Text(widget.node.documentationLink),
+                    onPressed: () async {
+                      // Open the link
+                      final url = Uri.parse(widget.node.documentationLink);
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url, mode: LaunchMode.externalApplication);
+                      } else {
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Could not launch $url"));
+                      }
+                    }
+                  ),
+                ),
+              ExtendedCustomCard(
+                title: "",
+                subtitle1: "Package:",
+                subtitle2: "Executable:",
+                value1: widget.node.packageName,
+                value2: widget.node.executableName
+              ),
+              ExtendedCustomCard(
+                title: "Topic:",
+                subtitle1: "Subscribing:",
+                subtitle2: "Publishing:",
+                value1: subscribing,
+                value2: publishing
+              ),
+              CustomCard(
+                title: "Service:",
+                value: service
+              )
+            ],
           ),
-        ),
-      ]
+        ],
+      ),
     );
   }
 

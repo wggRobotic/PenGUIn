@@ -3,6 +3,7 @@ import 'package:frontend/ui-elements/information_box/action_information_box.dart
 import 'package:frontend/ui-elements/information_box/node_information_box.dart';
 import 'package:frontend/ui-elements/information_box/service_information_box.dart';
 import 'package:frontend/ui-elements/information_box/topic_information_box.dart';
+import 'package:frontend/ui-elements/manage_node_button.dart';
 
 class InformationRightSheet {
   // Open the RightSheet and display some data
@@ -50,7 +51,20 @@ class InformationRightSheet {
                     : Text("Information (Type: ${item.type})"),
                   backgroundColor: theme.primaryContainer,
                 ),
-                body: SingleChildScrollView(child: content)
+                body: Stack(
+                  children: [
+                    SingleChildScrollView(child: content),
+                    isNode
+                      ? Align( // Button to start/stop a node
+                          alignment: Alignment.bottomRight,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: ManageNodeButton(item: item),
+                          ),
+                        )
+                      : SizedBox.shrink(),
+                  ],
+                ),
               ),
             )
           )
