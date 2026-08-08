@@ -22,7 +22,10 @@ class RosbridgeConnector {
     // Make sure to connect with the server
     if (!isConnected) {
       if (!context.mounted) return;
-      await connectAndListen(context);
+      final bool success = await connectAndListen(context);
+      if (!success) {
+        return;
+      }
     }
 
     // Make sure the given names aren't empty
@@ -57,7 +60,10 @@ class RosbridgeConnector {
     // Make sure to connect with the server
     if (!isConnected) {
       if (!context.mounted) return;
-      await connectAndListen(context);
+      final bool success = await connectAndListen(context);
+      if (!success) {
+        return;
+      }
     }
 
     // Publish the cancel command
@@ -81,7 +87,10 @@ class RosbridgeConnector {
     // Make sure the connection works
     if (!isConnected) {
       if (!context.mounted) return;
-      await connectAndListen(context);
+      final bool success = await connectAndListen(context);
+      if (!success) {
+        return;
+      }
     }
 
     // Call the server and receive the information
@@ -106,7 +115,10 @@ class RosbridgeConnector {
     // Make sure the connection works
     if (!isConnected) {
       if (!context.mounted) return;
-      await connectAndListen(context);
+      final bool success = await connectAndListen(context);
+      if (!success) {
+        return;
+      }
     }
 
     // Make sure the name starts with "/"
@@ -130,7 +142,10 @@ class RosbridgeConnector {
     // Make sure the connection works
     if (!isConnected) {
       if (!context.mounted) return;
-      await connectAndListen(context);
+      final bool success = await connectAndListen(context);
+      if (!success) {
+        return;
+      }
     }
 
     // Make sure the name starts with "/"
@@ -154,7 +169,10 @@ class RosbridgeConnector {
     // Make sure the connection works
     if (!isConnected) {
       if (!context.mounted) return;
-      await connectAndListen(context);
+      final bool success = await connectAndListen(context);
+      if (!success) {
+        return;
+      }
     }
 
     // Make sure the name starts with "/"
@@ -191,7 +209,10 @@ class RosbridgeConnector {
     // Make sure the connection works
     if (!isConnected) {
       if (!context.mounted) return;
-      await connectAndListen(context);
+      final bool success = await connectAndListen(context);
+      if (!success) {
+        return;
+      }
     }
 
     // Make sure the name starts with "/"
@@ -217,7 +238,10 @@ class RosbridgeConnector {
     // Make sure the connection works
     if (!isConnected) {
       if (!context.mounted) return;
-      await connectAndListen(context);
+      final bool success = await connectAndListen(context);
+      if (!success) {
+        return;
+      }
     }
 
     // Make sure the name starts with "/"
@@ -263,7 +287,10 @@ class RosbridgeConnector {
     // Make sure the connection works
     if (!isConnected) {
       if (!context.mounted) return;
-      await connectAndListen(context);
+      final bool success = await connectAndListen(context);
+      if (!success) {
+        return;
+      }
     }
 
     // Make sure the name starts with "/"
@@ -333,13 +360,13 @@ class RosbridgeConnector {
     });
   }
   // Connect to the WebSocket server
-  Future<void> connectAndListen(BuildContext context) async {
+  Future<bool> connectAndListen(BuildContext context) async {
     // Return if this is already done and running
     if (isConnected && listening) {
-      return;
+      return true;
     }
     if (connecting) {
-      return;
+      return true;
     }
 
     // Mark as connecting
@@ -379,12 +406,13 @@ class RosbridgeConnector {
           pending.clear();
         });
       }
+      return true;
     } catch (e) {
-      if (!context.mounted) return;
+      if (!context.mounted) return false;
       ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: e.toString().trim()));
       isConnected = false;
       listening = false;
-      return;
+      return false;
     } finally {
       connecting = false;
     }
@@ -508,6 +536,5 @@ class RosbridgeConnector {
 }
 
 // TODO: Handle wrong configuration
-// TODO: When receiving information return if the node isn't running or the topic/service/action isn't available
 // TODO: Identify whether a node is running or not
 // TODO: Identify whether a topic/service/action is available or not
