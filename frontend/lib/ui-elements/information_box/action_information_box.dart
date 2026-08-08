@@ -25,8 +25,8 @@ class _ActionInformationBoxState extends State<ActionInformationBox> {
     super.initState();
     // Request the desired data
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // TODO: Get action information
-      connector.getActionInterface(context, "steering");
+      // Get action information
+      connector.getActionInterface(context, widget.type.name);
     });
   }
 
