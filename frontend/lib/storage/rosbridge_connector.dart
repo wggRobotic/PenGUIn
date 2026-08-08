@@ -79,6 +79,9 @@ class RosbridgeConnector {
     // Call the server and receive the information
     if (!context.mounted) return;
     final data = await callServiceAndWait(context, "node_details", {"node": nodeName}, "getNodeInformation");
+    if (!context.mounted) return;
+    if (!checkServerResponse(context, data)) return;
+
     final subscribingList = (data["values"]["subscribing"] as List).cast<String>();
     final publishingList = (data["values"]["publishing"] as List).cast<String>();
     final serviceList = (data["values"]["services"] as List).cast<String>();
@@ -104,6 +107,8 @@ class RosbridgeConnector {
     // Call the server
     if (!context.mounted) return;
     final data = await callServiceAndWait( context, "publishers", {"topic": topicName},"getTopicPublishers");
+    if (!context.mounted) return;
+    if (!checkServerResponse(context, data)) return;
 
     // Parse the response
     final publishersList = (data["values"]["publishers"] as List).cast<String>();
@@ -126,6 +131,8 @@ class RosbridgeConnector {
     // Call the server
     if (!context.mounted) return;
     final data = await callServiceAndWait(context, "subscribers", {"topic": topicName}, "getTopicSubscribers");
+    if (!context.mounted) return;
+    if (!checkServerResponse(context, data)) return;
 
     // Parse the response
     final subscribersList = (data["values"]["subscribers"] as List).cast<String>();
@@ -148,17 +155,24 @@ class RosbridgeConnector {
     // Get the topic interface
     if (!context.mounted) return;
     final r1 = await callServiceAndWait(context, "topic_type", {"topic": topicName}, "getTopicInterface_1");
+    if (!context.mounted) return;
+    if (!checkServerResponse(context, r1)) return;
 
     final interface = (r1["values"]["type"] as String?)?.trim();
     if (interface == null || interface.isEmpty) {
       if (!context.mounted) return;
-      context.read<TopicInformationProvider>().setSubscribers("-");
+      context.read<TopicInformationProvider>().setInterface("-");
       return;
     }
 
     // Get the interface definition
     if (!context.mounted) return;
     final r2 = await callServiceAndWait(context, "message_details", {"type": interface}, "getTopicInterface_2");
+    if (!context.mounted) return;
+    if (!checkServerResponse(context, r2)) {
+      context.read<TopicInformationProvider>().setInterface(interface);
+      return;
+    }
     final definition = buildRos2InterfaceFromMap(r2);
     
     // Assemble the final String and apply it
@@ -178,6 +192,10 @@ class RosbridgeConnector {
     // Call the server
     if (!context.mounted) return;
     final data = await callServiceAndWait(context, "service_providers", {"service": serviceName}, "getServiceProviders");
+    if (!context.mounted) return;
+    if (!checkServerResponse(context, data)) {
+      return;
+    }
 
     // Parse the response
     final providerList = (data["values"]["providers"] as List).cast<String>();
@@ -200,6 +218,8 @@ class RosbridgeConnector {
     // Call the server and get the interface
     if (!context.mounted) return;
     final r1 = await callServiceAndWait(context, "service_type", {"service": serviceName}, "getServiceInterface_1");
+    if (!context.mounted) return;
+    if (!checkServerResponse(context, r1)) return;
     final interface = (r1["values"]["type"] as String?)?.trim();
     if (interface == null || interface.isEmpty) {
       if (!context.mounted) return;
@@ -210,11 +230,21 @@ class RosbridgeConnector {
     // Call the server and get request details
     if (!context.mounted) return;
     final r2 = await callServiceAndWait(context, "service_request_details", {"type": interface}, "getServiceInterface_2");
+    if (!context.mounted) return;
+    if (!checkServerResponse(context, r2)) {
+      context.read<ServiceInformationProvider>().setInterface(interface);
+      return;
+    }
     final request = buildRos2InterfaceFromMap(r2);
 
     // Call the server and get response details
     if (!context.mounted) return;
     final r3 = await callServiceAndWait(context, "service_response_details", {"type": interface}, "getServiceInterface_3");
+    if (!context.mounted) return;
+    if (!checkServerResponse(context, r3)) {
+      context.read<ServiceInformationProvider>().setInterface("$interface\n------------\n$request");
+      return;
+    }
     final response = buildRos2InterfaceFromMap(r3);
 
     // Apply the definition
@@ -234,6 +264,8 @@ class RosbridgeConnector {
     // Get the interface
     if (!context.mounted) return;
     final r1 = await callServiceAndWait(context, "action_type", {"action": actionName}, "getActionInterface_1");
+    if (!context.mounted) return;
+    if (!checkServerResponse(context, r1)) return;
     final interface = (r1["values"]["type"] as String?)?.trim();
     if (interface == null || interface.isEmpty) {
       if (!context.mounted) return;
@@ -244,16 +276,31 @@ class RosbridgeConnector {
     // Call the server and get the goal details
     if (!context.mounted) return;
     final r2 = await callServiceAndWait(context, "action_goal_details", {"type": interface}, "getActionInterface_2");
+    if (!context.mounted) return;
+    if (!checkServerResponse(context, r2)) {
+      context.read<ActionInformationProvider>().setInterface(interface);
+      return;
+    }
     final goal = buildRos2InterfaceFromMap(r2);
 
     // Call the server and get the feedback details
     if (!context.mounted) return;
     final r3 = await callServiceAndWait(context, "action_feedback_details", {"type": interface}, "getActionInterface_3");
+    if (!context.mounted) return;
+    if (!checkServerResponse(context, r3)) {
+      context.read<ActionInformationProvider>().setInterface("$interface\n------------\n$goal");
+      return;
+    }
     final feedback = buildRos2InterfaceFromMap(r3);
 
     // Call the server and get the result details
     if (!context.mounted) return;
     final r4 = await callServiceAndWait(context, "action_result_details", {"type": interface}, "getActionInterface_4");
+    if (!context.mounted) return;
+    if (!checkServerResponse(context, r4)) {
+      context.read<ActionInformationProvider>().setInterface("$interface\n------------\n$goal\n---\n$feedback");
+      return;
+    }
     final result = buildRos2InterfaceFromMap(r4);
 
     if (!context.mounted) return;
@@ -421,6 +468,38 @@ class RosbridgeConnector {
     // Retrun the list as one single String
     return lines.join('\n');
   }
+
+  bool checkServerResponse(BuildContext context, Map<String, dynamic> response) {
+    // Show an error for an empty response
+    if (response.isEmpty) {
+      if (!context.mounted) return false;
+      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Empty response by the server"));
+      return false;
+    }
+
+    // Handle an error returned by the server
+    if (response["result"] == false || response["result"] == "false" || response["result"] == 0) {
+      final values = response["values"];
+      String errorMessage = "-";
+
+      // Get the full error message
+      if (values is String) {
+        errorMessage = values.trim();
+      } else if (values is List) {
+        errorMessage = values.join(", ").trim();
+      }
+
+      // Display the error message
+      if (!context.mounted) return false;
+      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: errorMessage));
+      return false;
+    }
+    // Everything else should be valid
+    return true;
+  }
 }
 
 // TODO: Handle wrong configuration
+// TODO: When receiving information return if the node isn't running or the topic/service/action isn't available
+// TODO: Identify whether a node is running or not
+// TODO: Identify whether a topic/service/action is available or not
