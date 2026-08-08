@@ -387,28 +387,28 @@ class RosbridgeConnector {
         final baseType = (i < fieldtypes.length) ? (fieldtypes[i]?.toString() ?? '') : '';
 
         // Handle arrays
-        String arraySuffix = '';
+        String suffix = '';
         if (i < fieldarraylen.length) {
           final lenVal = fieldarraylen[i];
 
-          if (lenVal is num) {
-            if (lenVal == 0) {
-              arraySuffix = ''; // No array
-            } else if (lenVal < 0) {
-              arraySuffix = '[]'; // unbounded / variable length
-            } else {
-              arraySuffix = '[$lenVal]'; // fixed length
-            }
+          if (lenVal is! num) {
+            suffix = ""; // It's part of the datatype
+          } else if (lenVal == 0) {
+            suffix = "[]"; // Unbounded
+          } else if (lenVal < 0) {
+            suffix = ""; // No Array
+          } else {
+            suffix = '[$lenVal]'; // fixed length
           }
         }
 
         // Add a line to the list: <type> <name>
         if (baseType.isNotEmpty && name.isNotEmpty) {
-          lines.add("$baseType $name$arraySuffix");
+          lines.add("$baseType$suffix $name");
         } else if (baseType.isNotEmpty) {
-          lines.add("$baseType $arraySuffix");
+          lines.add("$baseType$suffix");
         } else if (name.isNotEmpty) {
-          lines.add("$name$arraySuffix");
+          lines.add("$suffix $name");
         }
       }
     }
