@@ -10,6 +10,7 @@ void main() {
   final nodeProvider = NodeProvider();
   final topicInformationProvider = TopicInformationProvider();
   final serviceInformationProvider = ServiceInformationProvider();
+  final actionInformationProvider = ActionInformationProvider();
 
   runApp(
     MultiProvider(
@@ -17,6 +18,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => nodeProvider),
         ChangeNotifierProvider(create: (_) => topicInformationProvider),
         ChangeNotifierProvider(create: (_) => serviceInformationProvider),
+        ChangeNotifierProvider(create: (_) => actionInformationProvider)
       ],
       child: const PenGUIn()
     ),

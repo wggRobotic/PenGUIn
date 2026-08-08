@@ -31,7 +31,7 @@ class _ActionInformationBoxState extends State<ActionInformationBox> {
 
   @override
   Widget build(BuildContext context) {
-    final interface = context.watch<ServiceInformationProvider>().interface;
+    final interface = context.watch<ActionInformationProvider>().interface;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
