@@ -44,10 +44,8 @@ class _NodesTabState extends State<NodesTab> {
                 onPressed: () {
                   // Run or stop a node
                   if (node.isRunning) {
-                    context.read<NodeProvider>().runNode(index, false);
                     connector.stopNode(context, index);
                   } else {
-                    context.read<NodeProvider>().runNode(index, true);
                     connector.startSingleNode(context, node.executableName, node.packageName, node.customCMD, index);
                   }
                 },
@@ -87,7 +85,6 @@ class _NodesTabState extends State<NodesTab> {
               for (var i = 0; i < nodesCount; i++) {
                 NodeDatamodell node = nodes[i];
                 if (node.isSelected) {
-                  context.read<NodeProvider>().runNode(i, true);
                   connector.startSingleNode(context, node.executableName, node.packageName, node.customCMD, i);
                   context.read<NodeProvider>().selectNode(i, false);
                 }

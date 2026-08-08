@@ -48,6 +48,10 @@ class RosbridgeConnector {
       },
     };
     channel.sink.add(jsonEncode(json));
+
+    // Uppdate the UI
+    if (!context.mounted) return;
+    context.read<NodeProvider>().runNode(id, true);
   }
   void stopNode(BuildContext context, int id) async {
     // Make sure to connect with the server
@@ -64,6 +68,10 @@ class RosbridgeConnector {
       "msg": {"data": id}
     };
     channel.sink.add(jsonEncode(json));
+
+    // Update the UI
+    if (!context.mounted) return;
+    context.read<NodeProvider>().runNode(id, false);
   }
 
   // -------------------------------------------------------------------------------------------------------------------------------
