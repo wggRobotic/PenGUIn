@@ -25,19 +25,15 @@ class _ServiceInformationBoxState extends State<ServiceInformationBox> {
     super.initState();
     // Request the desired data
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.type.type == "service") {
-        connector.getServiceInterface(context, widget.type.name);
-        connector.getServiceProviders(context, widget.type.name);
-      } else {
-        // TODO: Get action information
-      }
+      connector.getServiceInterface(context, widget.type.name);
+      connector.getServiceProviders(context, widget.type.name);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<ServiceAndActionInformationProvider>().provider;
-    final interface = context.watch<ServiceAndActionInformationProvider>().interface;
+    final provider = context.watch<ServiceInformationProvider>().provider;
+    final interface = context.watch<ServiceInformationProvider>().interface;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

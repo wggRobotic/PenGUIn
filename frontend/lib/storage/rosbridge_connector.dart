@@ -185,7 +185,7 @@ class RosbridgeConnector {
 
     // Apply the data
     if (!context.mounted) return;
-    context.read<ServiceAndActionInformationProvider>().setProvider(formattedProviders);
+    context.read<ServiceInformationProvider>().setProvider(formattedProviders);
   }
   void getServiceInterface(BuildContext context, String serviceName) async {
     // Make sure the connection works
@@ -203,7 +203,7 @@ class RosbridgeConnector {
     final interface = (r1["values"]["type"] as String?)?.trim();
     if (interface == null || interface.isEmpty) {
       if (!context.mounted) return;
-      context.read<ServiceAndActionInformationProvider>().setInterface("-");
+      context.read<ServiceInformationProvider>().setInterface("-");
       return;
     }
 
@@ -219,7 +219,7 @@ class RosbridgeConnector {
 
     // Apply the definition
     if (!context.mounted) return;
-    context.read<ServiceAndActionInformationProvider>().setInterface("$interface\n------------\n$request\n---\n$response");
+    context.read<ServiceInformationProvider>().setInterface("$interface\n------------\n$request\n---\n$response");
   }
 
   // -------------------------------------------------------------------------------------------------------------------------------

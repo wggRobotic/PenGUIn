@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 void main() {
   final nodeProvider = NodeProvider();
   final topicInformationProvider = TopicInformationProvider();
-  final serviceInformationProvider = ServiceAndActionInformationProvider();
+  final serviceInformationProvider = ServiceInformationProvider();
 
   runApp(
     MultiProvider(

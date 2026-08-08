@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/ui-elements/information_box/action_information_box.dart';
 import 'package:frontend/ui-elements/information_box/node_information_box.dart';
-import 'package:frontend/ui-elements/information_box/service_and_action_information_box.dart';
+import 'package:frontend/ui-elements/information_box/service_information_box.dart';
 import 'package:frontend/ui-elements/information_box/topic_information_box.dart';
 
 class InformationRightSheet {
@@ -19,8 +20,10 @@ class InformationRightSheet {
       // Pick the correct analytics content
       if (typeToLowerCase == "topic") {
         content = TopicInformationBox(topic: item);
-      } else if (typeToLowerCase == "service" || typeToLowerCase == "action") {
+      } else if (typeToLowerCase == "service") {
         content = ServiceInformationBox(type: item);
+      } else if (typeToLowerCase == "action") {
+        content =  ActionInformationBox(type: item);
       }
     }
 
