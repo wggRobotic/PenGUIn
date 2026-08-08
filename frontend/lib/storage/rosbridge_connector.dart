@@ -221,6 +221,44 @@ class RosbridgeConnector {
     if (!context.mounted) return;
     context.read<ServiceInformationProvider>().setInterface("$interface\n------------\n$request\n---\n$response");
   }
+  void getActionInterface(BuildContext context, String actionName) async {
+    // Make sure the connection works
+    if (!isConnected) {
+      if (!context.mounted) return;
+      await connectAndListen(context);
+    }
+
+    // Make sure the name starts with "/"
+    actionName = validateNameFormat(actionName);
+
+    // Get the interface
+    if (!context.mounted) return;
+    final r1 = await callServiceAndWait(context, "action_type", {"action": actionName}, "getActionInterface_1");
+    final interface = (r1["values"]["type"] as String?)?.trim();
+    if (interface == null || interface.isEmpty) {
+      if (!context.mounted) return;
+      context.read<ActionInformationProvider>().setInterface("-");
+      return;
+    }
+
+    // Call the server and get the goal details
+    if (!context.mounted) return;
+    final r2 = await callServiceAndWait(context, "action_goal_details", {"type": interface}, "getActionInterface_2");
+    final goal = buildRos2InterfaceFromMap(r2);
+
+    // Call the server and get the feedback details
+    if (!context.mounted) return;
+    final r3 = await callServiceAndWait(context, "action_feedback_details", {"type": interface}, "getActionInterface_3");
+    final feedback = buildRos2InterfaceFromMap(r3);
+
+    // Call the server and get the result details
+    if (!context.mounted) return;
+    final r4 = await callServiceAndWait(context, "action_result_details", {"type": interface}, "getActionInterface_4");
+    final result = buildRos2InterfaceFromMap(r4);
+
+    if (!context.mounted) return;
+    context.read<ActionInformationProvider>().setInterface("$interface\n------------\n$goal\n---\n$feedback\n---\n$result");
+  }
 
   // -------------------------------------------------------------------------------------------------------------------------------
   // Helper functions
@@ -385,5 +423,4 @@ class RosbridgeConnector {
   }
 }
 
-// TODO: Get Action information
 // TODO: Handle wrong configuration
