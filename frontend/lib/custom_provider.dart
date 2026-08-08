@@ -67,3 +67,12 @@ class ServiceInformationProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+class ActionInformationProvider extends ChangeNotifier {
+  String interface = "-";
+
+  void setInterface(String newInterface) {
+    interface = newInterface;
+    notifyListeners();
+  }
+}
