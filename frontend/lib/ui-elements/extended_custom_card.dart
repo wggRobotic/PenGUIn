@@ -33,44 +33,50 @@ class ExtendedCustomCard extends StatelessWidget {
           width: 468,
           child: Row(
             spacing: 8.0,
-            crossAxisAlignment: alignAtTop
-             ? CrossAxisAlignment.start
-             : CrossAxisAlignment.center,
+            crossAxisAlignment: alignAtTop ? CrossAxisAlignment.start : CrossAxisAlignment.center,
             children: [
-              Text(title),
-              Column(
-                spacing: 4.0,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 8.0,
-                    children: [
-                      Text(subtitle1),
-                      SizedBox(
-                        width: 312,
-                        child: Text(
-                          value1,
-                          softWrap: true,
+              Text(
+                title,
+                softWrap: true,
+                overflow: TextOverflow.fade,
+              ),
+              Expanded(
+                child: Column(
+                  spacing: 4.0,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      spacing: 8.0,
+                      children: [
+                        Text(subtitle1),
+                        Expanded(
+                          child: Text(
+                            value1,
+                            softWrap: true,
+                            overflow: TextOverflow.fade,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 8.0,
-                    children: [
-                      Text(subtitle2),
-                      SizedBox(
-                        width: 312,
-                        child: Text(
-                          value2,
-                          softWrap: true,
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      spacing: 8.0,
+                      children: [
+                        Text(subtitle2),
+                        Expanded(
+                          child: Text(
+                            value2,
+                            softWrap: true,
+                            overflow: TextOverflow.fade,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
