@@ -6,10 +6,12 @@ values of the topics and services of our ros2 projects.
 - [Installation](#Installation)
 - [Usage](#Usage)
     - [Running the ROSbridge](#Running-the-ROSbridge)
+    - [Running the control node](#Running-the-control-node)
+    - [Running the Frontend](#Running-the-Frontend)
 - [Configuration](#Configuration)
     - [Configure nodes](#Configure-nodes)
-    - [Configure topics](#Configure-topics)
-    - [Configure services](#Configure-services)
+    - [Configure analytics](#Configure-analytics)
+- [Troubleshooting](#Troubleshooting)
 - [How it works](#How-it-works)
 
 ### Installation
@@ -17,9 +19,13 @@ values of the topics and services of our ros2 projects.
 ```
 sudo apt-get install ros-<rosdistro>-rosbridge-server
 ```
-2. Download the frontend as well as the launch node package from the release page
+2. Download the frontend from the [release page](https://github.com/wggRobotic/PenGUIn/releases/)
+3. Unzip the archive and note the folder where you unzipped it
 3. Move the launch node package to your ros2 workspace and build your workspace
 4. Unzip the frontend build, move into the new folder and launch the frontend build
+*When moving the frontend make sure to **move all included subdirectories** to the same location and **keep the structure the way it's been right after unzipping** the archive, because otherwise important assets and more can't be located.*
+5. Download the archive with the packages from the [release page](https://github.com/wggRobotic/PenGUIn/releases/)
+6. Move the archive into the `/src` folder your workspace and unzip it
 
 ### Usage
 ###### Running the ROSbridge
@@ -29,36 +35,57 @@ source /opt/ros/<rosdistro>/setup.bash
 ros2 launch rosbridge_server rosbridge_websocket_launch.xml
 ```
 *The default port is 9090.*
-###### Running the launch node
-TODO
+###### Running the control node
+1. Clone the `penguin_controll_package` as well as the `penguin_interface_package` inside your ros2 workspace
+2. After cloning the required packages, open a new terminal and run `colcon build`
+3. Source the environment: `source install/setup.bash`
+4. Then launch the control node using this command: `ros2 run penguin_controll_package penGUIn_controller`
 
 ###### Running the Frontend
-TODO
+1. Navigate to the install folder
+2. Double click on the file called "frontend"
 
 ### Configuration
 ###### Configure nodes
-In order to add a node, which you want to launch via this frontend, to the list of available node, navigate to the install folder of the frontend and look for `/config`.
+In order to add a node, which you want to launch and introspect via this frontend, to the list of available node, navigate to the install folder of the frontend and look for `/config`.
 Inside this folder open the `nodes_config.json` file and edit it like this:
 ```
-{
-    "nodes": [
-        {
-            "executableName": "",    // The executable name of your node
-            "packageName": "",       // The package name
-            "description": "",       // Optional: A short description
-            "documentationLink": "", // Optional: A link to the official documentation
-            "isSelected": "true/false"         // Optional: Whether it will be selected or not
-        }
-    ]
-}
-
+[
+    {
+        "executableName": "",       // The executable name of your node
+        "packageName": "",          // The package name
+        "nodeName": "",             // Optional: The name of a node returned by `ros2 node list`, otherwise the executable name is used
+        "description": "",          // Optional: A short description
+        "documentationLink": "",    // Optional: A link to the official documentation
+        "customCMD": "",            // Optional: Set a custom cmd, default is `ros2 run <pkg> <exe>`
+        "isSelected": false         // Optional: Whether it will be selected by default or not
+    }
+]
 ```
 
-###### Configure topics
-TODO
+###### Configure analytics
+Since you need to configure aech topic, service or action for the analytics part, navigate to the install folder of the frontend and open the `analytics.json` file within the `/config` folder.
+This file is supposed to be configured as like this:
+```
+[
+    {
+        "type": "Topic",                // Define whether it's a topic/service/action
+        "name": "name",                 // The name of the topic/service/action
+        "description": "*optional*",    // Optional: A short description
+        "category": "*optional*"        // Optional: Category for filtering
+    }
+]
+```
 
-###### Configure services
-TODO
+### Troubleshooting
+###### "Service /ros_api/node_details does not exist"
+This is a known bug, which is caused by a wrong configuration causing rosapi to be unable to retrieve information about a certain node. Since rosapi can't handle this, it keeps crashing.
+So in order to fix this **check your node configuration** and **restart the WebSocket server**.
+*(This is no frontend bug, but a rosapi bug. Please don't open an issue about this.)*
+
+###### Unable to launch the frontend
+If you've moved the frontend to another location, check whether you moved the subfolders too, because without those subfolders, the frontend might not launch.
+In order to fix this **reinstall the frontend** where you want it and copy the whole `/config` folder into the archiv after unzipping it.
 
 ### How it works
 This is how the communication between your robot and the frontend works:
