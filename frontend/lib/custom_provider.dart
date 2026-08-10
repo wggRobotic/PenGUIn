@@ -76,3 +76,12 @@ class ActionInformationProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+class AnalyticsProvider extends ChangeNotifier {
+  List<AnalyticsDatamodell> data = [];
+
+  void updateAnalyticsData(List<AnalyticsDatamodell> newData) {
+    data = newData;
+    notifyListeners();
+  }
+}
