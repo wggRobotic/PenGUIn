@@ -1,0 +1,8 @@
+[
+    {
+        "type": "Topic",
+        "name": "name",
+        "description": "*optional*",
+        "category": "*optional*"
+    }
+]

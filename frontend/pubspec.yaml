@@ -35,3 +35,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/config/nodes_config.json
+    - assets/config/analytics_config.json
