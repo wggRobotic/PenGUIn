@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/custom_provider.dart';
 import 'package:frontend/datamodells.dart';
+import 'package:frontend/ui-elements/filter_dialog.dart';
 import 'package:frontend/ui-elements/information_right_sheet.dart';
 import 'package:provider/provider.dart';
 
@@ -31,22 +32,20 @@ class AnalyticsTab extends StatelessWidget{
                 mainAxisSize: MainAxisSize.min,
                 spacing: 24.0,
                 children: [
-                  item.category != null
-                  ? Row( // Display the category
-                      mainAxisSize: MainAxisSize.min,
-                      spacing: 4.0,
-                      children: [
-                        Icon(Icons.sell_outlined),
-                        Text(
-                          items[index].category!,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
-                    )
-                  : SizedBox.shrink(),
+                  Row( // Display the category
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 4.0,
+                    children: [
+                      Icon(Icons.sell_outlined),
+                      Text(
+                        items[index].category,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    ],
+                  ),
                   SizedBox( // Display the type of communication
                     width: 80.0,
                     child: Row(
@@ -82,7 +81,8 @@ class AnalyticsTab extends StatelessWidget{
         tooltip: "Apply filter",
         child: Icon(Icons.filter_list_outlined),
         onPressed: () {
-          // TODO: Implement Filters
+          // Open the filter dialog
+          FilterDialog().showFilterDialog(context, context.read<AnalyticsProvider>().typeFilter, context.read<AnalyticsProvider>().categoryFilter);
         }
       ),
     );
