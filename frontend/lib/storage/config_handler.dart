@@ -10,34 +10,34 @@ import 'package:path/path.dart' as path;
 class NodesConfigHandler {
 
   // Get the path of the whole config file
-  String getRelativeConfigPath() {
+  String getRelativeConfigPath(String fileName) {
     final exePath = File(Platform.resolvedExecutable).absolute.path;
     final baseDirectory = path.dirname(exePath);
 
-    return path.join(baseDirectory, "config", "nodes_config.json");
+    return path.join(baseDirectory, "config", fileName);
   }
 
   // Ensure the config exists
-  Future<void> ensureConfigExists(String configPath) async {
+  Future<void> ensureConfigExists(String configPath, String assetName) async {
     final file = File(configPath);
 
     // Move on if the config exists
     if (await file.exists()) return;
 
     // Copy the config from the assets
-    const assetPath = 'assets/config/nodes_config.json';
+    final String assetPath = "assets/config/$assetName";
     final defaultJson = await rootBundle.loadString(assetPath);
 
     await file.parent.create(recursive: true);
     await file.writeAsString(defaultJson, flush: true);
   }
 
-  // Read the config
+  // Read the node config
   Future<List<NodeDatamodell>> applyNodeConfiguration(BuildContext context) async {
-    final configPath = getRelativeConfigPath();
+    final configPath = getRelativeConfigPath("nodes_config.json");
 
     // Make sure it exists
-    await ensureConfigExists(configPath);
+    await ensureConfigExists(configPath, "nodes_config.json");
 
     // Get the JSON config
     String jsonConfig = await File(configPath).readAsString();
@@ -50,9 +50,9 @@ class NodesConfigHandler {
         final map = e as Map<String, dynamic>;
 
         return NodeDatamodell(
-          executableName: (map["executableName"] as String?) ?? "",
-          packageName: (map["packageName"] as String?) ?? "",
-          nodeName: (map["nodeName"] as String?) ?? "",
+          executableName: (map["executableName"] as String?) ?? "-",
+          packageName: (map["packageName"] as String?) ?? "-",
+          nodeName: (map["nodeName"] as String?) ?? "-",
           description: (map["description"] as String?) ?? "-",
           documentationLink: (map['documentationLink'] as String?) ?? "",
           customCMD: (map["customCMD"] as String?) ?? "",
@@ -61,11 +61,43 @@ class NodesConfigHandler {
       }).toList();
     } catch (e) {
       // Show an error message
-      if (!context.mounted) return [NodeDatamodell(executableName: "", packageName: "")];
-      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: e.toString().trim()));
-      return [NodeDatamodell(executableName: "", packageName: "")];
+      if (!context.mounted) return [NodeDatamodell(executableName: "-", packageName: "-")];
+      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Unable to load the node configuration: ${e.toString().trim()}"));
+      return [NodeDatamodell(executableName: "-", packageName: "-")];
+    }
+  }
+
+  // Read the analytics config
+  Future<List<AnalyticsDatamodell>> applyAnalyticsConfiguration(BuildContext context) async {
+    final configPath = getRelativeConfigPath("analytics_config.json");
+
+    // Make sure it exists
+    await ensureConfigExists(configPath, "analytics_config.json");
+
+    // Get the JSON config
+    String jsonConfig = await File(configPath).readAsString();
+
+    // Parse it to the datamodell and return it
+    try {
+      final List<dynamic> decodedConfig = jsonDecode(jsonConfig);
+      List<dynamic> analyticData = decodedConfig;
+      return analyticData.map((e) {
+        final map = e as Map<String, dynamic>;
+
+        return AnalyticsDatamodell(
+          type: (map["type"] as String?) ?? "-",
+          name: (map["name"] as String?) ?? "-",
+          description: (map["description"] as String?) ?? "-",
+          category: (map["category"] as String?) ?? "",
+        );
+      }).toList();
+    } catch (e) {
+      // Show an error message
+      if (!context.mounted) return [AnalyticsDatamodell(type: "-", name: "-")];
+      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Unable to load the analytics configuration: ${e.toString().trim()}"));
+      return [AnalyticsDatamodell(type: "-", name: "-")];
     }
   }
 }
 
-// TODO: Configuration for analytics
+// TODO: Try to filter for wrong config data
