@@ -44,9 +44,8 @@ class NodesConfigHandler {
 
     // Parse it to the datamodell and return it
     try {
-      Map<String, dynamic> decodedConfig = jsonDecode(jsonConfig) as Map<String, dynamic>;
-      List<dynamic> nodesList = (decodedConfig['nodes'] as List<dynamic>? ?? []);
-      return nodesList.map((e) {
+      List<dynamic> decodedConfig = jsonDecode(jsonConfig);
+      return decodedConfig.map((e) {
         final map = e as Map<String, dynamic>;
 
         return NodeDatamodell(
@@ -56,7 +55,7 @@ class NodesConfigHandler {
           description: (map["description"] as String?) ?? "-",
           documentationLink: (map['documentationLink'] as String?) ?? "",
           customCMD: (map["customCMD"] as String?) ?? "",
-          isSelected: (map["isSelected"] == "true") ? true : false,
+          isSelected: (map["isSelected"] == true) ? true : false,
         );
       }).toList();
     } catch (e) {
@@ -80,8 +79,7 @@ class NodesConfigHandler {
     // Parse it to the datamodell and return it
     try {
       final List<dynamic> decodedConfig = jsonDecode(jsonConfig);
-      List<dynamic> analyticData = decodedConfig;
-      return analyticData.map((e) {
+      return decodedConfig.map((e) {
         final map = e as Map<String, dynamic>;
 
         return AnalyticsDatamodell(

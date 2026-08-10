@@ -1,11 +1,9 @@
-{
-    "nodes": [
-        {
-            "executableName": "exampleNode",
-            "packageName": "examplePackage",
-            "description": "",
-            "documentationLink": "",
-            "isSelected": "false"
-        }
-    ]
-}
+[
+    {
+        "executableName": "exampleNode",
+        "packageName": "examplePackage",
+        "description": "",
+        "documentationLink": "",
+        "isSelected": false
+    }
+]
