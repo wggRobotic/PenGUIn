@@ -24,14 +24,14 @@ class AnalyticsDatamodell{
   String type;
   String name;
   String description;
-  String? category;
+  String category;
   bool isAvailable;
 
   AnalyticsDatamodell({
     required this.type,
     required this.name,
     this.description =  "",
-    this.category,
+    this.category = "",
     this.isAvailable = false,
   });
 }

@@ -86,7 +86,7 @@ class NodesConfigHandler {
           type: (map["type"] as String?) ?? "-",
           name: (map["name"] as String?) ?? "-",
           description: (map["description"] as String?) ?? "-",
-          category: (map["category"] as String?) ?? "",
+          category: (map["category"] as String?) ?? " - ",
         );
       }).toList();
     } catch (e) {
