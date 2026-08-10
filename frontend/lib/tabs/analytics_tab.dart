@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/custom_provider.dart';
 import 'package:frontend/datamodells.dart';
 import 'package:frontend/ui-elements/information_right_sheet.dart';
+import 'package:provider/provider.dart';
 
 class AnalyticsTab extends StatelessWidget{
   const AnalyticsTab({super.key});
@@ -8,11 +10,7 @@ class AnalyticsTab extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
-    List<AnalyticsDatamodell> items = [
-      AnalyticsDatamodell(type: "service", name: "name", category: "category", isAvailable: true),
-      AnalyticsDatamodell(type: "topic", name: "name", description: "description"),
-      AnalyticsDatamodell(type: "action", name: "name", description: "description"),
-    ];
+    List<AnalyticsDatamodell> items = context.watch<AnalyticsProvider>().data;
 
     // Display a list containing a set of topics, services, etc. and arrange it like a column
     return Scaffold(

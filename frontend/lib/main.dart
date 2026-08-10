@@ -11,6 +11,7 @@ void main() {
   final topicInformationProvider = TopicInformationProvider();
   final serviceInformationProvider = ServiceInformationProvider();
   final actionInformationProvider = ActionInformationProvider();
+  final analyticsProvider = AnalyticsProvider();
 
   runApp(
     MultiProvider(
@@ -18,7 +19,8 @@ void main() {
         ChangeNotifierProvider(create: (_) => nodeProvider),
         ChangeNotifierProvider(create: (_) => topicInformationProvider),
         ChangeNotifierProvider(create: (_) => serviceInformationProvider),
-        ChangeNotifierProvider(create: (_) => actionInformationProvider)
+        ChangeNotifierProvider(create: (_) => actionInformationProvider),
+        ChangeNotifierProvider(create: (_) => analyticsProvider)
       ],
       child: const PenGUIn()
     ),
@@ -78,7 +80,9 @@ class MyHomePage extends StatelessWidget {
             // Apply the configuration
             onTap: (index) async {
               if (index == 0) {
-                 context.read<NodeProvider>().updateNodeList(await NodesConfigHandler().applyNodeConfiguration(context));
+                context.read<NodeProvider>().updateNodeList(await NodesConfigHandler().applyNodeConfiguration(context));
+              } else if (index == 1) {
+                context.read<AnalyticsProvider>().updateAnalyticsData(await NodesConfigHandler().applyAnalyticsConfiguration(context));
               }
             },
           ),
@@ -94,6 +98,9 @@ class MyHomePage extends StatelessWidget {
   }
 
   void loadConfig(BuildContext context) async {
+    if (!context.mounted) return;
     context.read<NodeProvider>().updateNodeList(await NodesConfigHandler().applyNodeConfiguration(context));
+    if (!context.mounted) return;
+    context.read<AnalyticsProvider>().updateAnalyticsData(await NodesConfigHandler().applyAnalyticsConfiguration(context));
   }
 }
