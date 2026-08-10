@@ -29,14 +29,14 @@ class RosbridgeConnector {
     }
 
     // Make sure the given names aren't empty
-    if (executableName.isEmpty || packageName.isEmpty) {
+    if (executableName.isEmpty || executableName == "-" || packageName.isEmpty || packageName == "-") {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Empty package and node name"));
       return;
     }
 
     // Pick the correct command - by default `ros2 run <pkg> <exe>`
-    if (cmd.isEmpty) {
+    if (cmd.isEmpty || cmd == "-") {
       cmd = "ros2 run $packageName $executableName";
     }
 
@@ -122,11 +122,14 @@ class RosbridgeConnector {
     }
 
     // Make sure the name starts with "/"
-    topicName = validateNameFormat(topicName);
+    String? validatedName = validateNameFormat(topicName);
+    if (validatedName == null) {
+      return;
+    }
 
     // Call the server
     if (!context.mounted) return;
-    final data = await callServiceAndWait( context, "publishers", {"topic": topicName},"getTopicPublishers");
+    final data = await callServiceAndWait( context, "publishers", {"topic": validatedName},"getTopicPublishers");
     if (!context.mounted) return;
     if (!checkServerResponse(context, data)) return;
 
@@ -149,11 +152,14 @@ class RosbridgeConnector {
     }
 
     // Make sure the name starts with "/"
-    topicName = validateNameFormat(topicName);
+    String? validatedName = validateNameFormat(topicName);
+    if (validatedName == null) {
+      return;
+    }
 
     // Call the server
     if (!context.mounted) return;
-    final data = await callServiceAndWait(context, "subscribers", {"topic": topicName}, "getTopicSubscribers");
+    final data = await callServiceAndWait(context, "subscribers", {"topic": validatedName}, "getTopicSubscribers");
     if (!context.mounted) return;
     if (!checkServerResponse(context, data)) return;
 
@@ -176,11 +182,14 @@ class RosbridgeConnector {
     }
 
     // Make sure the name starts with "/"
-    topicName = validateNameFormat(topicName);
+    String? validatedName = validateNameFormat(topicName);
+    if (validatedName == null) {
+      return;
+    }
 
     // Get the topic interface
     if (!context.mounted) return;
-    final r1 = await callServiceAndWait(context, "topic_type", {"topic": topicName}, "getTopicInterface_1");
+    final r1 = await callServiceAndWait(context, "topic_type", {"topic": validatedName}, "getTopicInterface_1");
     if (!context.mounted) return;
     if (!checkServerResponse(context, r1)) return;
 
@@ -216,11 +225,14 @@ class RosbridgeConnector {
     }
 
     // Make sure the name starts with "/"
-    serviceName = validateNameFormat(serviceName);
+    String? validatedName = validateNameFormat(serviceName);
+    if (validatedName == null) {
+      return;
+    }
 
     // Call the server
     if (!context.mounted) return;
-    final data = await callServiceAndWait(context, "service_providers", {"service": serviceName}, "getServiceProviders");
+    final data = await callServiceAndWait(context, "service_providers", {"service": validatedName}, "getServiceProviders");
     if (!context.mounted) return;
     if (!checkServerResponse(context, data)) {
       return;
@@ -245,11 +257,14 @@ class RosbridgeConnector {
     }
 
     // Make sure the name starts with "/"
-    serviceName = validateNameFormat(serviceName);
+    String? validatedName = validateNameFormat(serviceName);
+    if (validatedName == null) {
+      return;
+    }
 
     // Call the server and get the interface
     if (!context.mounted) return;
-    final r1 = await callServiceAndWait(context, "service_type", {"service": serviceName}, "getServiceInterface_1");
+    final r1 = await callServiceAndWait(context, "service_type", {"service": validatedName}, "getServiceInterface_1");
     if (!context.mounted) return;
     if (!checkServerResponse(context, r1)) return;
     final interface = (r1["values"]["type"] as String?)?.trim();
@@ -294,11 +309,14 @@ class RosbridgeConnector {
     }
 
     // Make sure the name starts with "/"
-    actionName = validateNameFormat(actionName);
+    String? validatedName = validateNameFormat(actionName);
+    if (validatedName == null) {
+      return;
+    }
 
     // Get the interface
     if (!context.mounted) return;
-    final r1 = await callServiceAndWait(context, "action_type", {"action": actionName}, "getActionInterface_1");
+    final r1 = await callServiceAndWait(context, "action_type", {"action": validatedName}, "getActionInterface_1");
     if (!context.mounted) return;
     if (!checkServerResponse(context, r1)) return;
     final interface = (r1["values"]["type"] as String?)?.trim();
@@ -427,8 +445,10 @@ class RosbridgeConnector {
     }
   }
   // Make sure each name starts with a "/"
-  String validateNameFormat(String name) {
-    if (name.startsWith("/", 0)) {
+  String? validateNameFormat(String name) {
+    if (name.isEmpty || name == "-") {
+      return null;
+    } else if (name.startsWith("/", 0)) {
       return name;
     } else {
       return "/$name";
@@ -535,6 +555,6 @@ class RosbridgeConnector {
   }
 }
 
-// TODO: Handle wrong configuration
 // TODO: Identify whether a node is running or not
 // TODO: Identify whether a topic/service/action is available or not
+// TODO: Trim returned Strings as mutch as possible
