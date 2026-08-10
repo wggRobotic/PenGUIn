@@ -1,9 +1,11 @@
 [
     {
-        "executableName": "exampleNode",
-        "packageName": "examplePackage",
+        "executableName": "",
+        "packageName": "",
+        "nodeName": "",
         "description": "",
         "documentationLink": "",
+        "customCMD": "",
         "isSelected": false
     }
 ]
