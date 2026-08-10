@@ -124,4 +124,9 @@ class AnalyticsProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  void resetFilter() {
+    data = allData;
+    notifyListeners();
+  }
 }

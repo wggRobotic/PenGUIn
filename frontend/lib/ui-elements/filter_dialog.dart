@@ -17,6 +17,7 @@ class FilterDialog {
 
             return AlertDialog(
               title: const Text("Apply filter"),
+              alignment: AlignmentGeometry.bottomRight,
               content: ConstrainedBox(
                 constraints: BoxConstraints(
                   maxHeight: maxHeight
@@ -69,9 +70,14 @@ class FilterDialog {
                 TextButton(
                   child: Text("Apply"),
                   onPressed: () {
-                    // Apply the filter
-                    context.read<AnalyticsProvider>().applyFilter(selectedTypes, selectedCategories);
-                    Navigator.pop(context);
+                    if (selectedTypes.isEmpty && selectedCategories.isEmpty) {
+                      // Reset in order to improve the performance
+                      context.read<AnalyticsProvider>().resetFilter();
+                    } else {
+                      // Apply the filter
+                      context.read<AnalyticsProvider>().applyFilter(selectedTypes, selectedCategories);
+                      Navigator.pop(context);
+                    }
                   }
                 )
               ],
