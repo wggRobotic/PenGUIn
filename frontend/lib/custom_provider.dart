@@ -86,9 +86,42 @@ class ActionInformationProvider extends ChangeNotifier {
 
 class AnalyticsProvider extends ChangeNotifier {
   List<AnalyticsDatamodell> data = [];
+  List<AnalyticsDatamodell> allData = [];
+  List<String> typeFilter = [];
+  List<String> categoryFilter = [];
 
   void updateAnalyticsData(List<AnalyticsDatamodell> newData) {
     data = newData;
+    allData = newData;
+    notifyListeners();
+  }
+
+  void updateFilterAttributes() {
+    // Get all types
+    typeFilter = data.map((e) => e.type.toLowerCase()).where((t) => t.isNotEmpty).toSet().toList();
+    categoryFilter = data.map((e) => e.category.toLowerCase()).where((t) => t.isNotEmpty).toSet().toList();
+    categoryFilter.removeWhere((e) => e == " - ");
+  }
+
+  void applyFilter(List<String> selectedTypes, List<String> selectedCategories) {
+    // Include all data
+    data = allData;
+
+    // Standardise the values to be lowercase
+    final types = selectedTypes.map((s) => s.toLowerCase()).toSet();
+    final categories = selectedCategories.map((s) => s.toLowerCase()).toSet();
+
+    // Check witch filter were applied
+    final noTypeFilter = types.isEmpty;
+    final noCategoryFilter = categories.isEmpty;
+
+    // Apply the filter
+    data = allData.where((e) {
+      final typeMatches = noTypeFilter || types.contains(e.type.toLowerCase());
+      final categoryMatches = noCategoryFilter || categories.contains(e.category.toLowerCase());
+      return typeMatches && categoryMatches;
+    }).toList();
+
     notifyListeners();
   }
 }
