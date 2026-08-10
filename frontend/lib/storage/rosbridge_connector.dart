@@ -554,7 +554,3 @@ class RosbridgeConnector {
     return true;
   }
 }
-
-// TODO: Identify whether a node is running or not
-// TODO: Identify whether a topic/service/action is available or not
-// TODO: Trim returned Strings as mutch as possible

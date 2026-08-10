@@ -25,9 +25,10 @@ class NodeProvider extends ChangeNotifier {
   }
 
   void setNodeInformation(String newSubsribingList, String newPublishingList, String newServiceList) {
-    subscribing = newSubsribingList;
-    publishing = newPublishingList;
-    service = newServiceList;
+    // Apply and remove all redundant spaces
+    subscribing = newSubsribingList.replaceAll(" ", "");
+    publishing = newPublishingList.replaceAll(" ", "");
+    service = newServiceList.replaceAll(" ", "");
     notifyListeners();
   }
 }
@@ -38,17 +39,20 @@ class TopicInformationProvider extends ChangeNotifier {
   String subscriber = "-";
 
   void setInterface(String newInterface) {
-    interface = newInterface;
+    // Apply and remove all redundant spaces
+    interface = newInterface.replaceAll(" ", "");
     notifyListeners();
   }
   
   void setPublishers(String newPublishers) {
-    publisher = newPublishers;
+    // Apply and remove all redundant spaces
+    publisher = newPublishers.replaceAll(" ", "");
     notifyListeners();
   }
 
   void setSubscribers(String newSubscriber) {
-    subscriber = newSubscriber;
+    // Apply and remove all redundant spaces
+    subscriber = newSubscriber.replaceAll(" ", "");
     notifyListeners();
   }
 }
@@ -58,12 +62,14 @@ class ServiceInformationProvider extends ChangeNotifier {
   String interface = "-";
 
   void setProvider(String newProvider) {
-    provider = newProvider;
+    // Apply and remove all redundant spaces
+    provider = newProvider.replaceAll(" ", "");
     notifyListeners();
   }
 
   void setInterface(String newInterface) {
-    interface = newInterface;
+    // Apply and remove all redundant spaces
+    interface = newInterface.replaceAll(" ", "");
     notifyListeners();
   }
 }
@@ -72,7 +78,8 @@ class ActionInformationProvider extends ChangeNotifier {
   String interface = "-";
 
   void setInterface(String newInterface) {
-    interface = newInterface;
+    // Apply and remove all redundant spaces
+    interface = newInterface.replaceAll(" ", "");
     notifyListeners();
   }
 }
