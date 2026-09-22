@@ -14,78 +14,94 @@ class ControlsTab extends StatelessWidget{
       SliderDatamodell(label: "label", topic: "topic"),
       SliderDatamodell(label: "label", topic: "topic"),
     ];
-    // TODO: implement build
-    return Padding(
-      padding: EdgeInsetsGeometry.all(8.0),
+
+    return SingleChildScrollView(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Placeholder(),
-              Column( // Display as mutch sliders as configured
-                spacing: 4.0,
-                children: sliders.map((slider) {
-                  return SliderBox(slider: slider, onChangeEnd: (value) {
-                    // TODO: Implement the slider
-                  });
-                }).toList(),
+              Expanded(child: Placeholder()),
+              Container(
+                color: theme.surfaceContainer,
+                height: (MediaQuery.of(context).size.height * 3) / 5,
+                width: (MediaQuery.of(context).size.width) / 5,
+                child: ListView.separated( // Display vertical sliders
+                  shrinkWrap: true,
+                  itemCount: sliders.length,
+                  itemBuilder: (context, index) {
+                    return SliderBox(
+                      slider: sliders[index],
+                      centeredNull: false, // TODO: Read from the configuration file
+                      verticalOrientation: false,
+                      onChangeEnd: (value) {
+                        // TODO: Implement the slider
+                      },
+                    );
+                  },
+                  separatorBuilder: (context, index) => const SizedBox(height: 4.0),
+                ),
               ),
             ],
           ),
-          Row(
-            children: [
-              Joystick( // Display a joystick for the steering
-                base: JoystickBase(
-                  decoration: JoystickBaseDecoration(
-                    color: theme.surfaceContainer,
-                    drawOuterCircle: false,
+          Container(
+            color: theme.surfaceContainer,
+            child: Row(
+              children: [
+                Joystick( // Display a joystick
+                  base: JoystickBase(
+                    decoration: JoystickBaseDecoration(
+                      color: theme.surfaceContainer,
+                      drawOuterCircle: false,
+                    ),
+                    arrowsDecoration: JoystickArrowsDecoration(
+                      color: theme.primary,
+                      enableAnimation: false
+                    ),
+                    size: 175,
                   ),
-                  arrowsDecoration: JoystickArrowsDecoration(
-                    color: theme.primary,
-                    enableAnimation: false
+                  stick: JoystickStick(
+                    decoration: JoystickStickDecoration(color: theme.primary),
+                    size: 50,
                   ),
-                  size: 175,
+                  listener: (input) {
+                    // TODO: Implement the Joystick
+                  }
                 ),
-                stick: JoystickStick(
-                  decoration: JoystickStickDecoration(color: theme.primary),
-                  size: 50,
+                SizedBox(
+                  height: 225,
+                  width: MediaQuery.of(context).size.width - 200,
+                  child: ListView.separated( // Display as mutch vertical sliders as configured
+                    itemCount: sliders.length,
+                    scrollDirection: Axis.horizontal, // TODO: Improve the scroll behavior
+                    reverse: true,
+                    itemBuilder: (context, index) {
+                      return SliderBox(
+                        slider: sliders[index],
+                        centeredNull: true, // TODO: Read from the configuration file
+                        verticalOrientation: true,
+                        onChangeEnd: (value) {
+                          // TODO: Implement the slider
+                        },
+                      );
+                    },
+                    separatorBuilder: (context, index) => const SizedBox(height: 4.0),
+                  ),
                 ),
-                listener: (input) {
-                  // TODO: Implement the Joystick
-                }
-              ),
-              Expanded(child: SizedBox.shrink()),
-              TextButton( // Button for the accerleration
-                style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(theme.surfaceContainerHigh),
-                  fixedSize: WidgetStatePropertyAll(Size(100, 125)),
-                ),
-                onPressed: () {
-                  // TODO: Implement the button
-                },
-                child: Text("Speed")
-              ),
-              SizedBox(width: 8.0),
-              TextButton( // Button for slowing down
-                style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(theme.surfaceContainerHigh),
-                  fixedSize: WidgetStatePropertyAll(Size(100, 125)),
-                ),
-                onPressed: () {
-                  // TODO: Implement the button
-                },
-                child: Text("Brake")
-              ),
-            ],
-          )
+              ],
+            ),
+          ),
         ],
-      )
+      ),
     );
   }
 }
 
-// TODO: Get the sliders from the configuration
-// TODO: Publish the input to the configured topics
+// TODO: Get the sliders from the configuration file
+// TODO: Get the camera views from the configuration
+// TODO: Define the relevante functions for steering
+// TODO: Make the used functions configurable
+// TODO: Publish the input using the configured function
+// TODO: Fix issues while rezising: Stick to the bottom
+// TODO: Fix Divider
