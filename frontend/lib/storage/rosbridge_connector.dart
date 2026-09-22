@@ -554,3 +554,5 @@ class RosbridgeConnector {
     return true;
   }
 }
+
+// TODO: Check which nodes, topics, services and actions are available -> Mark them as running
