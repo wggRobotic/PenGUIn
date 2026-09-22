@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/storage/config_handler.dart';
 import 'package:frontend/custom_provider.dart';
 import 'package:frontend/tabs/analytics_tab.dart';
+import 'package:frontend/tabs/controls_tab.dart';
 import 'package:frontend/tabs/nodes_tab.dart';
 import 'package:frontend/theme/theme.dart';
 import 'package:provider/provider.dart';
@@ -60,7 +61,7 @@ class MyHomePage extends StatelessWidget {
     loadConfig(context);
 
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: theme.primaryContainer,
@@ -76,6 +77,10 @@ class MyHomePage extends StatelessWidget {
                 icon: Icon(Icons.analytics_outlined),
                 text: "Analytics"
               ),
+              Tab(
+                icon: Icon(Icons.control_camera_outlined),
+                text: "Controls"
+              )
             ],
             // Apply the configuration and filter attributes
             onTap: (index) async {
@@ -93,6 +98,7 @@ class MyHomePage extends StatelessWidget {
           children: [
             NodesTab(),
             AnalyticsTab(),
+            ControlsTab(),
           ],
         ),
       ),
