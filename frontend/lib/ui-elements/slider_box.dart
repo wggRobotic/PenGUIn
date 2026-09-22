@@ -27,7 +27,7 @@ class _SliderBoxState extends State<SliderBox> {
     return Column(
       children: [
         Text("${widget.slider.label}:"), // Display the label of the slider
-        RotatedBox(
+        RotatedBox( // Rotate the slider so its either horizontal or vertical
           quarterTurns: widget.verticalOrientation
             ? 3
             : 0,
@@ -37,6 +37,9 @@ class _SliderBoxState extends State<SliderBox> {
               ? -1
               : 0,
             max: 1,
+            activeColor: Color.fromARGB(175, 118, 116, 115),
+            inactiveColor: Color.fromARGB(175, 118, 116, 115),
+            thumbColor: Theme.of(context).colorScheme.primary,
             onChanged: (value) {
               setState(() {
                 sliderValue = value;
