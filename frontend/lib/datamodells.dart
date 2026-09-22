@@ -35,3 +35,13 @@ class AnalyticsDatamodell{
     this.isAvailable = false,
   });
 }
+
+class SliderDatamodell{
+  String label;
+  String topic;
+
+  SliderDatamodell({
+    required this.label,
+    required this.topic
+  });
+}
