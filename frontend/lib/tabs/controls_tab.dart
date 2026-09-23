@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
+import 'package:frontend/custom_provider.dart';
 import 'package:frontend/datamodells.dart';
 import 'package:frontend/ui-elements/slider_box.dart';
+import 'package:provider/provider.dart';
 
 class ControlsTab extends StatelessWidget{
   const ControlsTab({super.key});
@@ -10,10 +12,8 @@ class ControlsTab extends StatelessWidget{
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
 
-    final List<SliderDatamodell> sliders = [
-      SliderDatamodell(label: "label", topic: "topic"),
-      SliderDatamodell(label: "label", topic: "topic"),
-    ];
+    final List<SliderDatamodell> horizontalSliders = context.watch<SteeringProvider>().horizontalSliders;
+    final List<SliderDatamodell> verticalSliders = context.watch<SteeringProvider>().verticalSliders;
 
     return SingleChildScrollView(
       child: Column(
@@ -29,10 +29,10 @@ class ControlsTab extends StatelessWidget{
                 width: (MediaQuery.of(context).size.width) / 5,
                 child: ListView.separated( // Display vertical sliders
                   shrinkWrap: true,
-                  itemCount: sliders.length,
+                  itemCount: horizontalSliders.length,
                   itemBuilder: (context, index) {
                     return SliderBox(
-                      slider: sliders[index],
+                      slider: horizontalSliders[index],
                       centeredNull: false, // TODO: Read from the configuration file
                       verticalOrientation: false,
                       onChangeEnd: (value) {
@@ -73,12 +73,12 @@ class ControlsTab extends StatelessWidget{
                   height: 225,
                   width: MediaQuery.of(context).size.width - 200,
                   child: ListView.separated( // Display as mutch vertical sliders as configured
-                    itemCount: sliders.length,
+                    itemCount: verticalSliders.length,
                     scrollDirection: Axis.horizontal, // TODO: Improve the scroll behavior
                     reverse: true,
                     itemBuilder: (context, index) {
                       return SliderBox(
-                        slider: sliders[index],
+                        slider: verticalSliders[index],
                         centeredNull: true, // TODO: Read from the configuration file
                         verticalOrientation: true,
                         onChangeEnd: (value) {
@@ -98,9 +98,9 @@ class ControlsTab extends StatelessWidget{
   }
 }
 
-// TODO: Get the sliders from the configuration file
+// TODO: Get the sliders centering setting from the configuration file
 // TODO: Get the camera views from the configuration
-// TODO: Define the relevante functions for steering
+// TODO: Define the relevant functions for steering
 // TODO: Make the used functions configurable
 // TODO: Publish the input using the configured function
 // TODO: Fix issues while rezising: Stick to the bottom
