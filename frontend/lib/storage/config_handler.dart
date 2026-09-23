@@ -96,6 +96,47 @@ class NodesConfigHandler {
       return [AnalyticsDatamodell(type: "-", name: "-")];
     }
   }
+
+  // Read the steering config
+  Future<void> applySteeringConfiguration(BuildContext context) async {
+    final configPath = getRelativeConfigPath("steering_config.json");
+
+    // Make sure it exists
+    await ensureConfigExists(configPath, "steering_config.json");
+
+    // Get the JSON config
+    String jsonConfig = await File(configPath).readAsString();
+
+    // Parse it to the datamodell and return it
+    try {
+      final Map<String, dynamic> decodedConfig = jsonDecode(jsonConfig);
+
+      // Get the horizontal sliders
+      final List<SliderDatamodell> horizontalSliders = (decodedConfig["horizontalSliders"] as List<dynamic>).map((s) {
+        final slider = s as Map<String, dynamic>;
+
+        return SliderDatamodell(
+          label: slider["label"] as String? ?? "",
+          function: slider["function"] as String? ?? ""
+        );
+      }).toList();
+
+      // Get the vertical sliders
+      final List<SliderDatamodell> verticalSliders = (decodedConfig["verticalSliders"] as List<dynamic>).map((s) {
+        final slider = s as Map<String, dynamic>;
+
+        return SliderDatamodell(
+          label: slider["label"] as String? ?? "",
+          function: slider["function"] as String? ?? "" 
+        );
+      }).toList();
+    } catch (e) {
+      // Show an error message
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Unable to load the steering configuration: ${e.toString().trim()}"));
+      return;
+    }
+  }
 }
 
 // TODO: Try to filter for wrong config data
