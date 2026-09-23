@@ -17,32 +17,34 @@ class ControlsTab extends StatelessWidget{
 
     return SingleChildScrollView(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: Placeholder()),
-              Container(
-                color: theme.surfaceContainer,
-                height: (MediaQuery.of(context).size.height * 3) / 5,
-                width: (MediaQuery.of(context).size.width) / 5,
-                child: ListView.separated( // Display vertical sliders
-                  shrinkWrap: true,
-                  itemCount: horizontalSliders.length,
-                  itemBuilder: (context, index) {
-                    return SliderBox(
-                      slider: horizontalSliders[index],
-                      verticalOrientation: false,
-                      onChangeEnd: (value) {
-                        // TODO: Implement the slider
-                      },
-                    );
-                  },
-                  separatorBuilder: (context, index) => const SizedBox(height: 4.0),
+          SizedBox(
+            height: (MediaQuery.of(context).size.height * 3) / 5,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: Placeholder()),
+                Container(
+                  color: theme.surfaceContainer,
+                  width: (MediaQuery.of(context).size.width) / 5,
+                  child: ListView.separated( // Display vertical sliders
+                    itemCount: horizontalSliders.length,
+                    itemBuilder: (context, index) {
+                      return SliderBox(
+                        slider: horizontalSliders[index],
+                        verticalOrientation: false,
+                        onChangeEnd: (value) {
+                          // TODO: Implement the slider
+                        },
+                      );
+                    },
+                    separatorBuilder: (context, index) => const SizedBox(height: 4.0),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           Container(
             color: theme.surfaceContainer,
@@ -97,7 +99,6 @@ class ControlsTab extends StatelessWidget{
   }
 }
 
-// TODO: Get the sliders centering setting from the configuration file
 // TODO: Get the camera views from the configuration
 // TODO: Define the relevant functions for steering
 // TODO: Make the used functions configurable

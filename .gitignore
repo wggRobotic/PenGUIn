@@ -56,3 +56,4 @@ frontend/.vscode/browse.vc.db-wal
 frontend/.vscode/browse.vc.db
 frontend/.vscode/c_cpp_properties.json
 frontend/.vscode/browse.vc.db.lock
+frontend/pubspec.lock
