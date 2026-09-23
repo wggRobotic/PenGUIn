@@ -3,9 +3,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:frontend/custom_provider.dart';
 import 'package:frontend/datamodells.dart';
 import 'package:frontend/ui-elements/error_snackbar.dart';
 import 'package:path/path.dart' as path;
+import 'package:provider/provider.dart';
 
 class NodesConfigHandler {
 
@@ -120,6 +122,8 @@ class NodesConfigHandler {
           function: slider["function"] as String? ?? ""
         );
       }).toList();
+      if (!context.mounted) return;
+      context.read<SteeringProvider>().updateHorizontalSliders(horizontalSliders);
 
       // Get the vertical sliders
       final List<SliderDatamodell> verticalSliders = (decodedConfig["verticalSliders"] as List<dynamic>).map((s) {
@@ -130,6 +134,8 @@ class NodesConfigHandler {
           function: slider["function"] as String? ?? "" 
         );
       }).toList();
+      if (!context.mounted) return;
+      context.read<SteeringProvider>().updateVerticalSliders(verticalSliders);
     } catch (e) {
       // Show an error message
       if (!context.mounted) return;
