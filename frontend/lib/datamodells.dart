@@ -39,10 +39,12 @@ class AnalyticsDatamodell{
 class SliderDatamodell{
   String label;
   String function;
+  bool centered;
 
   SliderDatamodell({
     required this.label,
-    required this.function
+    required this.function,
+    required this.centered
   });
 }
 

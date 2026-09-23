@@ -6,13 +6,15 @@
         },
         {
             "label": "",
-            "function": ""
+            "function": "",
+            "centered": false
         }
     ],
     "verticalSliders": [
         {
             "label": "",
-            "function": ""
+            "function": "",
+            "centered": false
         }
     ]
 }
