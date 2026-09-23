@@ -38,10 +38,20 @@ class AnalyticsDatamodell{
 
 class SliderDatamodell{
   String label;
-  String topic;
+  String function;
 
   SliderDatamodell({
     required this.label,
-    required this.topic
+    required this.function
+  });
+}
+
+class SteeringDatamodell{
+  List<SliderDatamodell> horizontalSliders;
+  List<SliderDatamodell> verticalSliders;
+
+  SteeringDatamodell({
+    required this.horizontalSliders,
+    required this.verticalSliders
   });
 }
