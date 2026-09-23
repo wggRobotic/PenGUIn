@@ -130,3 +130,18 @@ class AnalyticsProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+class SteeringProvider extends ChangeNotifier {
+  List<SliderDatamodell> horizontalSliders = [];
+  List<SliderDatamodell> verticalSliders = [];
+
+  void updateHorizontalSliders (List<SliderDatamodell> sliders) {
+    horizontalSliders = sliders;
+    notifyListeners();
+  }
+
+  void updateVerticalSliders (List<SliderDatamodell> sliders) {
+    verticalSliders = sliders;
+    notifyListeners();
+  }
+}
