@@ -37,3 +37,4 @@ flutter:
   assets:
     - assets/config/nodes_config.json
     - assets/config/analytics_config.json
+    - assets/config/steering_config.json

@@ -84,12 +84,17 @@ class MyHomePage extends StatelessWidget {
             ],
             // Apply the configuration and filter attributes
             onTap: (index) async {
-              if (index == 0) {
-                context.read<NodeProvider>().updateNodeList(await NodesConfigHandler().applyNodeConfiguration(context));
-              } else if (index == 1) {
-                context.read<AnalyticsProvider>().updateAnalyticsData(await NodesConfigHandler().applyAnalyticsConfiguration(context));
-                if (!context.mounted) return;
-                context.read<AnalyticsProvider>().updateFilterAttributes();
+              switch (index) {
+                case 0:
+                  context.read<NodeProvider>().updateNodeList(await NodesConfigHandler().applyNodeConfiguration(context));
+                  break;
+                case 1:
+                  context.read<AnalyticsProvider>().updateAnalyticsData(await NodesConfigHandler().applyAnalyticsConfiguration(context));
+                  if (!context.mounted) return;
+                  context.read<AnalyticsProvider>().updateFilterAttributes();
+                case 2:
+                  // TODO:
+                  await NodesConfigHandler().applySteeringConfiguration(context);
               }
             },
           ),
@@ -111,6 +116,8 @@ class MyHomePage extends StatelessWidget {
     context.read<NodeProvider>().updateNodeList(await NodesConfigHandler().applyNodeConfiguration(context));
     if (!context.mounted) return;
     context.read<AnalyticsProvider>().updateAnalyticsData(await NodesConfigHandler().applyAnalyticsConfiguration(context));
+    if (!context.mounted) return;
+    await NodesConfigHandler().applySteeringConfiguration(context);
 
     // Update the filter attributes
     if(!context.mounted) return;
