@@ -4,14 +4,12 @@ import 'package:frontend/datamodells.dart';
 class SliderBox extends StatefulWidget{
   final SliderDatamodell slider;
   final ValueChanged<double> onChangeEnd;
-  final bool centeredNull;
   final bool verticalOrientation;
 
   const SliderBox({
     super.key,
     required this.slider,
     required this.onChangeEnd,
-    required this.centeredNull,
     required this.verticalOrientation,
   });
 
@@ -33,7 +31,7 @@ class _SliderBoxState extends State<SliderBox> {
             : 0,
           child: Slider( // Display the slider and its current value
             value: sliderValue,
-            min: widget.centeredNull // Center the x-axis
+            min: widget.slider.centered // Center the x-axis
               ? -1
               : 0,
             max: 1,

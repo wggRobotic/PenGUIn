@@ -114,26 +114,12 @@ class NodesConfigHandler {
       final Map<String, dynamic> decodedConfig = jsonDecode(jsonConfig);
 
       // Get the horizontal sliders
-      final List<SliderDatamodell> horizontalSliders = (decodedConfig["horizontalSliders"] as List<dynamic>).map((s) {
-        final slider = s as Map<String, dynamic>;
-
-        return SliderDatamodell(
-          label: slider["label"] as String? ?? "",
-          function: slider["function"] as String? ?? ""
-        );
-      }).toList();
+      final List<SliderDatamodell> horizontalSliders = getSliderDatamodellList(decodedConfig["horizontalSliders"] as List<dynamic>);
       if (!context.mounted) return;
       context.read<SteeringProvider>().updateHorizontalSliders(horizontalSliders);
 
       // Get the vertical sliders
-      final List<SliderDatamodell> verticalSliders = (decodedConfig["verticalSliders"] as List<dynamic>).map((s) {
-        final slider = s as Map<String, dynamic>;
-
-        return SliderDatamodell(
-          label: slider["label"] as String? ?? "",
-          function: slider["function"] as String? ?? "" 
-        );
-      }).toList();
+      final List<SliderDatamodell> verticalSliders = getSliderDatamodellList(decodedConfig["verticalSliders"] as List<dynamic>);
       if (!context.mounted) return;
       context.read<SteeringProvider>().updateVerticalSliders(verticalSliders);
     } catch (e) {
@@ -142,6 +128,19 @@ class NodesConfigHandler {
       ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Unable to load the steering configuration: ${e.toString().trim()}"));
       return;
     }
+  }
+
+  // Take the list from the JSON of the sliders and convert it to a list of the SliderDatamodell
+  List<SliderDatamodell> getSliderDatamodellList(List<dynamic> sliders) {
+    return sliders.map((s) {
+      final slider = s as Map<String, dynamic>;
+
+      return SliderDatamodell(
+        label: slider["label"] as String? ?? "",
+        function: slider["function"] as String? ?? "",
+        centered: slider["centered"] as bool? ?? false,
+      );
+    }).toList();
   }
 }
 

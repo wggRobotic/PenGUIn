@@ -33,7 +33,6 @@ class ControlsTab extends StatelessWidget{
                   itemBuilder: (context, index) {
                     return SliderBox(
                       slider: horizontalSliders[index],
-                      centeredNull: false, // TODO: Read from the configuration file
                       verticalOrientation: false,
                       onChangeEnd: (value) {
                         // TODO: Implement the slider
@@ -50,6 +49,7 @@ class ControlsTab extends StatelessWidget{
             child: Row(
               children: [
                 Joystick( // Display a joystick
+                includeInitialAnimation: false,
                   base: JoystickBase(
                     decoration: JoystickBaseDecoration(
                       color: theme.surfaceContainer,
@@ -79,7 +79,6 @@ class ControlsTab extends StatelessWidget{
                     itemBuilder: (context, index) {
                       return SliderBox(
                         slider: verticalSliders[index],
-                        centeredNull: true, // TODO: Read from the configuration file
                         verticalOrientation: true,
                         onChangeEnd: (value) {
                           // TODO: Implement the slider
