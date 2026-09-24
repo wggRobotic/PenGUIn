@@ -113,6 +113,15 @@ class NodesConfigHandler {
     try {
       final Map<String, dynamic> decodedConfig = jsonDecode(jsonConfig);
 
+      // Get the joystick configuration
+      final Map<String, dynamic> joystick = decodedConfig["joystick"];
+      final JoystickDatamodell joystickConfiguration = JoystickDatamodell(
+        xFunction: joystick["xFunction"] as String? ?? "",
+        yFunction: joystick["yFunction"] as String? ?? ""
+      );
+      if(!context.mounted) return;
+      context.read<SteeringProvider>().updateJoystick(joystickConfiguration);
+
       // Get the horizontal sliders
       final List<SliderDatamodell> horizontalSliders = getSliderDatamodellList(decodedConfig["horizontalSliders"] as List<dynamic>);
       if (!context.mounted) return;
@@ -145,3 +154,4 @@ class NodesConfigHandler {
 }
 
 // TODO: Try to filter for wrong config data
+//       => Handle missing keys within the JSON
