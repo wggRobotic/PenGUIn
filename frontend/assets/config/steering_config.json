@@ -20,5 +20,11 @@
             "function": "",
             "centered": false
         }
+    ],
+    "cameras": [
+        {
+            "label": "",
+            "function": ""
+        }
     ]
 }

@@ -131,6 +131,17 @@ class NodesConfigHandler {
       final List<SliderDatamodell> verticalSliders = getSliderDatamodellList(decodedConfig["verticalSliders"] as List<dynamic>);
       if (!context.mounted) return;
       context.read<SteeringProvider>().updateVerticalSliders(verticalSliders);
+
+      // Get the cameras
+      final List<CameraDatamodell> cameras = (decodedConfig["cameras"] as List<dynamic>).map((c) {
+        final camera = c as Map<String, dynamic>;
+         return CameraDatamodell(
+          label: camera["label"] as String? ?? "",
+          function: camera["function"] as String? ?? ""
+        );
+      }).toList();
+      if(!context.mounted) return;
+      context.read<SteeringProvider>().updateCamera(cameras);
     } catch (e) {
       // Show an error message
       if (!context.mounted) return;
