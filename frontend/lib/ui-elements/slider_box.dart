@@ -5,12 +5,14 @@ class SliderBox extends StatefulWidget{
   final SliderDatamodell slider;
   final ValueChanged<double> onChangeEnd;
   final bool verticalOrientation;
+  final double fixedWidth;
 
   const SliderBox({
     super.key,
     required this.slider,
     required this.onChangeEnd,
     required this.verticalOrientation,
+    required this.fixedWidth
   });
 
   @override
@@ -24,7 +26,14 @@ class _SliderBoxState extends State<SliderBox> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text("${widget.slider.label}:"), // Display the label of the slider
+        SizedBox(
+          width: widget.fixedWidth,
+          child: Text( // Display the label of the slider
+            "${widget.slider.label}:",
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
         RotatedBox( // Rotate the slider so its either horizontal or vertical
           quarterTurns: widget.verticalOrientation
             ? 3
@@ -44,6 +53,7 @@ class _SliderBoxState extends State<SliderBox> {
               });
             },
             onChangeEnd: (value) => widget.onChangeEnd(value),
+            label: "${widget.slider.label}:"
           ),
         ),
       ],
