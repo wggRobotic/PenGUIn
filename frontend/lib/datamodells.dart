@@ -36,7 +36,7 @@ class AnalyticsDatamodell{
   });
 }
 
-class SliderDatamodell{
+class SliderDatamodell {
   String label;
   String function;
   bool centered;
@@ -45,5 +45,15 @@ class SliderDatamodell{
     required this.label,
     required this.function,
     required this.centered
+  });
+}
+
+class JoystickDatamodell {
+  String xFunction;
+  String yFunction;
+
+  JoystickDatamodell({
+    required this.xFunction,
+    required this.yFunction
   });
 }
