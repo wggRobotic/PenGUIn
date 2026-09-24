@@ -18,6 +18,9 @@ class ControlsTab extends StatelessWidget{
     final int selectedPosition = context.watch<SteeringProvider>().selectedPosition;
     final List<CameraDatamodell> cameras = context.watch<SteeringProvider>().cameras;
 
+    final double overallWidth = MediaQuery.of(context).size.width;
+    final double sideBarWidth = overallWidth / 6;
+
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -29,7 +32,7 @@ class ControlsTab extends StatelessWidget{
               children: [
                 // Display a list of all available cameras & highlight the selected one
                 SizedBox(
-                  width: (MediaQuery.of(context).size.width) / 6,
+                  width: sideBarWidth,
                   child: Material(
                     child: Padding(
                       padding: EdgeInsetsGeometry.all(8.0),
@@ -53,14 +56,21 @@ class ControlsTab extends StatelessWidget{
                     ),
                   ),
                 ),
+                VerticalDivider(
+                  width: 2.0,
+                  thickness: 2.0,
+                ),
                 Expanded( // TODO: Replace by camera image
                   child: Center(
                     child: Text(cameras[selectedPosition].label)
                   )
                 ),
-                Container(
-                  color: theme.surfaceContainer,
-                  width: (MediaQuery.of(context).size.width) / 6,
+                VerticalDivider(
+                  width: 2.0,
+                  thickness: 2.0,
+                ),
+                SizedBox(
+                  width: sideBarWidth,
                   child: ListView.separated( // Display vertical sliders
                     itemCount: horizontalSliders.length,
                     itemBuilder: (context, index) {
@@ -79,52 +89,60 @@ class ControlsTab extends StatelessWidget{
               ],
             ),
           ),
-          Container(
-            color: theme.surfaceContainer,
-            child: Row(
-              children: [
-                Joystick( // Display a joystick
-                includeInitialAnimation: false,
-                  base: JoystickBase(
-                    decoration: JoystickBaseDecoration(
-                      color: theme.surfaceContainer,
-                      drawOuterCircle: false,
-                    ),
-                    arrowsDecoration: JoystickArrowsDecoration(
-                      color: theme.primary,
-                      enableAnimation: false
-                    ),
-                    size: 175,
+          Divider(
+            height: 2.0,
+            thickness: 2.0,
+          ),
+          Row(
+            children: [
+              Joystick( // Display a joystick
+              includeInitialAnimation: false,
+                base: JoystickBase(
+                  decoration: JoystickBaseDecoration(
+                    color: theme.surfaceContainer,
+                    drawOuterCircle: false,
                   ),
-                  stick: JoystickStick(
-                    decoration: JoystickStickDecoration(color: theme.primary),
-                    size: 50,
+                  arrowsDecoration: JoystickArrowsDecoration(
+                    color: theme.primary,
+                    enableAnimation: false
                   ),
-                  listener: (input) {
-                    // TODO: Implement the Joystick
-                  }
+                  size: sideBarWidth,
                 ),
-                SizedBox(
-                  height: 225,
-                  width: MediaQuery.of(context).size.width - 200,
-                  child: ListView.separated( // Display as mutch vertical sliders as configured
-                    itemCount: verticalSliders.length,
-                    scrollDirection: Axis.horizontal, // TODO: Improve the scroll behavior
-                    reverse: true,
-                    itemBuilder: (context, index) {
-                      return SliderBox(
-                        slider: verticalSliders[index],
-                        verticalOrientation: true,
-                        onChangeEnd: (value) {
-                          // TODO: Implement the slider
-                        },
-                      );
-                    },
-                    separatorBuilder: (context, index) => const SizedBox(height: 4.0),
-                  ),
+                stick: JoystickStick(
+                  decoration: JoystickStickDecoration(color: theme.primary),
+                  size: 50,
                 ),
-              ],
-            ),
+                listener: (input) {
+                  // TODO: Implement the Joystick
+                }
+              ),
+              SizedBox(
+                height: 225,
+                child: VerticalDivider(
+                  width: 2.0,
+                  thickness: 2.0,
+                ),
+              ),
+              SizedBox(
+                height: 225,
+                width: overallWidth - sideBarWidth - 2,
+                child: ListView.separated( // Display as mutch vertical sliders as configured
+                  itemCount: verticalSliders.length,
+                  scrollDirection: Axis.horizontal, // TODO: Improve the scroll behavior
+                  reverse: true,
+                  itemBuilder: (context, index) {
+                    return SliderBox(
+                      slider: verticalSliders[index],
+                      verticalOrientation: true,
+                      onChangeEnd: (value) {
+                        // TODO: Implement the slider
+                      },
+                    );
+                  },
+                  separatorBuilder: (context, index) => const SizedBox(width: 4.0),
+                ),
+              ),
+            ],
           ),
         ],
       ),
