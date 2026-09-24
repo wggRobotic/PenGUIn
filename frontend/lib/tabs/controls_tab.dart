@@ -15,8 +15,8 @@ class ControlsTab extends StatelessWidget{
     final List<SliderDatamodell> horizontalSliders = context.watch<SteeringProvider>().horizontalSliders;
     final List<SliderDatamodell> verticalSliders = context.watch<SteeringProvider>().verticalSliders;
     final JoystickDatamodell joystick = context.watch<SteeringProvider>().joystick;
-
-    final List<String> cameras = ["c1", "c2", "c3", "c4", "c1", "c2", "c3", "c4", "c1", "c2", "c3", "c4"];
+    final int selectedPosition = context.watch<SteeringProvider>().selectedPosition;
+    final List<CameraDatamodell> cameras = context.watch<SteeringProvider>().cameras;
 
     return SingleChildScrollView(
       child: Column(
@@ -37,15 +37,15 @@ class ControlsTab extends StatelessWidget{
                       child: ListView.separated(
                         itemCount: cameras.length,
                         itemBuilder: (context, index) {
-                          // TODO: Toggle selection state
                           return ListTile(
-                            title: Text(cameras[index]),
+                            title: Text(cameras[index].name),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                             tileColor: theme.surfaceContainer,
                             selectedTileColor: theme.secondaryContainer,
-                            selected: false,
+                            selected: cameras[index].selected,
                             onTap: () {
-                              // TODO: Implement
+                              // Select this one
+                              context.read<SteeringProvider>().selectCamera(index, cameras[index].selected ? false : true);
                             },
                           );
                         },
@@ -54,9 +54,9 @@ class ControlsTab extends StatelessWidget{
                     ),
                   ),
                 ),
-                Expanded(
+                Expanded( // TODO: Replace by camera image
                   child: Center(
-                    child: Text("Camera")
+                    child: Text(cameras[selectedPosition].name)
                   )
                 ),
                 Container(
@@ -133,7 +133,6 @@ class ControlsTab extends StatelessWidget{
   }
 }
 
-// TODO: Build a camera layout
 // TODO: Get the camera views from the configuration
 // TODO: Define the relevant functions for steering
 // TODO: Publish the input using the configured function
