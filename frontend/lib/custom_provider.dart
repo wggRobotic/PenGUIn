@@ -132,8 +132,14 @@ class AnalyticsProvider extends ChangeNotifier {
 }
 
 class SteeringProvider extends ChangeNotifier {
+  JoystickDatamodell joystick = JoystickDatamodell(xFunction: "", yFunction: "");
   List<SliderDatamodell> horizontalSliders = [];
   List<SliderDatamodell> verticalSliders = [];
+
+  void updateJoystick (JoystickDatamodell newJoystick) {
+    joystick = newJoystick;
+    notifyListeners();
+  }
 
   void updateHorizontalSliders (List<SliderDatamodell> sliders) {
     horizontalSliders = sliders;

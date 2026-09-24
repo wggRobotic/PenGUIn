@@ -14,6 +14,7 @@ class ControlsTab extends StatelessWidget{
 
     final List<SliderDatamodell> horizontalSliders = context.watch<SteeringProvider>().horizontalSliders;
     final List<SliderDatamodell> verticalSliders = context.watch<SteeringProvider>().verticalSliders;
+    final JoystickDatamodell joystick = context.watch<SteeringProvider>().joystick;
 
     return SingleChildScrollView(
       child: Column(
@@ -37,6 +38,7 @@ class ControlsTab extends StatelessWidget{
                         verticalOrientation: false,
                         onChangeEnd: (value) {
                           // TODO: Implement the slider
+                          print(joystick);
                         },
                       );
                     },
@@ -99,6 +101,7 @@ class ControlsTab extends StatelessWidget{
   }
 }
 
+// TODO: Get the joystick configuration
 // TODO: Get the camera views from the configuration
 // TODO: Define the relevant functions for steering
 // TODO: Make the used functions configurable
