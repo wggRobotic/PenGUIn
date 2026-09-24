@@ -19,7 +19,7 @@ class ControlsTab extends StatelessWidget{
     final List<CameraDatamodell> cameras = context.watch<SteeringProvider>().cameras;
 
     final double overallWidth = MediaQuery.of(context).size.width;
-    final double sideBarWidth = overallWidth / 6;
+    final double sideBarSize = overallWidth / 6;
 
     return Scaffold(
       body: Column(
@@ -32,7 +32,7 @@ class ControlsTab extends StatelessWidget{
               children: [
                 // Display a list of all available cameras & highlight the selected one
                 SizedBox(
-                  width: sideBarWidth,
+                  width: sideBarSize,
                   child: Material(
                     child: Padding(
                       padding: EdgeInsetsGeometry.all(8.0),
@@ -70,13 +70,15 @@ class ControlsTab extends StatelessWidget{
                   thickness: 2.0,
                 ),
                 SizedBox(
-                  width: sideBarWidth,
+                  width: sideBarSize,
                   child: ListView.separated( // Display vertical sliders
                     itemCount: horizontalSliders.length,
+                    padding: EdgeInsets.all(8.0),
                     itemBuilder: (context, index) {
                       return SliderBox(
                         slider: horizontalSliders[index],
                         verticalOrientation: false,
+                        fixedWidth: sideBarSize - 16,
                         onChangeEnd: (value) {
                           // TODO: Implement the slider
                           print(joystick);
@@ -106,7 +108,7 @@ class ControlsTab extends StatelessWidget{
                     color: theme.primary,
                     enableAnimation: false
                   ),
-                  size: sideBarWidth,
+                  size: sideBarSize,
                 ),
                 stick: JoystickStick(
                   decoration: JoystickStickDecoration(color: theme.primary),
@@ -117,15 +119,15 @@ class ControlsTab extends StatelessWidget{
                 }
               ),
               SizedBox(
-                height: 225,
+                height: sideBarSize,
                 child: VerticalDivider(
                   width: 2.0,
                   thickness: 2.0,
                 ),
               ),
               SizedBox(
-                height: 225,
-                width: overallWidth - sideBarWidth - 2,
+                height: sideBarSize,
+                width: overallWidth - sideBarSize - 2,
                 child: ListView.separated( // Display as mutch vertical sliders as configured
                   itemCount: verticalSliders.length,
                   scrollDirection: Axis.horizontal, // TODO: Improve the scroll behavior
@@ -134,6 +136,7 @@ class ControlsTab extends StatelessWidget{
                     return SliderBox(
                       slider: verticalSliders[index],
                       verticalOrientation: true,
+                      fixedWidth: sideBarSize / 3,
                       onChangeEnd: (value) {
                         // TODO: Implement the slider
                       },
@@ -152,5 +155,3 @@ class ControlsTab extends StatelessWidget{
 
 // TODO: Define the relevant functions
 // TODO: Publish the input using the configured function
-// TODO: Fix Divider
-// TODO: Handle long slider labels
