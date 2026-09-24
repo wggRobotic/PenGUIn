@@ -16,6 +16,8 @@ class ControlsTab extends StatelessWidget{
     final List<SliderDatamodell> verticalSliders = context.watch<SteeringProvider>().verticalSliders;
     final JoystickDatamodell joystick = context.watch<SteeringProvider>().joystick;
 
+    final List<String> cameras = ["c1", "c2", "c3", "c4", "c1", "c2", "c3", "c4", "c1", "c2", "c3", "c4"];
+
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -26,10 +28,40 @@ class ControlsTab extends StatelessWidget{
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(child: Placeholder()),
+                // Display a list of all available cameras & highlight the selected one
+                SizedBox(
+                  width: (MediaQuery.of(context).size.width) / 6,
+                  child: Material(
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.all(8.0),
+                      child: ListView.separated(
+                        itemCount: cameras.length,
+                        itemBuilder: (context, index) {
+                          // TODO: Toggle selection state
+                          return ListTile(
+                            title: Text(cameras[index]),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+                            tileColor: theme.surfaceContainer,
+                            selectedTileColor: theme.secondaryContainer,
+                            selected: false,
+                            onTap: () {
+                              // TODO: Implement
+                            },
+                          );
+                        },
+                        separatorBuilder: (context, index) => const SizedBox(height: 8.0),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Text("Camera")
+                  )
+                ),
                 Container(
                   color: theme.surfaceContainer,
-                  width: (MediaQuery.of(context).size.width) / 5,
+                  width: (MediaQuery.of(context).size.width) / 6,
                   child: ListView.separated( // Display vertical sliders
                     itemCount: horizontalSliders.length,
                     itemBuilder: (context, index) {
@@ -101,10 +133,10 @@ class ControlsTab extends StatelessWidget{
   }
 }
 
-// TODO: Get the joystick configuration
+// TODO: Build a camera layout
 // TODO: Get the camera views from the configuration
 // TODO: Define the relevant functions for steering
-// TODO: Make the used functions configurable
 // TODO: Publish the input using the configured function
 // TODO: Fix issues while rezising: Stick to the bottom
 // TODO: Fix Divider
+// TODO: Handle long slider labels
