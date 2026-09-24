@@ -135,7 +135,7 @@ class SteeringProvider extends ChangeNotifier {
   JoystickDatamodell joystick = JoystickDatamodell(xFunction: "", yFunction: "");
   List<SliderDatamodell> horizontalSliders = [];
   List<SliderDatamodell> verticalSliders = [];
-  List<CameraDatamodell> cameras = [CameraDatamodell(name: "c1", selected: true), CameraDatamodell(name: "c2", selected: false)];
+  List<CameraDatamodell> cameras = [];
   int selectedPosition = 0;
 
   void updateJoystick (JoystickDatamodell newJoystick) {
@@ -150,6 +150,16 @@ class SteeringProvider extends ChangeNotifier {
 
   void updateVerticalSliders (List<SliderDatamodell> sliders) {
     verticalSliders = sliders;
+    notifyListeners();
+  }
+
+  void updateCamera (List<CameraDatamodell> newCameras) {
+    // Apply the configuration
+    cameras = newCameras;
+
+    // By default select the first one
+    selectedPosition = 0;
+    cameras[selectedPosition].selected = true;
     notifyListeners();
   }
 
