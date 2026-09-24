@@ -114,32 +114,43 @@ class NodesConfigHandler {
       final Map<String, dynamic> decodedConfig = jsonDecode(jsonConfig);
 
       // Get the joystick configuration
-      final Map<String, dynamic> joystick = decodedConfig["joystick"];
-      final JoystickDatamodell joystickConfiguration = JoystickDatamodell(
-        xFunction: joystick["xFunction"] as String? ?? "",
-        yFunction: joystick["yFunction"] as String? ?? ""
-      );
+      final JoystickDatamodell joystickConfiguration;
+      if (decodedConfig["joystick"] != null) {
+        final Map<String, dynamic> joystick = decodedConfig["joystick"];
+        joystickConfiguration = JoystickDatamodell(
+          xFunction: joystick["xFunction"] as String? ?? "",
+          yFunction: joystick["yFunction"] as String? ?? ""
+        );
+      } else {
+        joystickConfiguration = JoystickDatamodell(xFunction: "", yFunction: "");
+      }
       if(!context.mounted) return;
       context.read<SteeringProvider>().updateJoystick(joystickConfiguration);
 
       // Get the horizontal sliders
-      final List<SliderDatamodell> horizontalSliders = getSliderDatamodellList(decodedConfig["horizontalSliders"] as List<dynamic>);
+      final List<SliderDatamodell> horizontalSliders = decodedConfig["horizontalSliders"] == null
+        ? <SliderDatamodell>[]
+        : getSliderDatamodellList(decodedConfig["horizontalSliders"] as List<dynamic>);
       if (!context.mounted) return;
       context.read<SteeringProvider>().updateHorizontalSliders(horizontalSliders);
 
       // Get the vertical sliders
-      final List<SliderDatamodell> verticalSliders = getSliderDatamodellList(decodedConfig["verticalSliders"] as List<dynamic>);
+      final List<SliderDatamodell> verticalSliders = decodedConfig["verticalSliders"] == null
+        ? <SliderDatamodell>[]
+        : getSliderDatamodellList(decodedConfig["verticalSliders"] as List<dynamic>);
       if (!context.mounted) return;
       context.read<SteeringProvider>().updateVerticalSliders(verticalSliders);
 
       // Get the cameras
-      final List<CameraDatamodell> cameras = (decodedConfig["cameras"] as List<dynamic>).map((c) {
-        final camera = c as Map<String, dynamic>;
-         return CameraDatamodell(
-          label: camera["label"] as String? ?? "",
-          function: camera["function"] as String? ?? ""
-        );
-      }).toList();
+      final List<CameraDatamodell> cameras = decodedConfig["cameras"] == null
+        ? <CameraDatamodell>[]
+        : (decodedConfig["cameras"] as List<dynamic>).map((c) {
+          final camera = c as Map<String, dynamic>;
+          return CameraDatamodell(
+            label: camera["label"] as String? ?? "",
+            function: camera["function"] as String? ?? ""
+          );
+        }).toList();
       if(!context.mounted) return;
       context.read<SteeringProvider>().updateCamera(cameras);
     } catch (e) {
@@ -163,6 +174,3 @@ class NodesConfigHandler {
     }).toList();
   }
 }
-
-// TODO: Try to filter for wrong config data
-//       => Handle missing keys within the JSON
