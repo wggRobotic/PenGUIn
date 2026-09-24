@@ -59,11 +59,13 @@ class JoystickDatamodell {
 }
 
 class CameraDatamodell {
-  String name;
+  String label;
+  String function;
   bool selected;
 
   CameraDatamodell({
-    required this.name,
+    required this.label,
+    required this.function,
     this.selected = false
   });
 }

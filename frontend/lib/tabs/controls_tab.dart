@@ -38,7 +38,7 @@ class ControlsTab extends StatelessWidget{
                         itemCount: cameras.length,
                         itemBuilder: (context, index) {
                           return ListTile(
-                            title: Text(cameras[index].name),
+                            title: Text(cameras[index].label),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                             tileColor: theme.surfaceContainer,
                             selectedTileColor: theme.secondaryContainer,
@@ -56,7 +56,7 @@ class ControlsTab extends StatelessWidget{
                 ),
                 Expanded( // TODO: Replace by camera image
                   child: Center(
-                    child: Text(cameras[selectedPosition].name)
+                    child: Text(cameras[selectedPosition].label)
                   )
                 ),
                 Container(
