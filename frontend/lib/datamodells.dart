@@ -57,3 +57,13 @@ class JoystickDatamodell {
     required this.yFunction
   });
 }
+
+class CameraDatamodell {
+  String name;
+  bool selected;
+
+  CameraDatamodell({
+    required this.name,
+    this.selected = false
+  });
+}
