@@ -18,12 +18,11 @@ class ControlsTab extends StatelessWidget{
     final int selectedPosition = context.watch<SteeringProvider>().selectedPosition;
     final List<CameraDatamodell> cameras = context.watch<SteeringProvider>().cameras;
 
-    return SingleChildScrollView(
-      child: Column(
+    return Scaffold(
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(
-            height: (MediaQuery.of(context).size.height * 3) / 5,
+          Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,9 +132,7 @@ class ControlsTab extends StatelessWidget{
   }
 }
 
-// TODO: Get the camera views from the configuration
-// TODO: Define the relevant functions for steering
+// TODO: Define the relevant functions
 // TODO: Publish the input using the configured function
-// TODO: Fix issues while rezising: Stick to the bottom
 // TODO: Fix Divider
 // TODO: Handle long slider labels
