@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:frontend/custom_provider.dart';
@@ -20,6 +21,8 @@ class ControlsTab extends StatelessWidget{
 
     final double overallWidth = MediaQuery.of(context).size.width;
     final double sideBarSize = overallWidth / 6;
+
+    final ScrollController controller = ScrollController();
 
     return Scaffold(
       body: Column(
@@ -81,7 +84,6 @@ class ControlsTab extends StatelessWidget{
                         fixedWidth: sideBarSize - 16,
                         onChangeEnd: (value) {
                           // TODO: Implement the slider
-                          print(joystick);
                         },
                       );
                     },
@@ -95,57 +97,70 @@ class ControlsTab extends StatelessWidget{
             height: 2.0,
             thickness: 2.0,
           ),
-          Row(
-            children: [
-              Joystick( // Display a joystick
-              includeInitialAnimation: false,
-                base: JoystickBase(
-                  decoration: JoystickBaseDecoration(
-                    color: theme.surfaceContainer,
-                    drawOuterCircle: false,
+          SizedBox(
+            height: sideBarSize + 16,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Joystick( // Display a joystick
+                includeInitialAnimation: false,
+                  base: JoystickBase(
+                    decoration: JoystickBaseDecoration(
+                      color: theme.surfaceContainer,
+                      drawOuterCircle: false,
+                    ),
+                    arrowsDecoration: JoystickArrowsDecoration(
+                      color: theme.primary,
+                      enableAnimation: false
+                    ),
+                    size: sideBarSize,
                   ),
-                  arrowsDecoration: JoystickArrowsDecoration(
-                    color: theme.primary,
-                    enableAnimation: false
+                  stick: JoystickStick(
+                    decoration: JoystickStickDecoration(color: theme.primary),
+                    size: 50,
                   ),
-                  size: sideBarSize,
+                  listener: (input) {
+                    // TODO: Implement the Joystick
+                  }
                 ),
-                stick: JoystickStick(
-                  decoration: JoystickStickDecoration(color: theme.primary),
-                  size: 50,
-                ),
-                listener: (input) {
-                  // TODO: Implement the Joystick
-                }
-              ),
-              SizedBox(
-                height: sideBarSize,
-                child: VerticalDivider(
+                VerticalDivider(
                   width: 2.0,
                   thickness: 2.0,
                 ),
-              ),
-              SizedBox(
-                height: sideBarSize,
-                width: overallWidth - sideBarSize - 2,
-                child: ListView.separated( // Display as mutch vertical sliders as configured
-                  itemCount: verticalSliders.length,
-                  scrollDirection: Axis.horizontal, // TODO: Improve the scroll behavior
-                  reverse: true,
-                  itemBuilder: (context, index) {
-                    return SliderBox(
-                      slider: verticalSliders[index],
-                      verticalOrientation: true,
-                      fixedWidth: sideBarSize / 3,
-                      onChangeEnd: (value) {
-                        // TODO: Implement the slider
+                Expanded(
+                  child: Listener(
+                    onPointerSignal: (event) {
+                      if (event is PointerScrollEvent) {
+                        // Get how far the user can and how far the user wants to scroll
+                        final newOffset = controller.offset + event.scrollDelta.dy;
+                        final maxScroll = controller.position.maxScrollExtent;
+                        final minScroll = controller.position.minScrollExtent;
+                        // Scroll, but take care of beeing between the start and the end
+                        controller.jumpTo(newOffset.clamp(minScroll, maxScroll));
+                      }
+                    },
+                    child: ListView.separated( // Display as mutch vertical sliders as configured
+                      controller: controller,
+                      itemCount: verticalSliders.length,
+                      scrollDirection: Axis.horizontal,
+                      reverse: true,
+                      padding: EdgeInsetsGeometry.all(8.0),
+                      itemBuilder: (context, index) {
+                        return SliderBox(
+                          slider: verticalSliders[index],
+                          verticalOrientation: true,
+                          fixedWidth: sideBarSize / 3,
+                          onChangeEnd: (value) {
+                            // TODO: Implement the slider
+                          },
+                        );
                       },
-                    );
-                  },
-                  separatorBuilder: (context, index) => const SizedBox(width: 4.0),
+                      separatorBuilder: (context, index) => const SizedBox(width: 4.0),
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
