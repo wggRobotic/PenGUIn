@@ -47,13 +47,3 @@ class SliderDatamodell{
     required this.centered
   });
 }
-
-class SteeringDatamodell{
-  List<SliderDatamodell> horizontalSliders;
-  List<SliderDatamodell> verticalSliders;
-
-  SteeringDatamodell({
-    required this.horizontalSliders,
-    required this.verticalSliders
-  });
-}
