@@ -95,7 +95,6 @@ class MyHomePage extends StatelessWidget {
                   if (!context.mounted) return;
                   context.read<AnalyticsProvider>().updateFilterAttributes();
                 case 2:
-                  // TODO:
                   await NodesConfigHandler().applySteeringConfiguration(context);
               }
             },
