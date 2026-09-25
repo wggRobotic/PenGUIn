@@ -3,6 +3,7 @@ import 'package:frontend/storage/config_handler.dart';
 import 'package:frontend/custom_provider.dart';
 import 'package:frontend/tabs/analytics_tab.dart';
 import 'package:frontend/tabs/controls_tab.dart';
+import 'package:frontend/tabs/log_tab.dart';
 import 'package:frontend/tabs/nodes_tab.dart';
 import 'package:frontend/theme/theme.dart';
 import 'package:provider/provider.dart';
@@ -63,7 +64,7 @@ class MyHomePage extends StatelessWidget {
     loadConfig(context);
 
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: theme.primaryContainer,
@@ -82,6 +83,10 @@ class MyHomePage extends StatelessWidget {
               Tab(
                 icon: Icon(Icons.control_camera_outlined),
                 text: "Controls"
+              ),
+              Tab(
+                icon: Icon(Icons.rule_outlined),
+                text: "Log"
               )
             ],
             // Apply the configuration and filter attributes
@@ -94,8 +99,13 @@ class MyHomePage extends StatelessWidget {
                   context.read<AnalyticsProvider>().updateAnalyticsData(await NodesConfigHandler().applyAnalyticsConfiguration(context));
                   if (!context.mounted) return;
                   context.read<AnalyticsProvider>().updateFilterAttributes();
+                  break;
                 case 2:
                   await NodesConfigHandler().applySteeringConfiguration(context);
+                  break;
+                case 3:
+                  // TODO
+                  break;
               }
             },
           ),
@@ -105,6 +115,7 @@ class MyHomePage extends StatelessWidget {
             NodesTab(),
             AnalyticsTab(),
             ControlsTab(),
+            LogTab(),
           ],
         ),
       ),
