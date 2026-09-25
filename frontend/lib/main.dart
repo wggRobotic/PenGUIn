@@ -13,7 +13,7 @@ void main() {
   final serviceInformationProvider = ServiceInformationProvider();
   final actionInformationProvider = ActionInformationProvider();
   final analyticsProvider = AnalyticsProvider();
-  final steeringProvider = SteeringProvider();
+  final controlsProvider = ControlsProvider();
 
   runApp(
     MultiProvider(
@@ -23,7 +23,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => serviceInformationProvider),
         ChangeNotifierProvider(create: (_) => actionInformationProvider),
         ChangeNotifierProvider(create: (_) => analyticsProvider),
-        ChangeNotifierProvider(create: (_) => steeringProvider)
+        ChangeNotifierProvider(create: (_) => controlsProvider)
       ],
       child: const PenGUIn()
     ),

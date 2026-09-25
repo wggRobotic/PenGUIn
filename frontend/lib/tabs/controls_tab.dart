@@ -13,11 +13,11 @@ class ControlsTab extends StatelessWidget{
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
 
-    final List<SliderDatamodell> horizontalSliders = context.watch<SteeringProvider>().horizontalSliders;
-    final List<SliderDatamodell> verticalSliders = context.watch<SteeringProvider>().verticalSliders;
-    final JoystickDatamodell joystick = context.watch<SteeringProvider>().joystick;
-    final int selectedPosition = context.watch<SteeringProvider>().selectedPosition;
-    final List<CameraDatamodell> cameras = context.watch<SteeringProvider>().cameras;
+    final List<SliderDatamodell> horizontalSliders = context.watch<ControlsProvider>().horizontalSliders;
+    final List<SliderDatamodell> verticalSliders = context.watch<ControlsProvider>().verticalSliders;
+    final JoystickDatamodell joystick = context.watch<ControlsProvider>().joystick;
+    final int selectedPosition = context.watch<ControlsProvider>().selectedPosition;
+    final List<CameraDatamodell> cameras = context.watch<ControlsProvider>().cameras;
 
     final double overallWidth = MediaQuery.of(context).size.width;
     final double sideBarSize = overallWidth / 6;
@@ -50,7 +50,7 @@ class ControlsTab extends StatelessWidget{
                             selected: cameras[index].selected,
                             onTap: () {
                               // Select this one
-                              context.read<SteeringProvider>().selectCamera(index, cameras[index].selected ? false : true);
+                              context.read<ControlsProvider>().selectCamera(index, cameras[index].selected ? false : true);
                             },
                           );
                         },

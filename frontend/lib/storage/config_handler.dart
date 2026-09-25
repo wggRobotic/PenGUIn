@@ -125,21 +125,21 @@ class NodesConfigHandler {
         joystickConfiguration = JoystickDatamodell(xFunction: "", yFunction: "");
       }
       if(!context.mounted) return;
-      context.read<SteeringProvider>().updateJoystick(joystickConfiguration);
+      context.read<ControlsProvider>().updateJoystick(joystickConfiguration);
 
       // Get the horizontal sliders
       final List<SliderDatamodell> horizontalSliders = decodedConfig["horizontalSliders"] == null
         ? <SliderDatamodell>[]
         : getSliderDatamodellList(decodedConfig["horizontalSliders"] as List<dynamic>);
       if (!context.mounted) return;
-      context.read<SteeringProvider>().updateHorizontalSliders(horizontalSliders);
+      context.read<ControlsProvider>().updateHorizontalSliders(horizontalSliders);
 
       // Get the vertical sliders
       final List<SliderDatamodell> verticalSliders = decodedConfig["verticalSliders"] == null
         ? <SliderDatamodell>[]
         : getSliderDatamodellList(decodedConfig["verticalSliders"] as List<dynamic>);
       if (!context.mounted) return;
-      context.read<SteeringProvider>().updateVerticalSliders(verticalSliders);
+      context.read<ControlsProvider>().updateVerticalSliders(verticalSliders);
 
       // Get the cameras
       final List<CameraDatamodell> cameras = decodedConfig["cameras"] == null
@@ -152,7 +152,7 @@ class NodesConfigHandler {
           );
         }).toList();
       if(!context.mounted) return;
-      context.read<SteeringProvider>().updateCamera(cameras);
+      context.read<ControlsProvider>().updateCamera(cameras);
     } catch (e) {
       // Show an error message
       if (!context.mounted) return;
