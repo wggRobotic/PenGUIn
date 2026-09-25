@@ -69,3 +69,17 @@ class CameraDatamodell {
     this.selected = false
   });
 }
+
+class LogEntryDatamodell {
+  int logLevel;
+  String fileName;
+  String fullLogMessage;
+  int lineWithinTheCode;
+
+  LogEntryDatamodell({
+    required this.logLevel,
+    required this.fileName,
+    required this.fullLogMessage,
+    required this.lineWithinTheCode
+  });
+}
