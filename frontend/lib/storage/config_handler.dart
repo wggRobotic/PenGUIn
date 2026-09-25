@@ -101,10 +101,10 @@ class NodesConfigHandler {
 
   // Read the steering config
   Future<void> applySteeringConfiguration(BuildContext context) async {
-    final configPath = getRelativeConfigPath("steering_config.json");
+    final configPath = getRelativeConfigPath("controls_config.json");
 
     // Make sure it exists
-    await ensureConfigExists(configPath, "steering_config.json");
+    await ensureConfigExists(configPath, "controls_config.json");
 
     // Get the JSON config
     String jsonConfig = await File(configPath).readAsString();
