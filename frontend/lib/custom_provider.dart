@@ -178,3 +178,49 @@ class ControlsProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+class LogProvider extends ChangeNotifier {
+  List<LogEntryDatamodell> logEntries = [
+    LogEntryDatamodell(
+      logLevel: 10,
+      fileName: "fileName",
+      fullLogMessage: "fullLogMessage",
+      lineWithinTheCode: 0
+    ),
+    LogEntryDatamodell(
+      logLevel: 20,
+      fileName: "fileName",
+      fullLogMessage: "fullLogMessage",
+      lineWithinTheCode: 0
+    ),
+    LogEntryDatamodell(
+      logLevel: 30,
+      fileName: "fileName",
+      fullLogMessage: "fullLogMessage",
+      lineWithinTheCode: 0
+    ),
+    LogEntryDatamodell(
+      logLevel: 40,
+      fileName: "fileName",
+      fullLogMessage: "fullLogMessage",
+      lineWithinTheCode: 0
+    ),
+    LogEntryDatamodell(
+      logLevel: 50,
+      fileName: "fileName",
+      fullLogMessage: "fullLogMessage",
+      lineWithinTheCode: 0
+    ),
+    LogEntryDatamodell(
+      logLevel: 0,
+      fileName: "fileName",
+      fullLogMessage: "fullLogMessage",
+      lineWithinTheCode: 0
+    ),
+  ];
+
+  void updateLogEntries(List<LogEntryDatamodell> newLogEntries) {
+    logEntries = newLogEntries;
+    notifyListeners();
+  }
+}

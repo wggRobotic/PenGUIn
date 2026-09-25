@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/custom_provider.dart';
 import 'package:frontend/datamodells.dart';
+import 'package:provider/provider.dart';
 
 class LogTab extends StatelessWidget{
   const LogTab({super.key});
@@ -7,44 +9,7 @@ class LogTab extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
-    List<LogEntryDatamodell> logEntries = [
-      LogEntryDatamodell(
-        logLevel: 10,
-        fileName: "fileName",
-        fullLogMessage: "fullLogMessage",
-        lineWithinTheCode: 0
-      ),
-      LogEntryDatamodell(
-        logLevel: 20,
-        fileName: "fileName",
-        fullLogMessage: "fullLogMessage",
-        lineWithinTheCode: 0
-      ),
-      LogEntryDatamodell(
-        logLevel: 30,
-        fileName: "fileName",
-        fullLogMessage: "fullLogMessage",
-        lineWithinTheCode: 0
-      ),
-      LogEntryDatamodell(
-        logLevel: 40,
-        fileName: "fileName",
-        fullLogMessage: "fullLogMessage",
-        lineWithinTheCode: 0
-      ),
-      LogEntryDatamodell(
-        logLevel: 50,
-        fileName: "fileName",
-        fullLogMessage: "fullLogMessage",
-        lineWithinTheCode: 0
-      ),
-      LogEntryDatamodell(
-        logLevel: 0,
-        fileName: "fileName",
-        fullLogMessage: "fullLogMessage",
-        lineWithinTheCode: 0
-      ),
-    ];
+    List<LogEntryDatamodell> logEntries = context.watch<LogProvider>().logEntries;
 
     // Display a list of log entries
     return Scaffold(

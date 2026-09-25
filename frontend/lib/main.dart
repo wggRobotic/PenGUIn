@@ -15,6 +15,7 @@ void main() {
   final actionInformationProvider = ActionInformationProvider();
   final analyticsProvider = AnalyticsProvider();
   final controlsProvider = ControlsProvider();
+  final logProvider = LogProvider();
 
   runApp(
     MultiProvider(
@@ -24,7 +25,8 @@ void main() {
         ChangeNotifierProvider(create: (_) => serviceInformationProvider),
         ChangeNotifierProvider(create: (_) => actionInformationProvider),
         ChangeNotifierProvider(create: (_) => analyticsProvider),
-        ChangeNotifierProvider(create: (_) => controlsProvider)
+        ChangeNotifierProvider(create: (_) => controlsProvider),
+        ChangeNotifierProvider(create: (_) => logProvider)
       ],
       child: const PenGUIn()
     ),
