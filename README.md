@@ -11,6 +11,7 @@ values of the topics and services of our ros2 projects.
 - [Configuration](#Configuration)
     - [Configure nodes](#Configure-nodes)
     - [Configure analytics](#Configure-analytics)
+    - [Configure controls](#configure-controls)
 - [Troubleshooting](#Troubleshooting)
 - [How it works](#How-it-works)
 
@@ -64,7 +65,7 @@ Inside this folder open the `nodes_config.json` file and edit it like this:
 ```
 
 ###### Configure analytics
-Since you need to configure aech topic, service or action for the analytics part, navigate to the install folder of the frontend and open the `analytics.json` file within the `/config` folder.
+Since you need to configure each topic, service or action for the analytics part, navigate to the install folder of the frontend and open the `analytics.json` file within the `/config` folder.
 This file is supposed to be configured as like this:
 ```
 [
@@ -76,6 +77,39 @@ This file is supposed to be configured as like this:
     }
 ]
 ```
+
+###### Configure controls
+Since we want to support as many robots as possible with this single UI, you'll have to configure your desired controls manually. Therefore navigate to the install folder and open the `controls_config.json` within the `/config` folder.
+This file is supposed to be configured as follows:
+```
+{
+    "joystick": {
+        "xFunction": "",                // Define the function used to profide the input for the x-axis
+        "yFunction": ""                 // Define the function used to profide the input for the y-axis
+    },
+    "horizontalSliders": [
+        {
+            "label": "",                // Set a label for the slider
+            "function": "",             // Define a function used to provide the input
+            "centered": false           // If true the sliders 0 coordinate is centred, otherwise it's left-sided
+        }
+    ],
+    "verticalSliders": [
+        {
+            "label": "",                // Set a label for the slider
+            "function": "",             // Define a function used to provide the input
+            "centered": false           // If true the sliders 0 coordinate is centred, otherwise it's left-sided
+        }
+    ],
+    "cameras": [
+        {
+            "label": "",                // Set a label for a camera
+            "function": ""              // Define a function used to retrieve the camera image
+        }
+    ]
+}
+```
+Further information about the tags of all available functions can be found [here](AVAILABLE-CONTROL-FUNCTIONS.md).
 
 ### Troubleshooting
 ###### "Service /ros_api/node_details does not exist"
