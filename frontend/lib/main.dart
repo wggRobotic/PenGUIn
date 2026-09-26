@@ -104,9 +104,6 @@ class MyHomePage extends StatelessWidget {
                 case 2:
                   await NodesConfigHandler().applySteeringConfiguration(context);
                   break;
-                case 3:
-                  // TODO
-                  break;
               }
             },
           ),
@@ -141,5 +138,3 @@ class MyHomePage extends StatelessWidget {
     context.read<AnalyticsProvider>().updateFilterAttributes();
   }
 }
-
-// TODO: Cancel the log subscription before closing the app
