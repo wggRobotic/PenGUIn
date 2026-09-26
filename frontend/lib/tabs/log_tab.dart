@@ -81,6 +81,13 @@ class LogTab extends StatelessWidget{
           },
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: "Clear",
+        onPressed: () {
+          context.read<LogProvider>().clearLog();
+        },
+        child: Icon(Icons.history_rounded),
+      ),
     );
   }
 }

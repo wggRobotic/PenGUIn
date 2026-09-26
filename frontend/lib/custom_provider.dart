@@ -186,4 +186,9 @@ class LogProvider extends ChangeNotifier {
     logEntries.add(newLogEntry);
     notifyListeners();
   }
+
+  void clearLog() {
+    logEntries.clear();
+    notifyListeners();
+  }
 }
