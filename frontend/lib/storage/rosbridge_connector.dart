@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend/custom_provider.dart';
 import 'package:frontend/datamodells.dart';
+import 'package:frontend/storage/robot-specific-functions/quac.dart';
 import 'package:frontend/ui-elements/error_snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -83,7 +84,7 @@ class RosbridgeConnector {
   }
 
   // -------------------------------------------------------------------------------------------------------------------------------
-  // RosAPI
+  // Introspection
   // -------------------------------------------------------------------------------------------------------------------------------
   // Introspect nodes, topics, etc.
   void getNodeInformation(BuildContext context, String nodeName) async {
@@ -401,6 +402,38 @@ class RosbridgeConnector {
   }
 
   // -------------------------------------------------------------------------------------------------------------------------------
+  // Control
+  // -------------------------------------------------------------------------------------------------------------------------------
+  Future<void> publishJoystickInput(BuildContext context, String configuredFunction, double x, double y) async {
+    // Make sure to connect with the server
+    if (!isConnected) {
+      if (!context.mounted) return;
+      final bool success = await connectAndListen(context);
+      if (!success) {
+        return;
+      }
+    }
+
+    // Get the correct request depending on the configured function
+    final String json;
+    switch (configuredFunction) {
+      case "quac-driving":
+        json = Quac().getQuacDrivingRequest(x, y);
+        break;
+      default:
+        if(!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Unsupported joystick function: $configuredFunction"));
+        return;
+    }
+
+    // Publish the cancel command
+    channel.sink.add(json);
+
+    // Disconnect
+    channel.sink.close();
+  }
+
+  // -------------------------------------------------------------------------------------------------------------------------------
   // Helper functions
   // -------------------------------------------------------------------------------------------------------------------------------
   // Wait for the response after calling a service
@@ -594,3 +627,5 @@ class RosbridgeConnector {
     return true;
   }
 }
+
+// TODO: Add functions for each control widget and call compatible robot-specific request

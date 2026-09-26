@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:frontend/custom_provider.dart';
 import 'package:frontend/datamodells.dart';
+import 'package:frontend/storage/rosbridge_connector.dart';
 import 'package:frontend/ui-elements/slider_box.dart';
 import 'package:provider/provider.dart';
 
@@ -120,7 +121,8 @@ class ControlsTab extends StatelessWidget{
                     size: 50,
                   ),
                   listener: (input) {
-                    // TODO: Implement the Joystick
+                    // Publish the input depending on the configuration
+                    RosbridgeConnector().publishJoystickInput(context, joystick.function, input.x, input.y);
                   }
                 ),
                 VerticalDivider(
