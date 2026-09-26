@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/custom_provider.dart';
+import 'package:frontend/datamodells.dart';
 import 'package:frontend/ui-elements/error_snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -13,6 +14,7 @@ class RosbridgeConnector {
   bool connecting = false;
   bool listening = false;
   final Map<String, Completer<Map<String, dynamic>>> pending = {};
+  StreamSubscription? subscription;
 
   // -------------------------------------------------------------------------------------------------------------------------------
   // PenGUIn Control Node: Control nodes
@@ -81,8 +83,9 @@ class RosbridgeConnector {
   }
 
   // -------------------------------------------------------------------------------------------------------------------------------
-  // RosAPI: Introspect nodes, topics, etc.
+  // RosAPI
   // -------------------------------------------------------------------------------------------------------------------------------
+  // Introspect nodes, topics, etc.
   void getNodeInformation(BuildContext context, String nodeName) async {
     // Make sure the connection works
     if (!isConnected) {
@@ -358,6 +361,43 @@ class RosbridgeConnector {
 
     if (!context.mounted) return;
     context.read<ActionInformationProvider>().setInterface("$interface\n------------\n$goal\n---\n$feedback\n---\n$result");
+  }
+
+  // Receive the current log
+  void subscribeToLogTopic(BuildContext context) {
+    final WebSocketChannel channel = WebSocketChannel.connect(Uri.parse("ws://127.0.0.1:9090"));
+    // Handle the provided log entries
+    subscription = channel.stream.listen(
+      (rawMessage) {
+        final data = jsonDecode(rawMessage as String);
+        
+        // Return if the log entry is invalid
+        if (data["op"] != "publish") return;
+        if (data["topic"] != "/rosout") return;
+
+        // Get the log entry
+        final logEntry = data["msg"];
+
+        final parsedLogEntry = LogEntryDatamodell(
+          logLevel: logEntry["level"] as int? ?? 0,
+          fileName: logEntry["file"] as String? ?? "-",
+          fullLogMessage: logEntry["msg"] as String? ?? "-",
+          lineWithinTheCode: logEntry["line"] as int? ?? 0
+        );
+        
+        // Display the log entry
+        if (!context.mounted) return;
+        context.read<LogProvider>().addLogEntry(parsedLogEntry);
+      },
+      onError: (error) {
+        // Show an error message
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: error.toString().trim()));
+      }
+    );
+
+    // Submit the subscription
+    channel.sink.add(jsonEncode({"op": "subscribe", "id": "log-topic-subscription", "topic": "/rosout", "type": "rcl_interfaces/msg/Log"}));
   }
 
   // -------------------------------------------------------------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/storage/config_handler.dart';
 import 'package:frontend/custom_provider.dart';
+import 'package:frontend/storage/rosbridge_connector.dart';
 import 'package:frontend/tabs/analytics_tab.dart';
 import 'package:frontend/tabs/controls_tab.dart';
 import 'package:frontend/tabs/log_tab.dart';
@@ -51,8 +52,6 @@ class PenGUIn extends StatelessWidget {
       home: const MyHomePage(),
     );
   }
-
-  
 }
 
 class MyHomePage extends StatelessWidget {
@@ -133,8 +132,14 @@ class MyHomePage extends StatelessWidget {
     if (!context.mounted) return;
     await NodesConfigHandler().applySteeringConfiguration(context);
 
+    // Subscribe the log topic
+    if (!context.mounted) return;
+    RosbridgeConnector().subscribeToLogTopic(context);
+
     // Update the filter attributes
     if(!context.mounted) return;
     context.read<AnalyticsProvider>().updateFilterAttributes();
   }
 }
+
+// TODO: Cancel the log subscription before closing the app
