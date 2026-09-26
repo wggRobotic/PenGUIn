@@ -18,6 +18,7 @@ class LogTab extends StatelessWidget{
         child: ListView.separated(
           itemCount: logEntries.length,
           separatorBuilder: (context, index) => const SizedBox(height: 8),
+          reverse: true,
           itemBuilder: (context, index) {
             final logEntry = logEntries[index];
             return ListTile(
