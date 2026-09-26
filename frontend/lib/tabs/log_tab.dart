@@ -19,6 +19,7 @@ class LogTab extends StatelessWidget{
           itemCount: logEntries.length,
           separatorBuilder: (context, index) => const SizedBox(height: 8),
           reverse: true,
+          shrinkWrap: true,
           itemBuilder: (context, index) {
             final logEntry = logEntries[index];
             return ListTile(
