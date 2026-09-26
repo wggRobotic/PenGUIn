@@ -49,12 +49,10 @@ class SliderDatamodell {
 }
 
 class JoystickDatamodell {
-  String xFunction;
-  String yFunction;
+  String function;
 
   JoystickDatamodell({
-    required this.xFunction,
-    required this.yFunction
+    required this.function,
   });
 }
 

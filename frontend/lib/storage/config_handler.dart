@@ -100,7 +100,7 @@ class NodesConfigHandler {
   }
 
   // Read the steering config
-  Future<void> applySteeringConfiguration(BuildContext context) async {
+  Future<void> applyControlsConfiguration(BuildContext context) async {
     final configPath = getRelativeConfigPath("controls_config.json");
 
     // Make sure it exists
@@ -118,11 +118,10 @@ class NodesConfigHandler {
       if (decodedConfig["joystick"] != null) {
         final Map<String, dynamic> joystick = decodedConfig["joystick"];
         joystickConfiguration = JoystickDatamodell(
-          xFunction: joystick["xFunction"] as String? ?? "",
-          yFunction: joystick["yFunction"] as String? ?? ""
+          function: joystick["function"] as String? ?? "",
         );
       } else {
-        joystickConfiguration = JoystickDatamodell(xFunction: "", yFunction: "");
+        joystickConfiguration = JoystickDatamodell(function: "");
       }
       if(!context.mounted) return;
       context.read<ControlsProvider>().updateJoystick(joystickConfiguration);
