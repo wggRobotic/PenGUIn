@@ -183,7 +183,8 @@ class LogProvider extends ChangeNotifier {
   List<LogEntryDatamodell> logEntries = [];
 
   void addLogEntry(LogEntryDatamodell newLogEntry) {
-    logEntries.add(newLogEntry);
+    //logEntries.add(newLogEntry);
+    logEntries.insert(0, newLogEntry);
     notifyListeners();
   }
 
