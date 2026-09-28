@@ -366,7 +366,7 @@ class RosbridgeConnector {
 
   // Receive the current log
   void subscribeToLogTopic(BuildContext context) {
-    final WebSocketChannel channel = WebSocketChannel.connect(Uri.parse("ws://127.0.0.1:9090"));
+    final WebSocketChannel channel = WebSocketChannel.connect(Uri.parse("ws://${context.read<ControlsProvider>().ipAddress}:9090"));
     // Handle the provided log entries
     subscription = channel.stream.listen(
       (rawMessage) {
