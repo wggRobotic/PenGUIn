@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend/custom_provider.dart';
 import 'package:frontend/datamodells.dart';
-import 'package:frontend/storage/robot-specific-functions/quac.dart';
+import 'package:frontend/storage/interface-specific-functions/geometry_msgs_interfaces.dart';
 import 'package:frontend/ui-elements/error_snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -418,7 +418,7 @@ class RosbridgeConnector {
     final String json;
     switch (configuredFunction) {
       case "quac-driving":
-        json = Quac().getQuacDrivingRequest(x, y);
+        json = GeometryMsgsInterfaces().getTwistStampedRequest(x, y);
         break;
       default:
         if(!context.mounted) return;
