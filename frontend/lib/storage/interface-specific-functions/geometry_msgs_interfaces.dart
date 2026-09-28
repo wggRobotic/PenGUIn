@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-class Quac {
-  String getQuacDrivingRequest(double x, double y) {
+class GeometryMsgsInterfaces {
+  String getTwistStampedRequest(double x, double y) {
     return jsonEncode({
       "op": "publish",
       "topic": "/quac/cmd_vel_pilot",
