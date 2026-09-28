@@ -137,6 +137,7 @@ class ControlsProvider extends ChangeNotifier {
   List<SliderDatamodell> verticalSliders = [];
   List<CameraDatamodell> cameras = [];
   int selectedPosition = 0;
+  String ipAddress = "127.0.0.1";
 
   void updateJoystick (JoystickDatamodell newJoystick) {
     joystick = newJoystick;
@@ -176,6 +177,10 @@ class ControlsProvider extends ChangeNotifier {
     // Remember the position of the selection
     selectedPosition = position;
     notifyListeners();
+  }
+
+  void updateIPAddress(String newipAddress) {
+    ipAddress = newipAddress;
   }
 }
 

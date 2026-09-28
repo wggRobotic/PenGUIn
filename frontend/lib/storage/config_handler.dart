@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/custom_provider.dart';
 import 'package:frontend/datamodells.dart';
+import 'package:frontend/storage/rosbridge_connector.dart';
 import 'package:frontend/ui-elements/error_snackbar.dart';
 import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
@@ -152,6 +153,11 @@ class NodesConfigHandler {
         }).toList();
       if(!context.mounted) return;
       context.read<ControlsProvider>().updateCamera(cameras);
+
+      // Get the ip address of the robot
+      final String ipAddress = decodedConfig["robot-ip"] as String? ?? "127.0.0.1";
+      if (!context.mounted) return;
+      context.read<ControlsProvider>().updateIPAddress(ipAddress);
     } catch (e) {
       // Show an error message
       if (!context.mounted) return;
