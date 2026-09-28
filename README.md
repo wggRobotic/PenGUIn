@@ -12,6 +12,7 @@ values of the topics and services of our ros2 projects.
     - [Configure nodes](#Configure-nodes)
     - [Configure analytics](#Configure-analytics)
     - [Configure controls](#configure-controls)
+    - [Configure logs](#configure-logs)
 - [Troubleshooting](#Troubleshooting)
 - [How it works](#How-it-works)
 
@@ -110,6 +111,15 @@ This file is supposed to be configured as follows:
 }
 ```
 Further information about the tags of all available functions can be found [here](AVAILABLE-CONTROL-FUNCTIONS.md).
+
+###### Configure logs
+Since there might be a lot of irrelevant log entries, you might want to hidde certain sources as follows:
+```
+[
+    "/path/file.cpp",                   // Ignore a certain file
+    "/path/*"                           // Ignore a certain directory
+]
+``` 
 
 ### Troubleshooting
 ###### "Service /ros_api/node_details does not exist"
