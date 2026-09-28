@@ -82,7 +82,15 @@ class AnalyticsTab extends StatelessWidget{
         child: Icon(Icons.filter_list_outlined),
         onPressed: () {
           // Open the filter dialog
-          FilterDialog().showFilterDialog(context, context.read<AnalyticsProvider>().typeFilter, context.read<AnalyticsProvider>().categoryFilter);
+          FilterDialog().showFilterDialog(
+            context,
+            "Type:",
+            context.read<AnalyticsProvider>().typeFilter,
+            "Category:",
+            context.read<AnalyticsProvider>().categoryFilter,
+            () => context.read<AnalyticsProvider>().resetFilter(),
+            (selectedTypes, selectedCategories) => context.read<AnalyticsProvider>().applyFilter(selectedTypes, selectedCategories),
+          );
         }
       ),
     );

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/custom_provider.dart';
 import 'package:frontend/ui-elements/filter_checkbox.dart';
-import 'package:provider/provider.dart';
 
 class FilterDialog {
-  void showFilterDialog(BuildContext context, List<String> typeFilter, List<String> categoryFiler) {
-    List<String> selectedTypes = [];
-    List<String> selectedCategories = [];
+  void showFilterDialog(BuildContext context, String firstLabel, List<String> firstFilter, String secondLabel, List<String> secondFiler, VoidCallback resetAction, Function(List<String>, List<String>) applyAction) {
+    List<String> selectedTagsOfFirst = [];
+    List<String> selectedTagsOfSecond = [];
 
     showDialog(
       context: context,
@@ -26,33 +24,33 @@ class FilterDialog {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text("Type:"),
+                      Text(firstLabel),
                       Column(
-                        children: typeFilter.map((attribute) {
+                        children: firstFilter.map((attribute) {
                           return FilterCheckbox(
                             label: attribute,
                             onChanged: (state) {
                               // Add the type to the list of selected filters
                               if (state == true) {
-                                selectedTypes.add(attribute);
+                                selectedTagsOfFirst.add(attribute);
                               } else if (state == false) {
-                                selectedTypes.remove(attribute);
+                                selectedTagsOfFirst.remove(attribute);
                               }
                             }
                           );
                         }).toList(),
                       ),
-                      Text("Category:"),
+                      Text(secondLabel),
                       Column(
-                        children: categoryFiler.map((attribute) {
+                        children: secondFiler.map((attribute) {
                           return FilterCheckbox(
                             label: attribute,
                             onChanged: (state) {
                               // Add the type to the list of selected filters
                               if (state == true) {
-                                selectedCategories.add(attribute);
+                                selectedTagsOfSecond.add(attribute);
                               } else if (state == false) {
-                                selectedCategories.remove(attribute);
+                                selectedTagsOfSecond.remove(attribute);
                               }
                             }
                           );
@@ -70,14 +68,17 @@ class FilterDialog {
                 TextButton(
                   child: Text("Apply"),
                   onPressed: () {
-                    if (selectedTypes.isEmpty && selectedCategories.isEmpty) {
+                    // TODO: Support multiple tabs
+                    if (selectedTagsOfFirst.isEmpty && selectedTagsOfSecond.isEmpty) {
                       // Reset in order to improve the performance
-                      context.read<AnalyticsProvider>().resetFilter();
+                      resetAction();
                     } else {
                       // Apply the filter
-                      context.read<AnalyticsProvider>().applyFilter(selectedTypes, selectedCategories);
-                      Navigator.pop(context);
+                      applyAction(selectedTagsOfFirst, selectedTagsOfSecond);
                     }
+
+                    // Close the dialog
+                    Navigator.pop(context);
                   }
                 )
               ],
