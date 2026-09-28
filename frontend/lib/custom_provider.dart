@@ -103,7 +103,7 @@ class AnalyticsProvider extends ChangeNotifier {
     categoryFilter.removeWhere((e) => e == " - ");
   }
 
-  void applyFilter(List<String> selectedTypes, List<String> selectedCategories) {
+  void applyFilter(List<dynamic> selectedTypes, List<String> selectedCategories) {
     // Include all data
     data = allData;
 
@@ -181,15 +181,51 @@ class ControlsProvider extends ChangeNotifier {
 
 class LogProvider extends ChangeNotifier {
   List<LogEntryDatamodell> logEntries = [];
+  List<LogEntryDatamodell> allLogEntries = [];
+  List<int> logLevelFilter = [];
+  List<String> fileNameFilter = [];
 
   void addLogEntry(LogEntryDatamodell newLogEntry) {
     //logEntries.add(newLogEntry);
     logEntries.insert(0, newLogEntry);
+    allLogEntries.insert(0, newLogEntry);
     notifyListeners();
   }
 
   void clearLog() {
     logEntries.clear();
+    notifyListeners();
+  }
+
+  void updateFilterAttributes() {
+    // Get all types
+    logLevelFilter = allLogEntries.map((e) => e.logLevel).toSet().toList();
+    fileNameFilter = allLogEntries.map((e) => e.fileName.toLowerCase()).where((t) => t.isNotEmpty).toSet().toList();
+  }
+
+  void applyFilter(List<dynamic> selectedLogLevels, List<String> selectedFileNames) {
+    // Include all log entries
+    logEntries = allLogEntries;
+
+    // Standardise the values to be lowercase
+    final fileNames = selectedFileNames.map((s) => s.toLowerCase()).toSet();
+
+    // Check which filter were applied
+    final noLogLevelFilter = selectedLogLevels.isEmpty;
+    final noFileNameFilter = fileNames.isEmpty;
+
+    // Apply the filter
+    logEntries = allLogEntries.where((e) {
+      final logLevelMatches = noLogLevelFilter || selectedLogLevels.contains(e.logLevel);
+      final fileNameMatches = noFileNameFilter || fileNames.contains(e.fileName.toLowerCase());
+      return logLevelMatches && fileNameMatches;
+    }).toList();
+
+    notifyListeners();
+  }
+
+  void resetFilter() {
+    logEntries = allLogEntries;
     notifyListeners();
   }
 }

@@ -104,6 +104,9 @@ class MyHomePage extends StatelessWidget {
                 case 2:
                   await NodesConfigHandler().applyControlsConfiguration(context);
                   break;
+                case 3:
+                  context.read<LogProvider>().updateFilterAttributes();
+                  break;
               }
             },
           ),
@@ -136,5 +139,6 @@ class MyHomePage extends StatelessWidget {
     // Update the filter attributes
     if(!context.mounted) return;
     context.read<AnalyticsProvider>().updateFilterAttributes();
+    context.read<LogProvider>().updateFilterAttributes();
   }
 }
