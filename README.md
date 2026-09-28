@@ -107,7 +107,8 @@ This file is supposed to be configured as follows:
             "label": "",                // Set a label for a camera
             "function": ""              // Define a function used to retrieve the camera image
         }
-    ]
+    ],
+    "robot-ip": ""                      // The IP address of the robot
 }
 ```
 Further information about the tags of all available functions can be found [here](AVAILABLE-CONTROL-FUNCTIONS.md).

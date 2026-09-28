@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/custom_provider.dart';
 import 'package:frontend/datamodells.dart';
-import 'package:frontend/storage/rosbridge_connector.dart';
 import 'package:frontend/ui-elements/error_snackbar.dart';
 import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
