@@ -184,9 +184,25 @@ class LogProvider extends ChangeNotifier {
   List<LogEntryDatamodell> allLogEntries = [];
   List<int> logLevelFilter = [];
   List<String> fileNameFilter = [];
+  List<String> logConfiguration = [];
 
   void addLogEntry(LogEntryDatamodell newLogEntry) {
-    //logEntries.add(newLogEntry);
+    // Check whether it's supposed to be ignored
+    for (var line in logConfiguration) {
+      // Ignore if it's a perfect match
+      if (line == newLogEntry.fileName) {
+        return;
+      // Check whether it's a file within an ignored subdirectory
+      } else if (line.endsWith("*")) {
+        final shortEntry = line.substring(0, line.length -1);
+
+        if (newLogEntry.fileName.startsWith(shortEntry)) {
+          return;
+        }
+      }
+    }
+
+    // Add the log entry to the list
     logEntries.insert(0, newLogEntry);
     allLogEntries.insert(0, newLogEntry);
     notifyListeners();
@@ -227,5 +243,9 @@ class LogProvider extends ChangeNotifier {
   void resetFilter() {
     logEntries = allLogEntries;
     notifyListeners();
+  }
+
+  void applyLogConfig(List<String> newLogConfiguration) {
+    logConfiguration = newLogConfiguration;
   }
 }
