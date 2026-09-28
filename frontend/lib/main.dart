@@ -105,6 +105,8 @@ class MyHomePage extends StatelessWidget {
                   await NodesConfigHandler().applyControlsConfiguration(context);
                   break;
                 case 3:
+                  context.read<LogProvider>().applyLogConfig(await NodesConfigHandler().applyLogConfiguration(context));
+                  if (!context.mounted) return;
                   context.read<LogProvider>().updateFilterAttributes();
                   break;
               }
@@ -131,6 +133,8 @@ class MyHomePage extends StatelessWidget {
     context.read<AnalyticsProvider>().updateAnalyticsData(await NodesConfigHandler().applyAnalyticsConfiguration(context));
     if (!context.mounted) return;
     await NodesConfigHandler().applyControlsConfiguration(context);
+    if (!context.mounted) return;
+    context.read<LogProvider>().applyLogConfig(await NodesConfigHandler().applyLogConfiguration(context));
 
     // Subscribe the log topic
     if (!context.mounted) return;

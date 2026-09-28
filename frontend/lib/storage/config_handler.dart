@@ -160,6 +160,26 @@ class NodesConfigHandler {
     }
   }
 
+  // Read the log config
+  Future<List<String>> applyLogConfiguration(BuildContext context) async {
+    final configPath = getRelativeConfigPath("log_config.json");
+
+    // Make sure it exists
+    await ensureConfigExists(configPath, "log_config.json");
+
+    // Get the JSON config
+    String jsonConfig = await File(configPath).readAsString();
+
+    // Parse the JSON config
+    try {
+      return List<String>.from(jsonDecode(jsonConfig));
+    } catch (e) {
+      if(!context.mounted) return [];
+      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Unable to load the log configuration: ${e.toString().trim()}"));
+      return [];
+    }
+  }
+
   // Take the list from the JSON of the sliders and convert it to a list of the SliderDatamodell
   List<SliderDatamodell> getSliderDatamodellList(List<dynamic> sliders) {
     return sliders.map((s) {
@@ -173,3 +193,4 @@ class NodesConfigHandler {
     }).toList();
   }
 }
+ 
