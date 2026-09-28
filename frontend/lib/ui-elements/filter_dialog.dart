@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/ui-elements/filter_checkbox.dart';
 
 class FilterDialog {
-  void showFilterDialog(BuildContext context, String firstLabel, List<String> firstFilter, String secondLabel, List<String> secondFiler, VoidCallback resetAction, Function(List<String>, List<String>) applyAction) {
-    List<String> selectedTagsOfFirst = [];
+  void showFilterDialog(BuildContext context, String firstLabel, List<dynamic> firstFilter, String secondLabel, List<String> secondFiler, VoidCallback resetAction, Function(List<dynamic>, List<String>) applyAction) {
+    List<dynamic> selectedTagsOfFirst = [];
     List<String> selectedTagsOfSecond = [];
 
     showDialog(
@@ -28,7 +28,7 @@ class FilterDialog {
                       Column(
                         children: firstFilter.map((attribute) {
                           return FilterCheckbox(
-                            label: attribute,
+                            label: attribute.toString(),
                             onChanged: (state) {
                               // Add the type to the list of selected filters
                               if (state == true) {

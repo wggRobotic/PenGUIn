@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/custom_provider.dart';
 import 'package:frontend/datamodells.dart';
+import 'package:frontend/ui-elements/filter_dialog.dart';
 import 'package:provider/provider.dart';
 
 class LogTab extends StatelessWidget{
@@ -80,12 +81,37 @@ class LogTab extends StatelessWidget{
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        tooltip: "Clear",
-        onPressed: () {
-          context.read<LogProvider>().clearLog();
-        },
-        child: Icon(Icons.history_rounded),
+      floatingActionButton: SizedBox(
+        height: 120,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8.0,
+          children: [
+            FloatingActionButton(
+              tooltip: "Clear",
+              child: Icon(Icons.history_rounded),
+              onPressed: () {
+                context.read<LogProvider>().clearLog();
+              }
+              ),
+            FloatingActionButton(
+              tooltip: "Apply filter",
+              child: Icon(Icons.filter_list_outlined),
+              onPressed: () {
+                // TODO: Open a filter dialog
+                FilterDialog().showFilterDialog(
+                  context,
+                  "Log level:",
+                  context.read<LogProvider>().logLevelFilter,
+                  "File name:",
+                  context.read<LogProvider>().fileNameFilter,
+                  () => context.read<LogProvider>().resetFilter(),
+                  (selectedLogLevels, selectedFileNames) => context.read<LogProvider>().applyFilter(selectedLogLevels, selectedFileNames),
+                );
+              }
+            ),
+          ],
+        ),
       ),
     );
   }
