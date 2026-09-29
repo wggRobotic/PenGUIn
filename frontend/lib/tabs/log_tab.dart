@@ -98,7 +98,7 @@ class LogTab extends StatelessWidget{
               tooltip: "Apply filter",
               child: Icon(Icons.filter_list_outlined),
               onPressed: () {
-                // TODO: Open a filter dialog
+                // Open a filter dialog
                 FilterDialog().showFilterDialog(
                   context,
                   "Log level:",
@@ -116,8 +116,3 @@ class LogTab extends StatelessWidget{
     );
   }
 }
-
-// TODO: Add a filter dialog
-// TODO: Filter for
-//        - The file name
-//        - The log level

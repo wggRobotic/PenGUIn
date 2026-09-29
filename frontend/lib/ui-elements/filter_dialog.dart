@@ -68,7 +68,6 @@ class FilterDialog {
                 TextButton(
                   child: Text("Apply"),
                   onPressed: () {
-                    // TODO: Support multiple tabs
                     if (selectedTagsOfFirst.isEmpty && selectedTagsOfSecond.isEmpty) {
                       // Reset in order to improve the performance
                       resetAction();
