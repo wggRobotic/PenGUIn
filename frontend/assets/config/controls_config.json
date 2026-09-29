@@ -1,25 +1,41 @@
 {
     "joystick": {
-        "function": ""
+        "function": {
+            "tag": "",
+            "type": "",
+            "topic": ""
+        }
     },
     "horizontalSliders": [
         {
             "label": "",
-            "function": "",
+            "function": {
+                "tag": "",
+                "type": "",
+                "topic": ""
+            },
             "centered": false
         }
     ],
     "verticalSliders": [
         {
             "label": "",
-            "function": "",
+            "function": {
+                "tag": "",
+                "type": "",
+                "topic": ""
+            },
             "centered": false
         }
     ],
     "cameras": [
         {
             "label": "",
-            "function": ""
+            "function": {
+                "tag": "",
+                "type": "",
+                "topic": ""
+            }
         }
     ],
     "robot-ip": "127.0.0.1"

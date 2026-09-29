@@ -38,7 +38,7 @@ class AnalyticsDatamodell{
 
 class SliderDatamodell {
   String label;
-  String function;
+  InterfaceRequestDatamodell function;
   bool centered;
 
   SliderDatamodell({
@@ -49,7 +49,7 @@ class SliderDatamodell {
 }
 
 class JoystickDatamodell {
-  String function;
+  InterfaceRequestDatamodell function;
 
   JoystickDatamodell({
     required this.function,
@@ -79,5 +79,17 @@ class LogEntryDatamodell {
     required this.fileName,
     required this.fullLogMessage,
     required this.lineWithinTheCode
+  });
+}
+
+class InterfaceRequestDatamodell {
+  String tag;
+  String type;
+  String topic;
+
+  InterfaceRequestDatamodell({
+    required this.tag,
+    required this.type,
+    required this.topic
   });
 }
