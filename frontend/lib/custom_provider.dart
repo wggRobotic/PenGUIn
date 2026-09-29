@@ -132,7 +132,7 @@ class AnalyticsProvider extends ChangeNotifier {
 }
 
 class ControlsProvider extends ChangeNotifier {
-  JoystickDatamodell joystick = JoystickDatamodell(function: "");
+  JoystickDatamodell joystick = JoystickDatamodell(function: InterfaceRequestDatamodell(tag: "", type: "", topic: ""));
   List<SliderDatamodell> horizontalSliders = [];
   List<SliderDatamodell> verticalSliders = [];
   List<CameraDatamodell> cameras = [];

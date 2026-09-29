@@ -117,11 +117,17 @@ class NodesConfigHandler {
       final JoystickDatamodell joystickConfiguration;
       if (decodedConfig["joystick"] != null) {
         final Map<String, dynamic> joystick = decodedConfig["joystick"];
+        final Map<String, dynamic> function = joystick["function"];
+
         joystickConfiguration = JoystickDatamodell(
-          function: joystick["function"] as String? ?? "",
+          function: InterfaceRequestDatamodell(
+            tag: function["tag"] as String? ?? "",
+            type: function["type"] as String? ?? "",
+            topic: function["topic"] as String? ?? ""
+          ),
         );
       } else {
-        joystickConfiguration = JoystickDatamodell(function: "");
+        joystickConfiguration = JoystickDatamodell(function: InterfaceRequestDatamodell(tag: "", type: "", topic: ""));
       }
       if(!context.mounted) return;
       context.read<ControlsProvider>().updateJoystick(joystickConfiguration);
@@ -189,10 +195,15 @@ class NodesConfigHandler {
   List<SliderDatamodell> getSliderDatamodellList(List<dynamic> sliders) {
     return sliders.map((s) {
       final slider = s as Map<String, dynamic>;
+      final Map<String, dynamic> function = slider["function"];
 
       return SliderDatamodell(
         label: slider["label"] as String? ?? "",
-        function: slider["function"] as String? ?? "",
+        function: InterfaceRequestDatamodell(
+          tag: function["tag"] as String? ?? "",
+          type: function["type"] as String? ?? "",
+          topic: function["topic"] as String? ?? ""
+        ),
         centered: slider["centered"] as bool? ?? false,
       );
     }).toList();
