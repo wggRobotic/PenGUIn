@@ -405,6 +405,7 @@ class RosbridgeConnector {
   // -------------------------------------------------------------------------------------------------------------------------------
   // Control
   // -------------------------------------------------------------------------------------------------------------------------------
+  // Joystick
   Future<void> publishJoystickInput(BuildContext context, String configuredFunction, double x, double y) async {
     // Make sure to connect with the server
     if (!isConnected) {
@@ -416,19 +417,13 @@ class RosbridgeConnector {
     }
 
     // Get the correct request depending on the configured function
-    final String json;
-    switch (configuredFunction) {
-      case "twist":
-        json = GeometryMsgsInterfaces().getTwistRequest(x, y);
-        break;
-      case "twistStamped":
-        json = GeometryMsgsInterfaces().getTwistStampedRequest(x, y);
-        break;
-      default:
-        if(!context.mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Unsupported joystick function: $configuredFunction"));
-        return;
-    }
+    if (!context.mounted) return;
+    final String json = """{
+      "op": "publish",
+      "topic": "/quac/cmd_vel_pilot",
+      "type": "geometry_msgs/msg/TwistStamped",
+      "msg": ${getJoystickRequest(context, configuredFunction, x, y)}
+    }""";
 
     // Publish the input
     channel.sink.add(jsonEncode(json));
@@ -437,6 +432,21 @@ class RosbridgeConnector {
     channel.sink.close();
   }
 
+  String getJoystickRequest(BuildContext context, String configuredFunction, double x, double y) {
+    // Get the missing part of the standard request schema
+    switch (configuredFunction) {
+      case "twist":
+        return GeometryMsgsInterfaces().getTwistRequest(x, y);
+      case "twistStamped":
+        return GeometryMsgsInterfaces().getTwistStampedRequest(x, y);
+      default:
+        if(!context.mounted) return "";
+        ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Unsupported joystick function: $configuredFunction"));
+        return "";
+    }
+  }
+
+  // Slider
   Future<void> publishSliderInput(BuildContext context, String configuredFunction, double value) async {
     // Make sure to connect with the server
     if (!isConnected) {
@@ -448,26 +458,35 @@ class RosbridgeConnector {
     }
 
     // Get the correct request depending on the configuration
-    final String json;
-    switch (configuredFunction) {
-      case "float64":
-        json = StdMsgsInterfaces().getFloat64Request(value);
-        break;
-      case "pose2D":
-        // TODO: Further infromation required
-        json = "";
-        //json = GeometryMsgsInterfaces().getPose2DRequest(x, y, theta);
-      default:
-        if(!context.mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Unsupported slider function: $configuredFunction"));
-        return;
-    }
+    if (!context.mounted) return;
+    final String json = """{
+      "op": "publish",
+      "topic": "/quac/cmd_vel_pilot",
+      "type": "geometry_msgs/msg/TwistStamped",
+      "msg": ${getSliderRequest(context, configuredFunction, value)}
+    }"""; // TODO: Support different types, topics, etc.
 
     // Publish the input
     channel.sink.add(jsonEncode(json));
 
     // Disconnect
     channel.sink.close();
+  }
+
+  String getSliderRequest(BuildContext context, String configuredFunction, double value) {
+    // Get the missing part of the standard request schema
+    switch (configuredFunction) {
+      case "float64":
+        return StdMsgsInterfaces().getFloat64Request(value);
+      case "pose2D":
+        // TODO: Further infromation required
+        return "";
+        //json = GeometryMsgsInterfaces().getPose2DRequest(x, y, theta);
+      default:
+        if(!context.mounted) return "";
+        ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Unsupported slider function: $configuredFunction"));
+        return "";
+    }
   }
 
   // -------------------------------------------------------------------------------------------------------------------------------
