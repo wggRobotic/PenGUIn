@@ -22,16 +22,25 @@ class GeometryMsgsInterfaces {
       "topic": "/quac/cmd_vel_pilot",
       "type": "geometry_msgs/msg/TwistStamped",
       "msg": {
-        "header": { // TODO: Use the correct time stamp (if necessary) => ros2 system time!
-          "stamp": {
-            "sec": 0,
-            "nanosec": 0
-          },
-          "frame_id": "base_link" // TODO: Use the required root link for quac
+        "header": {
+          "stamp": getTimeStamp(),
+          "frame_id": "base_link",
         },
         "twist": getTwistRequest(x, y)
-      }
+      },
     });
+  }
+
+  String getTimeStamp() {
+    final now = DateTime.now().toUtc();
+    final totalMicroseconds = now.microsecondsSinceEpoch;
+
+    return """{
+      "stamp": {
+        "sec": ${totalMicroseconds ~/ 1000000},
+        "nanosec": ${(totalMicroseconds % 1000000) * 1000}
+      }
+    }""";
   }
 }
 
