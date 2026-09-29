@@ -453,6 +453,10 @@ class RosbridgeConnector {
       case "float64":
         json = StdMsgsInterfaces().getFloat64Request(value);
         break;
+      case "pose2D":
+        // TODO: Further infromation required
+        json = "";
+        //json = GeometryMsgsInterfaces().getPose2DRequest(x, y, theta);
       default:
         if(!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Unsupported slider function: $configuredFunction"));

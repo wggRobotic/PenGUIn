@@ -1,7 +1,20 @@
 # Available control functions
-This is a list of available functions, that can be configured for each `function` key within the `controls_config.json`:
+Since not every interface can be used for every control element, the tags are seperated and can't be used for every function tag. This is where you can find the available tags depending on the control element:
+- [Joystick tags](#joystick-tags)
 
-| Tag for the config file: | Short description:        |
-|--------------------------|---------------------------|
+## Joystick tags
+These tags can be used for the joystick configuration:
 
-*As from the **25th of september 2026***
+| Tag for the config file:       | Short description:             |
+|--------------------------------|--------------------------------|
+| `twist` | Regular Twist interface with linear and angular velocity |
+| `twistStamped` | Extended Twist interface with a time stamp |
+
+## Slider tags
+These tags can be used for each slider within your configuration:
+
+| Tag for the config file:       | Short description:             |
+|--------------------------------|--------------------------------|
+| `float64` | Regular Float64 interface with |
+
+*As from the **29th of september 2026***
