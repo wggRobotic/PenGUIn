@@ -406,7 +406,7 @@ class RosbridgeConnector {
   // Control
   // -------------------------------------------------------------------------------------------------------------------------------
   // Joystick
-  Future<void> publishJoystickInput(BuildContext context, String configuredFunction, double x, double y) async {
+  Future<void> publishJoystickInput(BuildContext context, InterfaceRequestDatamodell configuredFunction, double x, double y) async {
     // Make sure to connect with the server
     if (!isConnected) {
       if (!context.mounted) return;
@@ -420,9 +420,9 @@ class RosbridgeConnector {
     if (!context.mounted) return;
     final String json = """{
       "op": "publish",
-      "topic": "/quac/cmd_vel_pilot",
-      "type": "geometry_msgs/msg/TwistStamped",
-      "msg": ${getJoystickRequest(context, configuredFunction, x, y)}
+      "topic": ${configuredFunction.topic},
+      "type": ${configuredFunction.type},
+      "msg": ${getJoystickRequest(context, configuredFunction.tag, x, y)}
     }""";
 
     // Publish the input
@@ -447,7 +447,7 @@ class RosbridgeConnector {
   }
 
   // Slider
-  Future<void> publishSliderInput(BuildContext context, String configuredFunction, double value) async {
+  Future<void> publishSliderInput(BuildContext context, InterfaceRequestDatamodell configuredFunction, double value) async {
     // Make sure to connect with the server
     if (!isConnected) {
       if (!context.mounted) return;
@@ -461,10 +461,10 @@ class RosbridgeConnector {
     if (!context.mounted) return;
     final String json = """{
       "op": "publish",
-      "topic": "/quac/cmd_vel_pilot",
-      "type": "geometry_msgs/msg/TwistStamped",
-      "msg": ${getSliderRequest(context, configuredFunction, value)}
-    }"""; // TODO: Support different types, topics, etc.
+      "topic": ${configuredFunction.topic},
+      "type": ${configuredFunction.type},
+      "msg": ${getSliderRequest(context, configuredFunction.tag, value)}
+    }""";
 
     // Publish the input
     channel.sink.add(jsonEncode(json));
@@ -683,5 +683,3 @@ class RosbridgeConnector {
     return true;
   }
 }
-
-// TODO: Add functions for each control widget and call compatible robot-specific request
