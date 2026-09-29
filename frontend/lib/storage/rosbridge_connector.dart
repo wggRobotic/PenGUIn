@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/custom_provider.dart';
 import 'package:frontend/datamodells.dart';
 import 'package:frontend/storage/interface-specific-functions/geometry_msgs_interfaces.dart';
+import 'package:frontend/storage/interface-specific-functions/std_msgs_interfaces.dart';
 import 'package:frontend/ui-elements/error_snackbar.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -417,7 +418,10 @@ class RosbridgeConnector {
     // Get the correct request depending on the configured function
     final String json;
     switch (configuredFunction) {
-      case "quac-driving":
+      case "twist":
+        json = GeometryMsgsInterfaces().getTwistRequest(x, y);
+        break;
+      case "twistStamped":
         json = GeometryMsgsInterfaces().getTwistStampedRequest(x, y);
         break;
       default:
@@ -426,7 +430,36 @@ class RosbridgeConnector {
         return;
     }
 
-    // Publish the cancel command
+    // Publish the input
+    channel.sink.add(jsonEncode(json));
+
+    // Disconnect
+    channel.sink.close();
+  }
+
+  Future<void> publishSliderInput(BuildContext context, String configuredFunction, double value) async {
+    // Make sure to connect with the server
+    if (!isConnected) {
+      if (!context.mounted) return;
+      final bool success = await connectAndListen(context);
+      if (!success) {
+        return;
+      }
+    }
+
+    // Get the correct request depending on the configuration
+    final String json;
+    switch (configuredFunction) {
+      case "float64":
+        json = StdMsgsInterfaces().getFloat64Request(value);
+        break;
+      default:
+        if(!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Unsupported slider function: $configuredFunction"));
+        return;
+    }
+
+    // Publish the input
     channel.sink.add(jsonEncode(json));
 
     // Disconnect
