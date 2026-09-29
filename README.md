@@ -85,30 +85,45 @@ This file is supposed to be configured as follows:
 ```
 {
     "joystick": {
-        "xFunction": "",                // Define the function used to profide the input for the x-axis
-        "yFunction": ""                 // Define the function used to profide the input for the y-axis
+        "function": {                  // Define a function used to provide the input
+            "tag": "",                      // One of the supported functions
+            "type": "",                     // The full type of the interface
+            "topic": ""                     // The topic that's used
+        }
     },
     "horizontalSliders": [
         {
-            "label": "",                // Set a label for the slider
-            "function": "",             // Define a function used to provide the input
-            "centered": false           // If true the sliders 0 coordinate is centred, otherwise it's left-sided
+            "label": "",               // Set a label for the slider
+            "function": {              // Define a function used to provide the input
+                "tag": "",                  // The topic that's used
+                "type": "",                 // The topic that's used
+                "topic": ""                 // The topic that's used
+            },
+            "centered": false          // If true the sliders 0 coordinate is centred, otherwise it's left-sided
         }
     ],
     "verticalSliders": [
         {
-            "label": "",                // Set a label for the slider
-            "function": "",             // Define a function used to provide the input
-            "centered": false           // If true the sliders 0 coordinate is centred, otherwise it's left-sided
+            "label": "",               // Set a label for the slider
+            "function": {              // Define a function used to provide the input
+                "tag": "",                  // One of the supported functions
+                "type": "",                 // The full type of the interface
+                "topic": ""                 // The topic that's used
+            },
+            "centered": false          // If true the sliders 0 coordinate is centred, otherwise it's left-sided
         }
     ],
     "cameras": [
         {
-            "label": "",                // Set a label for a camera
-            "function": ""              // Define a function used to retrieve the camera image
+            "label": "",               // Set a label for a camera
+            "function": {              // Define a function used to retrieve the camera image
+                "tag": "",                  // One of the supported functions
+                "type": "",                 // The full type of the interface
+                "topic": ""                 // The topic that's used
+            }
         }
     ],
-    "robot-ip": ""                      // The IP address of the robot
+    "robot-ip": "127.0.0.1"            // The IP address of the robot
 }
 ```
 Further information about the tags of all available functions can be found [here](AVAILABLE-CONTROL-FUNCTIONS.md).
