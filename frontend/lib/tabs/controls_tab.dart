@@ -84,7 +84,8 @@ class ControlsTab extends StatelessWidget{
                         verticalOrientation: false,
                         fixedWidth: sideBarSize - 16,
                         onChangeEnd: (value) {
-                          // TODO: Implement the slider
+                          // Publish the input
+                          RosbridgeConnector().publishSliderInput(context, horizontalSliders[index].function, value);
                         },
                       );
                     },
@@ -153,7 +154,8 @@ class ControlsTab extends StatelessWidget{
                           verticalOrientation: true,
                           fixedWidth: sideBarSize / 3,
                           onChangeEnd: (value) {
-                            // TODO: Implement the slider
+                            // Publish the input
+                            RosbridgeConnector().publishSliderInput(context, verticalSliders[index].function, value);
                           },
                         );
                       },
@@ -169,6 +171,3 @@ class ControlsTab extends StatelessWidget{
     );
   }
 }
-
-// TODO: Define the relevant functions
-// TODO: Publish the input using the configured function
