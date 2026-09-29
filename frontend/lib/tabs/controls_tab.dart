@@ -43,15 +43,17 @@ class ControlsTab extends StatelessWidget{
                       child: ListView.separated(
                         itemCount: cameras.length,
                         itemBuilder: (context, index) {
+                          final camera = cameras[index];
+
                           return ListTile(
-                            title: Text(cameras[index].label),
+                            title: Text(camera.label),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                             tileColor: theme.surfaceContainer,
                             selectedTileColor: theme.secondaryContainer,
-                            selected: cameras[index].selected,
+                            selected: camera.selected,
                             onTap: () {
                               // Select this one
-                              context.read<ControlsProvider>().selectCamera(index, cameras[index].selected ? false : true);
+                              context.read<ControlsProvider>().selectCamera(index, camera.selected ? false : true);
                             },
                           );
                         },
@@ -79,13 +81,15 @@ class ControlsTab extends StatelessWidget{
                     itemCount: horizontalSliders.length,
                     padding: EdgeInsets.all(8.0),
                     itemBuilder: (context, index) {
+                      final horizontalSlider = horizontalSliders[index];
+
                       return SliderBox(
-                        slider: horizontalSliders[index],
+                        slider: horizontalSlider,
                         verticalOrientation: false,
                         fixedWidth: sideBarSize - 16,
                         onChangeEnd: (value) {
                           // Publish the input
-                          RosbridgeConnector().publishSliderInput(context, horizontalSliders[index].function, value);
+                          RosbridgeConnector().publishSliderInput(context, horizontalSlider.function, value);
                         },
                       );
                     },
@@ -149,13 +153,15 @@ class ControlsTab extends StatelessWidget{
                       reverse: true,
                       padding: EdgeInsetsGeometry.all(8.0),
                       itemBuilder: (context, index) {
+                        final verticalSlider = verticalSliders[index];
+
                         return SliderBox(
-                          slider: verticalSliders[index],
+                          slider: verticalSlider,
                           verticalOrientation: true,
                           fixedWidth: sideBarSize / 3,
                           onChangeEnd: (value) {
                             // Publish the input
-                            RosbridgeConnector().publishSliderInput(context, verticalSliders[index].function, value);
+                            RosbridgeConnector().publishSliderInput(context, verticalSlider.function, value);
                           },
                         );
                       },
