@@ -427,7 +427,7 @@ class RosbridgeConnector {
     }
 
     // Publish the cancel command
-    channel.sink.add(json);
+    channel.sink.add(jsonEncode(json));
 
     // Disconnect
     channel.sink.close();

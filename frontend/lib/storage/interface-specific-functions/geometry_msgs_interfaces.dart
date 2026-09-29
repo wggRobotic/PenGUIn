@@ -1,6 +1,21 @@
 import 'dart:convert';
 
 class GeometryMsgsInterfaces {
+  String getTwistRequest(double x, double y) {
+    return """{
+      "linear": {
+        "x": $x,
+        "y": 0,
+        "z": 0,
+      },
+      "angular": {
+        "x": 0,
+        "y": 0,
+        "z": $y
+      }
+    }""";
+  }
+
   String getTwistStampedRequest(double x, double y) {
     return jsonEncode({
       "op": "publish",
@@ -14,18 +29,7 @@ class GeometryMsgsInterfaces {
           },
           "frame_id": "base_link" // TODO: Use the required root link for quac
         },
-        "twist": {
-          "linear": {
-            "x": x,
-            "y": 0,
-            "z": 0
-          },
-          "angular": {
-            "x": 0,
-            "y": 0,
-            "z": y
-          }
-        }
+        "twist": getTwistRequest(x, y)
       }
     });
   }
