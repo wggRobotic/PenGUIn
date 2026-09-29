@@ -1,3 +1,5 @@
+import 'package:frontend/storage/interface-specific-functions/builtin_interfaces.dart';
+
 class GeometryMsgsInterfaces {
   String getTwistRequest(double x, double y) {
     return """{
@@ -28,7 +30,7 @@ class GeometryMsgsInterfaces {
       "type": "geometry_msgs/msg/TwistStamped",
       "msg": {
         "header": {
-          "stamp": getTimeStamp(),
+          "stamp": ${BuiltinInterfaces().getTimeRequest()},
           "frame_id": "base_link",
         },
         "twist": {
@@ -47,19 +49,16 @@ class GeometryMsgsInterfaces {
     }""";
   }
 
-  String getTimeStamp() {
-    // Get the current time stamp
-    final now = DateTime.now().toUtc();
-    final totalMicroseconds = now.microsecondsSinceEpoch;
-
-    // Return the required JSON header
+  String getPose2DRequest(double x, double y, double theta) {
     return """{
-      "stamp": {
-        "sec": ${totalMicroseconds ~/ 1000000},
-        "nanosec": ${(totalMicroseconds % 1000000) * 1000}
+      "op": "publish",
+      "topic": "/quac/ee_pose",
+      "type": "geometry_msgs/msg/Pose2D",
+      "msg": {
+        "x": $x,
+        "y": $y,
+        "theta": $theta
       }
     }""";
   }
 }
-
-// TODO: Implement functions returning the correct request for the WebSocket Server
