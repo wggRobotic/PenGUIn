@@ -1,5 +1,3 @@
-import 'package:frontend/storage/interface-specific-functions/builtin_interfaces.dart';
-
 class GeometryMsgsInterfaces {
   Map<String, dynamic> getTwistRequest(double x, double y) {
     return {
@@ -19,12 +17,31 @@ class GeometryMsgsInterfaces {
   }
 
   Map<String, dynamic> getTwistStampedRequest(double x, double y) {
+    // Get the time stamp
+    final now = DateTime.now().toUtc();
+    final totalMicroseconds = now.microsecondsSinceEpoch;
+
+    // Assemble the request and return it
     return {
       "header": {
-        "stamp": BuiltinInterfaces().getTimeRequest(),
+        "stamp": {
+          "sec": totalMicroseconds ~/ 1000000,
+          "nanosec": (totalMicroseconds % 1000000) * 1000
+        },
         "frame_id": "base_link",
       },
-      "twist": getTwistRequest(x, y)
+      "twist": {
+        "linear": {
+          "x": x,
+          "y": 0,
+          "z": 0,
+        },
+        "angular": {
+          "x": 0,
+          "y": 0,
+          "z": y
+        }
+      }
     };
   }
 
