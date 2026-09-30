@@ -68,7 +68,9 @@ class ControlsTab extends StatelessWidget{
                 ),
                 Expanded( // TODO: Replace by camera image
                   child: Center(
-                    child: Text(cameras[selectedPosition].label)
+                    child: cameras.isNotEmpty
+                      ? Text(cameras[selectedPosition].label)
+                      : Placeholder()
                   )
                 ),
                 VerticalDivider(
@@ -177,3 +179,5 @@ class ControlsTab extends StatelessWidget{
     );
   }
 }
+
+// TODO: Fix scaling issues
