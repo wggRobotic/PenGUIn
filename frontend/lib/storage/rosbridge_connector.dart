@@ -418,12 +418,12 @@ class RosbridgeConnector {
 
     // Get the correct request depending on the configured function
     if (!context.mounted) return;
-    final String json = """{
+    final Map<String, dynamic> json = {
       "op": "publish",
-      "topic": ${configuredFunction.topic},
-      "type": ${configuredFunction.type},
-      "msg": ${getJoystickRequest(context, configuredFunction.tag, x, y)}
-    }""";
+      "topic": configuredFunction.topic,
+      "type": configuredFunction.type,
+      "msg": getJoystickRequest(context, configuredFunction.tag, x, y)
+    };
 
     // Publish the input
     channel.sink.add(jsonEncode(json));
@@ -432,7 +432,7 @@ class RosbridgeConnector {
     channel.sink.close();
   }
 
-  String getJoystickRequest(BuildContext context, String configuredFunction, double x, double y) {
+  Map<String, dynamic> getJoystickRequest(BuildContext context, String configuredFunction, double x, double y) {
     // Get the missing part of the standard request schema
     switch (configuredFunction) {
       case "twist":
@@ -440,9 +440,9 @@ class RosbridgeConnector {
       case "twistStamped":
         return GeometryMsgsInterfaces().getTwistStampedRequest(x, y);
       default:
-        if(!context.mounted) return "";
+        if(!context.mounted) return {};
         ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Unsupported joystick function: $configuredFunction"));
-        return "";
+        return {};
     }
   }
 
@@ -459,12 +459,12 @@ class RosbridgeConnector {
 
     // Get the correct request depending on the configuration
     if (!context.mounted) return;
-    final String json = """{
+    final Map<String, dynamic> json = {
       "op": "publish",
-      "topic": ${configuredFunction.topic},
-      "type": ${configuredFunction.type},
-      "msg": ${getSliderRequest(context, configuredFunction.tag, value)}
-    }""";
+      "topic": configuredFunction.topic,
+      "type": configuredFunction.type,
+      "msg": getSliderRequest(context, configuredFunction.tag, value)
+    };
 
     // Publish the input
     channel.sink.add(jsonEncode(json));
@@ -473,19 +473,19 @@ class RosbridgeConnector {
     channel.sink.close();
   }
 
-  String getSliderRequest(BuildContext context, String configuredFunction, double value) {
+  Map<String, dynamic> getSliderRequest(BuildContext context, String configuredFunction, double value) {
     // Get the missing part of the standard request schema
     switch (configuredFunction) {
       case "float64":
         return StdMsgsInterfaces().getFloat64Request(value);
       case "pose2D":
         // TODO: Further infromation required
-        return "";
+        return {};
         //json = GeometryMsgsInterfaces().getPose2DRequest(x, y, theta);
       default:
-        if(!context.mounted) return "";
+        if(!context.mounted) return {};
         ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Unsupported slider function: $configuredFunction"));
-        return "";
+        return {};
     }
   }
 
@@ -521,7 +521,7 @@ class RosbridgeConnector {
 
     try {
       // Open a Websocket channel
-      channel = WebSocketChannel.connect(Uri.parse("ws://localhost:9090"));
+      channel = WebSocketChannel.connect(Uri.parse("ws://${context.read<ControlsProvider>().ipAddress}:9090"));
       await channel.ready;
 
       // Mark as connected
