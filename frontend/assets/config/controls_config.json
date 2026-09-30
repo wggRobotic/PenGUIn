@@ -30,13 +30,8 @@
     ],
     "cameras": [
         {
-            "label": "",
-            "function": {
-                "tag": "",
-                "type": "",
-                "topic": ""
-            }
+            "label": ""
         }
     ],
-    "robot-ip": "127.0.0.1"
+    "robot-ip": "192.168.1.58"
 }

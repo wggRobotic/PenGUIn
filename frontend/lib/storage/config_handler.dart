@@ -146,14 +146,13 @@ class NodesConfigHandler {
       if (!context.mounted) return;
       context.read<ControlsProvider>().updateVerticalSliders(verticalSliders);
 
-      // Get the cameras
+      // Get the cameras // TODO: Use correct Function datamodell
       final List<CameraDatamodell> cameras = decodedConfig["cameras"] == null
         ? <CameraDatamodell>[]
         : (decodedConfig["cameras"] as List<dynamic>).map((c) {
           final camera = c as Map<String, dynamic>;
           return CameraDatamodell(
             label: camera["label"] as String? ?? "",
-            function: camera["function"] as String? ?? ""
           );
         }).toList();
       if(!context.mounted) return;
@@ -166,7 +165,7 @@ class NodesConfigHandler {
     } catch (e) {
       // Show an error message
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Unable to load the steering configuration: ${e.toString().trim()}"));
+      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Unable to load the controls configuration: ${e.toString().trim()}"));
       return;
     }
   }
@@ -209,4 +208,3 @@ class NodesConfigHandler {
     }).toList();
   }
 }
- 

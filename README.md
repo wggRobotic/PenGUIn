@@ -115,12 +115,7 @@ This file is supposed to be configured as follows:
     ],
     "cameras": [
         {
-            "label": "",               // Set a label for a camera
-            "function": {              // Define a function used to retrieve the camera image
-                "tag": "",                  // One of the supported functions
-                "type": "",                 // The full type of the interface
-                "topic": ""                 // The topic that's used
-            }
+            "label": ""                // Set a label for a camera
         }
     ],
     "robot-ip": "127.0.0.1"            // The IP address of the robot
