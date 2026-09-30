@@ -5,14 +5,14 @@ class GeometryMsgsInterfaces {
     return """{
       "twist": {
         "linear": {
-          "x": x,
+          "x": $x,
           "y": 0,
           "z": 0,
         },
         "angular": {
           "x": 0,
           "y": 0,
-          "z": y
+          "z": $y
         }
       }
     }""";
