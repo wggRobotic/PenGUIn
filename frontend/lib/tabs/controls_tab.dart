@@ -111,6 +111,7 @@ class ControlsTab extends StatelessWidget{
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Joystick( // Display a joystick
+                stickOffsetCalculator: CircleStickOffsetCalculator(snappingThreshold: 0.5),
                 includeInitialAnimation: false,
                   base: JoystickBase(
                     decoration: JoystickBaseDecoration(
@@ -129,7 +130,7 @@ class ControlsTab extends StatelessWidget{
                   ),
                   listener: (input) {
                     // Publish the input depending on the configuration
-                    RosbridgeConnector().publishJoystickInput(context, joystick.function, input.x, input.y);
+                    RosbridgeConnector().publishJoystickInput(context, joystick.function, -input.y, input.x);
                   }
                 ),
                 VerticalDivider(
