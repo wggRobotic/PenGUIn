@@ -1,17 +1,15 @@
 class GeometryMsgsInterfaces {
   Map<String, dynamic> getTwistRequest(double x, double y) {
     return {
-      "twist": {
-        "linear": {
-          "x": x,
-          "y": 0,
-          "z": 0,
-        },
-        "angular": {
-          "x": 0,
-          "y": 0,
-          "z": y
-        }
+      "linear": {
+        "x": x,
+        "y": 0,
+        "z": 0,
+      },
+      "angular": {
+        "x": 0,
+        "y": 0,
+        "z": y
       }
     };
   }
@@ -30,18 +28,7 @@ class GeometryMsgsInterfaces {
         },
         "frame_id": "base_link",
       },
-      "twist": {
-        "linear": {
-          "x": x,
-          "y": 0,
-          "z": 0,
-        },
-        "angular": {
-          "x": 0,
-          "y": 0,
-          "z": y
-        }
-      }
+      "twist": getTwistRequest(x, y)
     };
   }
 
