@@ -417,6 +417,7 @@ class RosbridgeConnector {
     }
 
     // Get the correct request depending on the configured function
+    // TODO: Validate input
     if (!context.mounted) return;
     final Map<String, dynamic> json = {
       "op": "publish",
