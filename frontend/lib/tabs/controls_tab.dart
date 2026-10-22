@@ -4,6 +4,7 @@ import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:frontend/custom_provider.dart';
 import 'package:frontend/datamodells.dart';
 import 'package:frontend/storage/rosbridge_connector.dart';
+import 'package:frontend/ui-elements/camera_image_box.dart';
 import 'package:frontend/ui-elements/slider_box.dart';
 import 'package:provider/provider.dart';
 
@@ -69,7 +70,8 @@ class ControlsTab extends StatelessWidget{
                 Expanded( // TODO: Replace by camera image
                   child: Center(
                     child: cameras.isNotEmpty
-                      ? Text(cameras[selectedPosition].label)
+                      //? Text(cameras[selectedPosition].label)
+                      ? CameraImageBox()
                       : Placeholder()
                   )
                 ),
