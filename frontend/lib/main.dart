@@ -7,6 +7,7 @@ import 'package:frontend/tabs/controls_tab.dart';
 import 'package:frontend/tabs/log_tab.dart';
 import 'package:frontend/tabs/nodes_tab.dart';
 import 'package:frontend/theme/theme.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -17,6 +18,10 @@ void main() {
   final analyticsProvider = AnalyticsProvider();
   final controlsProvider = ControlsProvider();
   final logProvider = LogProvider();
+
+  // Initialize the MediaKit package
+  WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
 
   runApp(
     MultiProvider(
