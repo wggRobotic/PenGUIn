@@ -183,6 +183,4 @@ class ControlsTab extends StatelessWidget{
   }
 }
 
-// TODO: Support all platforms
-// TODO: Update install instructions
 // TODO: Fix scaling issues

@@ -18,7 +18,7 @@ class _RtspCameraLiveViewBoxState extends State<RtspCameraLiveViewBox> {
   void initState() {
     super.initState();
     // Play the video via RTSP
-    player.open(Media("rtsp://viewer:view-only@192.168.2.122:554/Streaming/Channels/1")); // TODO:
+    player.open(Media("rtsp://viewer:view-only@192.168.2.122:554/Streaming/Channels/1")); // TODO: 
   }
 
   @override
@@ -33,3 +33,5 @@ class _RtspCameraLiveViewBoxState extends State<RtspCameraLiveViewBox> {
     super.dispose();
   }
 }
+
+// TODO: Follow these instructions to support further plattforms: https://pub.dev/packages/media_kit#permissions

@@ -21,13 +21,18 @@ values of the topics and services of our ros2 projects.
 ```
 sudo apt-get install ros-<rosdistro>-rosbridge-server
 ```
-2. Download the frontend from the [release page](https://github.com/wggRobotic/PenGUIn/releases/)
-3. Unzip the archive and note the folder where you unzipped it
-3. Move the launch node package to your ros2 workspace and build your workspace
-4. Unzip the frontend build, move into the new folder and launch the frontend build
+2. If running on Linux, install these dependencies required for the camera stream:
+```
+sudo apt install libmpv-dev mpv libmimalloc2.0
+sudo apt install libmimalloc-dev // Note: This is just required by developers!
+```
+3. Download the frontend from the [release page](https://github.com/wggRobotic/PenGUIn/releases/)
+4. Unzip the archive and note the folder where you unzipped it
+5. Move the launch node package to your ros2 workspace and build your workspace
+6. Unzip the frontend build, move into the new folder and launch the frontend build
 *When moving the frontend make sure to **move all included subdirectories** to the same location and **keep the structure the way it's been right after unzipping** the archive, because otherwise important assets and more can't be located.*
-5. Download the archive with the packages from the [release page](https://github.com/wggRobotic/PenGUIn/releases/)
-6. Move the archive into the `/src` folder your workspace and unzip it
+7. Download the archive with the packages from the [release page](https://github.com/wggRobotic/PenGUIn/releases/)
+8. Move the archive into the `/src` folder your workspace and unzip it
 
 ### Usage
 ###### Running the ROSbridge

@@ -46,9 +46,6 @@ frontend/android/app/debug
 frontend/android/app/profile
 frontend/android/app/release
 
-# Linux
-frontend/linux/**
-
 # VSCode
 frontend/.vscode/settings.json
 frontend/.vscode/browse.vc.db-shm
