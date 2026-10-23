@@ -21,7 +21,9 @@ dependencies:
   web_socket_channel: ^3.0.3
   url_launcher: ^6.3.2
   flutter_joystick: ^0.2.2
-  vlc_player: ^2.1.2
+  media_kit: ^1.2.6
+  media_kit_video: ^2.0.1
+  media_kit_libs_video: ^1.0.7
 
 dev_dependencies:
   flutter_test:
