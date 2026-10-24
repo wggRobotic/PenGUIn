@@ -417,11 +417,10 @@ class RosbridgeConnector {
     }
 
     // Get the correct request depending on the configured function
-    // TODO: Validate input
     if (!context.mounted) return;
     final Map<String, dynamic> json = {
       "op": "publish",
-      "topic": configuredFunction.topic,
+      "topic": validateNameFormat(configuredFunction.topic),
       "type": configuredFunction.type,
       "msg": getJoystickRequest(context, configuredFunction.tag, x, y)
     };
@@ -462,7 +461,7 @@ class RosbridgeConnector {
     if (!context.mounted) return;
     final Map<String, dynamic> json = {
       "op": "publish",
-      "topic": configuredFunction.topic,
+      "topic": validateNameFormat(configuredFunction.topic),
       "type": configuredFunction.type,
       "msg": getSliderRequest(context, configuredFunction.tag, value)
     };
@@ -480,7 +479,7 @@ class RosbridgeConnector {
       case "float64":
         return StdMsgsInterfaces().getFloat64Request(value);
       case "pose2D":
-        // TODO: Further infromation required
+        // TODO: Further information required
         return {};
         //json = GeometryMsgsInterfaces().getPose2DRequest(x, y, theta);
       default:
