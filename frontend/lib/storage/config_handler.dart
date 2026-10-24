@@ -146,13 +146,15 @@ class NodesConfigHandler {
       if (!context.mounted) return;
       context.read<ControlsProvider>().updateVerticalSliders(verticalSliders);
 
-      // Get the cameras // TODO: Use correct Function datamodell
+      // Get the cameras
       final List<CameraDatamodell> cameras = decodedConfig["cameras"] == null
         ? <CameraDatamodell>[]
         : (decodedConfig["cameras"] as List<dynamic>).map((c) {
           final camera = c as Map<String, dynamic>;
           return CameraDatamodell(
             label: camera["label"] as String? ?? "",
+            port: camera["port"] as String? ?? "",
+            endpoint: camera["endpoint"] as String? ?? "",
           );
         }).toList();
       if(!context.mounted) return;
