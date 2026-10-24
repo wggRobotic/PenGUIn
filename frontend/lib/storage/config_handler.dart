@@ -146,6 +146,11 @@ class NodesConfigHandler {
       if (!context.mounted) return;
       context.read<ControlsProvider>().updateVerticalSliders(verticalSliders);
 
+      // Get the ip address of the robot
+      final String ipAddress = decodedConfig["robot-ip"] as String? ?? "127.0.0.1";
+      if (!context.mounted) return;
+      context.read<ControlsProvider>().updateIPAddress(ipAddress);
+
       // Get the cameras
       final List<CameraDatamodell> cameras = decodedConfig["cameras"] == null
         ? <CameraDatamodell>[]
@@ -159,11 +164,6 @@ class NodesConfigHandler {
         }).toList();
       if(!context.mounted) return;
       context.read<ControlsProvider>().updateCamera(cameras);
-
-      // Get the ip address of the robot
-      final String ipAddress = decodedConfig["robot-ip"] as String? ?? "127.0.0.1";
-      if (!context.mounted) return;
-      context.read<ControlsProvider>().updateIPAddress(ipAddress);
     } catch (e) {
       // Show an error message
       if (!context.mounted) return;
