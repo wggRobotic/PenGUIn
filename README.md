@@ -15,6 +15,8 @@ values of the topics and services of our ros2 projects.
     - [Configure logs](#configure-logs)
 - [Troubleshooting](#Troubleshooting)
 - [How it works](#How-it-works)
+    - [Communication between the Robot and PenGUIn](#Communication-between-the-Robot-and-PenGUIn)
+    - [Camera image](#Camera-image)
 
 ### Installation
 1. Install the [Rosbridge](https://github.com/RobotWebTools/rosbridge_suite) by running this command:
@@ -120,7 +122,9 @@ This file is supposed to be configured as follows:
     ],
     "cameras": [
         {
-            "label": ""                // Set a label for a camera
+            "label": "",               // Set a label for a camera
+            "port": "",                // Configure the port of the RTSP stream
+            "endpoint": ""             // Configure the exact endpoint of the RTSP stream
         }
     ],
     "robot-ip": "127.0.0.1"            // The IP address of the robot
@@ -129,13 +133,13 @@ This file is supposed to be configured as follows:
 Further information about the tags of all available functions can be found [here](AVAILABLE-CONTROL-FUNCTIONS.md).
 
 ###### Configure logs
-Since there might be a lot of irrelevant log entries, you might want to hidde certain sources as follows:
+Since there might be a lot of irrelevant log entries, you might want to hide certain sources as follows:
 ```
 [
     "/path/file.cpp",                   // Ignore a certain file
     "/path/*"                           // Ignore a certain directory
 ]
-``` 
+```
 
 ### Troubleshooting
 ###### "Service /ros_api/node_details does not exist"
@@ -148,6 +152,7 @@ If you've moved the frontend to another location, check whether you moved the su
 In order to fix this **reinstall the frontend** where you want it and copy the whole `/config` folder into the archiv after unzipping it.
 
 ### How it works
+##### Communication between the Robot and PenGUIn
 This is how the communication between your robot and the frontend works:
 ```
 ros2 nodes
@@ -164,4 +169,21 @@ Further ressources:
 - [Running Rosbridge](https://wiki.ros.org/rosbridge_suite/Tutorials/RunningRosbridge#Running_Rosbridge)
 - [Rosbridge documentation](https://github.com/RobotWebTools/rosbridge_suite/blob/ros1/ROSBRIDGE_PROTOCOL.md)
 - [Rosapi documentation](https://github.com/RobotWebTools/rosbridge_suite/tree/ros2/rosapi)
+
+##### Camera image
+The camera image is streamed via RTSP. Therefore we us this ros2 package: https://github.com/wggRobotic/ros2-camera-stream-package. However this is basically how it works:
+```
+ros2 package
+|
+| RTSP Stream
+|
+PenGUIn (and MediaKit)
+```
+However, if you want to test this without using the package from above, try these CMD commands:
+```
+curl -L https://raw.githubusercontent.com/GStreamer/gst-rtsp-server/master/examples/test-launch.c -o test-launch.c
+gcc test-launch.c -o test-launch $(pkg-config --cflags --libs gstreamer-rtsp-server-1.0)
+
+./test-launch '( videotestsrc is-live=true ! video/x-raw,width=640,height=480,framerate=15/1 ! videoconvert ! x264enc tune=zerolatency speed-preset=ultrafast ! rtph264pay name=pay0 pt=96 )'
+```
 
