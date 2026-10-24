@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/ui-elements/error_snackbar.dart';
+import 'package:frontend/custom_provider.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:provider/provider.dart';
 
 class RtspCameraLiveViewBox extends StatefulWidget {
-  const RtspCameraLiveViewBox({super.key});
+  const RtspCameraLiveViewBox({super.key,});
 
   @override
   State<RtspCameraLiveViewBox> createState() => _RtspCameraLiveViewBoxState();
@@ -12,18 +13,14 @@ class RtspCameraLiveViewBox extends StatefulWidget {
 
 class _RtspCameraLiveViewBoxState extends State<RtspCameraLiveViewBox> {
   // Create a control playback as well as a controller to handle it
-  late final player = Player();
-  late final controller = VideoController(player);
+  late Player player = Player();
+  late VideoController controller = VideoController(player);
   bool fullscreenEnabled = false;
 
   @override
-  void initState() {
-    super.initState();
-    createMediaKitPlayer(context);
-  }
-
-  @override
   Widget build(BuildContext context) {
+    controller = VideoController(context.watch<ControlsProvider>().mediaKitPlayer);
+
     return Video(
       controller: controller,
       controls: (state) {
@@ -50,37 +47,6 @@ class _RtspCameraLiveViewBoxState extends State<RtspCameraLiveViewBox> {
         );
       },
     );
-  }
-
-  @override
-  void dispose() {
-    // Close the player
-    player.dispose();
-    super.dispose();
-  }
-
-  Future<void> createMediaKitPlayer(BuildContext context) async {
-    try {
-      // Reduce latency
-      final platform = player.platform;
-      if (platform is NativePlayer) {
-        await platform.setProperty("profile", "low-latency");
-        await platform.setProperty("cache", "no");
-        await platform.setProperty("demuxer-readahed-secs", "0");
-        await platform.setProperty("audio", "no");
-      }
-
-      // Remove unused functionality
-      await player.setAudioTrack(AudioTrack.no());
-      await player.setSubtitleTrack(SubtitleTrack.no());
-
-      // Play the video via RTSP
-      await player.open(Media("rtsp://viewer:view-only@192.168.2.122:554/Streaming/Channels/1")); // TODO: 
-    } catch (e) {
-      // Display an error message
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(ErrorSnackbar().buildErrorSnackBar(context: context, error: "Couldn't get the RTSP stream"));
-    }
   }
 }
 

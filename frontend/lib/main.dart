@@ -11,6 +11,10 @@ import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  // Initialize the MediaKit package
+  WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
+
   final nodeProvider = NodeProvider();
   final topicInformationProvider = TopicInformationProvider();
   final serviceInformationProvider = ServiceInformationProvider();
@@ -18,10 +22,6 @@ void main() {
   final analyticsProvider = AnalyticsProvider();
   final controlsProvider = ControlsProvider();
   final logProvider = LogProvider();
-
-  // Initialize the MediaKit package
-  WidgetsFlutterBinding.ensureInitialized();
-  MediaKit.ensureInitialized();
 
   runApp(
     MultiProvider(

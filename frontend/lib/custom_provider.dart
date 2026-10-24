@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/datamodells.dart';
+import 'package:media_kit/media_kit.dart';
 
 // Store the nodes and handle them
 class NodeProvider extends ChangeNotifier {
@@ -138,6 +139,7 @@ class ControlsProvider extends ChangeNotifier {
   List<CameraDatamodell> cameras = [];
   int selectedPosition = 0;
   String ipAddress = "127.0.0.1";
+  Player mediaKitPlayer = Player();
 
   void updateJoystick (JoystickDatamodell newJoystick) {
     joystick = newJoystick;
@@ -154,17 +156,37 @@ class ControlsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateCamera (List<CameraDatamodell> newCameras) {
+  void updateCamera (List<CameraDatamodell> newCameras) async {
     // Apply the configuration
     cameras = newCameras;
 
-    // By default select the first one
+    // By default select the first one and display its image
     selectedPosition = 0;
     cameras[selectedPosition].selected = true;
+
+    // Reduce latency
+    final platform = mediaKitPlayer.platform;
+    if (platform is NativePlayer) {
+      await platform.setProperty("profile", "low-latency");
+      await platform.setProperty("cache", "no");
+      await platform.setProperty("demuxer-readahed-secs", "0");
+      await platform.setProperty("audio", "no");
+    }
+
+    // Remove unused functionality
+    await mediaKitPlayer.setAudioTrack(AudioTrack.no());
+    await mediaKitPlayer.setSubtitleTrack(SubtitleTrack.no());
+
+    // Open the correct RTSP stream
+    await mediaKitPlayer.open(Media(cameras[selectedPosition].port)); // TODO: 
     notifyListeners();
   }
 
-  void selectCamera (int position, bool selectionState) {
+  void updateIPAddress(String newipAddress) {
+    ipAddress = newipAddress;
+  }
+
+  void selectCamera (int position, bool selectionState, String port, String endpoint) async {
     // Don't deselect the selected one
     if(selectedPosition == position) return;
 
@@ -176,11 +198,10 @@ class ControlsProvider extends ChangeNotifier {
 
     // Remember the position of the selection
     selectedPosition = position;
-    notifyListeners();
-  }
 
-  void updateIPAddress(String newipAddress) {
-    ipAddress = newipAddress;
+    // Apply those changes to the camera preview by opening the correct RTSP stream
+    await mediaKitPlayer.open(Media(port)); // TODO: 
+    notifyListeners();
   }
 }
 

@@ -18,7 +18,6 @@ class ControlsTab extends StatelessWidget{
     final List<SliderDatamodell> horizontalSliders = context.watch<ControlsProvider>().horizontalSliders;
     final List<SliderDatamodell> verticalSliders = context.watch<ControlsProvider>().verticalSliders;
     final JoystickDatamodell joystick = context.watch<ControlsProvider>().joystick;
-    final int selectedPosition = context.watch<ControlsProvider>().selectedPosition;
     final List<CameraDatamodell> cameras = context.watch<ControlsProvider>().cameras;
 
     final double overallWidth = MediaQuery.of(context).size.width;
@@ -54,7 +53,7 @@ class ControlsTab extends StatelessWidget{
                             selected: camera.selected,
                             onTap: () {
                               // Select this one
-                              context.read<ControlsProvider>().selectCamera(index, camera.selected ? false : true);
+                              context.read<ControlsProvider>().selectCamera(index, camera.selected ? false : true, camera.port, camera.endpoint);
                             },
                           );
                         },
@@ -67,10 +66,9 @@ class ControlsTab extends StatelessWidget{
                   width: 2.0,
                   thickness: 2.0,
                 ),
-                Expanded( // TODO: Replace by camera image
+                Expanded(
                   child: Center(
                     child: cameras.isNotEmpty
-                      // ? Text(cameras[selectedPosition].label)
                       ? RtspCameraLiveViewBox()
                       : Placeholder()
                   )
