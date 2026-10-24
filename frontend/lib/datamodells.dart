@@ -58,10 +58,14 @@ class JoystickDatamodell {
 
 class CameraDatamodell {
   String label;
+  String port;
+  String endpoint;
   bool selected;
 
   CameraDatamodell({
     required this.label,
+    required this.port,
+    required this.endpoint,
     this.selected = false
   });
 }

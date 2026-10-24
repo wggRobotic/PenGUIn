@@ -30,7 +30,9 @@
     ],
     "cameras": [
         {
-            "label": ""
+            "label": "",
+            "port": "",
+            "endpoint": ""
         }
     ],
     "robot-ip": "127.0.0.1"
