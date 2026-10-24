@@ -53,7 +53,7 @@ class ControlsTab extends StatelessWidget{
                             selected: camera.selected,
                             onTap: () {
                               // Select this one
-                              context.read<ControlsProvider>().selectCamera(index, camera.selected ? false : true, camera.port, camera.endpoint);
+                              context.read<ControlsProvider>().selectCamera(index, camera.selected ? false : true);
                             },
                           );
                         },
