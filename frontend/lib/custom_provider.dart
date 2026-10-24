@@ -201,7 +201,7 @@ class ControlsProvider extends ChangeNotifier {
     selectedPosition = position;
 
     // Apply those changes to the camera preview by opening the correct RTSP stream
-    String source = "rtsp://viewer:view-only@${cameras[position].port}${cameras[position].endpoint}";
+    String source = "$ipAddress:${cameras[position].port}${cameras[position].endpoint}";
     await mediaKitPlayer.open(Media(source));
     notifyListeners();
   }
