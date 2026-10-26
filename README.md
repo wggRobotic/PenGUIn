@@ -5,9 +5,9 @@ values of the topics and services of our ros2 projects.
 ### Overview
 - [Installation](#Installation)
 - [Usage](#Usage)
-    - [Running the ROSbridge](#Running-the-ROSbridge)
+    - [Running the Rosbridge](#Running-the-ROSbridge)
     - [Running the control node](#Running-the-control-node)
-    - [Running the Frontend](#Running-the-Frontend)
+    - [Running the frontend](#Running-the-Frontend)
 - [Configuration](#Configuration)
     - [Configure nodes](#Configure-nodes)
     - [Configure analytics](#Configure-analytics)
@@ -19,44 +19,45 @@ values of the topics and services of our ros2 projects.
     - [Camera image](#Camera-image)
 
 ### Installation
-1. Install the [Rosbridge](https://github.com/RobotWebTools/rosbridge_suite) by running this command:
+1. Install the required [ROSbridge WebSocket server](https://github.com/RobotWebTools/rosbridge_suite) as follows:
 ```
 sudo apt-get install ros-<rosdistro>-rosbridge-server
 ```
-2. If running on Linux, install these dependencies required for the camera stream:
+2. Install these dependencies required for the camera stream:
 ```
 sudo apt install libmpv-dev mpv libmimalloc2.0
 sudo apt install libmimalloc-dev // Note: This is just required by developers!
 ```
-3. Download the frontend from the [release page](https://github.com/wggRobotic/PenGUIn/releases/)
-4. Unzip the archive and note the folder where you unzipped it
-5. Move the launch node package to your ros2 workspace and build your workspace
-6. Unzip the frontend build, move into the new folder and launch the frontend build
-*When moving the frontend make sure to **move all included subdirectories** to the same location and **keep the structure the way it's been right after unzipping** the archive, because otherwise important assets and more can't be located.*
-7. Download the archive with the packages from the [release page](https://github.com/wggRobotic/PenGUIn/releases/)
-8. Move the archive into the `/src` folder your workspace and unzip it
+3. Download all attached `.tar.xz` files from the [release page](https://github.com/wggRobotic/PenGUIn/releases/)
+4. Unzip the `PenGUIn-v2.0.0-linux.tar.xz` archive within e.g. your projects folder
+*Note: It's highly recommended to move the extracted folder as a whole. Otherwise the frontend won't be able to launch!*
+5. Do the same for `PenGUIn-v2.0.0-packages.tar.xz` archive
+6. Navigate into the extracted folder and run `colcon build` once
+
+*Note: We currently don't support any other plattforms then linux.*
 
 ### Usage
-###### Running the ROSbridge
-Since the install already includes a launch file, you can run the bridge as follows:
+###### Running the Rosbridge
+Since the installation already includes a launch file, you can run the bridge as follows:
 ```
 source /opt/ros/<rosdistro>/setup.bash
 ros2 launch rosbridge_server rosbridge_websocket_launch.xml
 ```
 *The default port is 9090.*
+
 ###### Running the control node
-1. Clone the `penguin_controll_package` as well as the `penguin_interface_package` inside your ros2 workspace
-2. After cloning the required packages, open a new terminal and run `colcon build`
-3. Source the environment: `source install/setup.bash`
+1. Navigate to the folder where you'd extracted the `PenGUIn-v2.0.0-packages.tar.xz` archive
+2. If necessary run `colcon build` once again
+3. Source the environment as follows: `source install/setup.bash`
 4. Then launch the control node using this command: `ros2 run penguin_controll_package penGUIn_controller`
 
-###### Running the Frontend
-1. Navigate to the install folder
-2. Double click on the file called "frontend"
+###### Running the frontend
+1. Navigate to the folder where you'd extracted the `PenGUIn-v2.0.0-linux.tar.xz`
+2. Double click on the file called "penGUIn" in order to launch the frontend
 
 ### Configuration
 ###### Configure nodes
-In order to add a node, which you want to launch and introspect via this frontend, to the list of available node, navigate to the install folder of the frontend and look for `/config`.
+In order to add a node, which you want to launch and introspect via PenGUIn, to the list of available nodes, navigate to the installation folder of the frontend and look for `/config`.
 Inside this folder open the `nodes_config.json` file and edit it like this:
 ```
 [
@@ -133,7 +134,7 @@ This file is supposed to be configured as follows:
 Further information about the tags of all available functions can be found [here](AVAILABLE-CONTROL-FUNCTIONS.md).
 
 ###### Configure logs
-Since there might be a lot of irrelevant log entries, you might want to hide certain sources as follows:
+Since there might be a lot of irrelevant log entries, you might also want to hide certain sources as follows:
 ```
 [
     "/path/file.cpp",                   // Ignore a certain file
@@ -148,7 +149,7 @@ So in order to fix this **check your node configuration** and **restart the WebS
 *(This is no frontend bug, but a rosapi bug. Please don't open an issue about this.)*
 
 ###### Unable to launch the frontend
-If you've moved the frontend to another location, check whether you moved the subfolders too, because without those subfolders, the frontend might not launch.
+If you've moved the frontend to another location, check whether you moved the subfolders too, because without those subfolders, the frontend might not launch due to a **lack of dependencies**.
 In order to fix this **reinstall the frontend** where you want it and copy the whole `/config` folder into the archiv after unzipping it.
 
 ### How it works
