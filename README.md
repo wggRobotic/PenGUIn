@@ -181,9 +181,11 @@ PenGUIn (and MediaKit)
 ```
 However, if you want to test this without using the package from above, try these CMD commands:
 ```
+sudo apt install gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav libgstrtspserver-1.0-dev pkg-config
 curl -L https://raw.githubusercontent.com/GStreamer/gst-rtsp-server/master/examples/test-launch.c -o test-launch.c
 gcc test-launch.c -o test-launch $(pkg-config --cflags --libs gstreamer-rtsp-server-1.0)
 
 ./test-launch '( videotestsrc is-live=true ! video/x-raw,width=640,height=480,framerate=15/1 ! videoconvert ! x264enc tune=zerolatency speed-preset=ultrafast ! rtph264pay name=pay0 pt=96 )'
 ```
+Further ressources: [MediaKit](https://pub.dev/packages/media_kit)
 

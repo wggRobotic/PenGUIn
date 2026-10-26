@@ -178,7 +178,7 @@ class ControlsProvider extends ChangeNotifier {
     await mediaKitPlayer.setSubtitleTrack(SubtitleTrack.no());
 
     // Open the correct RTSP stream
-    String source = "$ipAddress:${cameras[selectedPosition].port}${cameras[selectedPosition].endpoint}";
+    String source = "rtsp://$ipAddress:${cameras[selectedPosition].port}/${cameras[selectedPosition].endpoint}";
     await mediaKitPlayer.open(Media(source));
     notifyListeners();
   }
@@ -201,7 +201,7 @@ class ControlsProvider extends ChangeNotifier {
     selectedPosition = position;
 
     // Apply those changes to the camera preview by opening the correct RTSP stream
-    String source = "$ipAddress:${cameras[position].port}${cameras[position].endpoint}";
+    String source = "rtsp://$ipAddress:${cameras[position].port}/${cameras[position].endpoint}";
     await mediaKitPlayer.open(Media(source));
     notifyListeners();
   }
