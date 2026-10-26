@@ -1,6 +1,6 @@
 # PenGUIn
-PenGUIn is a custom frontend for the ros2 framework, which is used to launch all available nodes and control the
-values of the topics and services of our ros2 projects.
+**PenGUIn is a custom frontend for** the **ros2** framework, which is **used to manage configured nodes, introspect the ros2 communication, control the robots** and more.
+Therefore we use the Rosbridge WebSocket server, which is supposed to be run on the robot, to enable the communication between Flutter and ros2.
 
 ### Overview
 - [Installation](#Installation)
@@ -29,10 +29,9 @@ sudo apt install libmpv-dev mpv libmimalloc2.0
 sudo apt install libmimalloc-dev // Note: This is just required by developers!
 ```
 3. Download all attached `.tar.xz` files from the [release page](https://github.com/wggRobotic/PenGUIn/releases/)
-4. Unzip the `PenGUIn-v2.0.0-linux.tar.xz` archive within e.g. your projects folder
-*Note: It's highly recommended to move the extracted folder as a whole. Otherwise the frontend won't be able to launch!*
-5. Do the same for `PenGUIn-v2.0.0-packages.tar.xz` archive
-6. Navigate into the extracted folder and run `colcon build` once
+4. Unzip the `PenGUIn-v2.0.0-linux.tar.xz` archive within e.g. your projects folder *(It's highly recommended to move the extracted folder as a whole. Otherwise the frontend won't be able to launch!)*
+6. Do the same for `PenGUIn-v2.0.0-packages.tar.xz` archive
+7. Navigate into the extracted folder and run `colcon build` once
 
 *Note: We currently don't support any other plattforms then linux.*
 
@@ -174,7 +173,7 @@ Further ressources:
 ##### Camera image
 The camera image is streamed via RTSP. Therefore we us this ros2 package: https://github.com/wggRobotic/ros2-camera-stream-package. However this is basically how it works:
 ```
-ros2 package
+ros2-camera-stream-package
 |
 | RTSP Stream
 |
