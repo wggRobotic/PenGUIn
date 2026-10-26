@@ -1,6 +1,7 @@
 # Available control functions
-Since not every interface can be used for every control element, the tags are seperated and can't be used for every function tag. This is where you can find the available tags depending on the control element:
+Since not every interface can be used for every control element, the **tags are separated and can't be used for every function tag**. This is where you can find the available tags depending on the control element:
 - [Joystick tags](#joystick-tags)
+- [Slider tags](#slider-tags)
 
 ## Joystick tags
 These tags can be used for the joystick configuration:
