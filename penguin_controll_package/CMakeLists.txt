@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(controller_package)
+project(penguin_controll_package)
 
 # Apply the C++ standard
 if(NOT CMAKE_CXX_STANDARD)

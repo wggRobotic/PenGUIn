@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>controller_package</name>
+  <name>penguin_controll_package</name>
   <version>0.0.0</version>
   <description>Package handling the conrtol of the GroundsBot</description>
   <maintainer email="175958349+naibaf-1@users.noreply.github.com">naibaf-1</maintainer>

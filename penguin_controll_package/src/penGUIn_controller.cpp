@@ -1,5 +1,5 @@
 #include "rclcpp/rclcpp.hpp"
-#include "interface_package/msg/single.hpp"
+#include "penguin_interface_package/msg/single.hpp"
 #include "std_msgs/msg/int32.hpp"
 #include <string>
 #include <sys/types.h>
@@ -17,7 +17,7 @@ class PenGUInController : public rclcpp::Node {
     public:
         PenGUInController() : Node("penguin_controller") {
             // Subscribe to a topic and launch a node
-            launch_single_subscriber = this->create_subscription<interface_package::msg::Single>(
+            launch_single_subscriber = this->create_subscription<penguin_interface_package::msg::Single>(
                 "penGUIn/start_single",
                 10,
                 std::bind(&PenGUInController::launchSingleNodeCallBack, this, std::placeholders::_1)
@@ -36,7 +36,7 @@ class PenGUInController : public rclcpp::Node {
             int repetitions;
         };
 
-        void launchSingleNodeCallBack(const interface_package::msg::Single::SharedPtr msg) {
+        void launchSingleNodeCallBack(const penguin_interface_package::msg::Single::SharedPtr msg) {
             std::string cmd = msg ->cmd;
             int id = msg->id;
             RCLCPP_WARN(this->get_logger(), "Id: %i", id);
@@ -169,7 +169,7 @@ class PenGUInController : public rclcpp::Node {
         }
 
         std::unordered_map<int, ProcInfo> procs; // id -> pid
-        rclcpp::Subscription<interface_package::msg::Single>::SharedPtr launch_single_subscriber;
+        rclcpp::Subscription<penguin_interface_package::msg::Single>::SharedPtr launch_single_subscriber;
         rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr stop_single_subscriber;
         std::unordered_map<int, rclcpp::TimerBase::SharedPtr> pending_stop_kill_timers;
         rclcpp::TimerBase:: SharedPtr reap_timer;
