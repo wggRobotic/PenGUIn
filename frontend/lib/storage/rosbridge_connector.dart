@@ -48,7 +48,7 @@ class RosbridgeConnector {
     final json = {
       "op": "publish",
       "topic": "penGUIn/start_single",
-      "type": "interface_package/msg/Single",
+      "type": "penguin_interface_package/msg/Single",
       "msg": {
         "cmd": cmd,
         "id": id
@@ -56,7 +56,7 @@ class RosbridgeConnector {
     };
     channel.sink.add(jsonEncode(json));
 
-    // Uppdate the UI
+    // Update the UI
     if (!context.mounted) return;
     context.read<NodeProvider>().runNode(id, true);
   }
