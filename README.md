@@ -154,16 +154,13 @@ In order to fix this **reinstall the frontend** where you want it and copy the w
 ### How it works
 ##### Communication between the Robot and PenGUIn
 This is how the communication between your robot and the frontend works:
-```
-ros2 nodes
-|
-| DDS
-|
-WebSocket server (ROSbridge)
-|
-| JSON
-|
-Frontend
+```mermaid
+graph LR
+
+    A[ROS 2 Nodes] --> |DDS| B[ROSbridge]
+    B --> |JSON| C[Frontend]
+    C --> |JSON| B
+    B --> |DDS| A
 ```
 Further ressources:
 - [Running Rosbridge](https://wiki.ros.org/rosbridge_suite/Tutorials/RunningRosbridge#Running_Rosbridge)
@@ -172,12 +169,10 @@ Further ressources:
 
 ##### Camera image
 The camera image is streamed via RTSP. Therefore we us this ros2 package: https://github.com/wggRobotic/ros2-camera-stream-package. However this is basically how it works:
-```
-ros2-camera-stream-package
-|
-| RTSP Stream
-|
-PenGUIn (and MediaKit)
+```mermaid
+graph LR
+
+    A[Node publishing an image] --> |RTSP| B[PenGUIn]
 ```
 However, if you want to test this without using the package from above, try these CMD commands:
 ```
