@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:frontend/ui-elements/information_box/action_information_box.dart';
 import 'package:frontend/ui-elements/information_box/node_information_box.dart';
 import 'package:frontend/ui-elements/information_box/service_information_box.dart';

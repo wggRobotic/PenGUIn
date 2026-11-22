@@ -1,5 +1,5 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:frontend/custom_provider.dart';
 import 'package:frontend/datamodells.dart';
