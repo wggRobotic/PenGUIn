@@ -66,7 +66,8 @@ Inside this folder open the `nodes_config.json` file and edit it like this:
         "nodeName": "",             // Optional: The name of a node returned by `ros2 node list`, otherwise the executable name is used
         "description": "",          // Optional: A short description
         "documentationLink": "",    // Optional: A link to the official documentation
-        "customCMD": "",            // Optional: Set a custom cmd, default is `ros2 run <pkg> <exe>`
+        "customCMD": "",            // Optional: Set a custom command, default is `ros2 run <pkg> <exe>`
+        "customCancelCMD": "",      // Optional: Use a custom command to cancel a certain program, e.g. cancel a Docker Container
         "isSelected": false         // Optional: Whether it will be selected by default or not
     }
 ]

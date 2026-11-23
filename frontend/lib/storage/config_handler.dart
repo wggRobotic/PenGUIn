@@ -57,6 +57,7 @@ class NodesConfigHandler {
           description: (map["description"] as String?) ?? "-",
           documentationLink: (map['documentationLink'] as String?) ?? "",
           customCMD: (map["customCMD"] as String?) ?? "",
+          customCancelCMD: (map["customCancelCMD"] as String?) ?? "",
           isSelected: (map["isSelected"] == true) ? true : false,
         );
       }).toList();

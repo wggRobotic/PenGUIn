@@ -10,169 +10,312 @@
 #include <vector>
 #include <chrono>
 
+#include <cerrno>
+#include <csignal>
+#include <unordered_map>
+
 using namespace std::placeholders;
 using namespace std::chrono_literals;
 
 class PenGUInController : public rclcpp::Node {
     public:
         PenGUInController() : Node("penguin_controller") {
-            // Subscribe to a topic and launch a node
+            // Launch a usual commandline program
             launch_single_subscriber = this->create_subscription<penguin_interface_package::msg::Single>(
                 "penGUIn/start_single",
                 10,
-                std::bind(&PenGUInController::launchSingleNodeCallBack, this, std::placeholders::_1)
+                std::bind(&PenGUInController::launchSingleProgramCallBack, this, std::placeholders::_1)
             );
-            stop_single_subscriber = this->create_subscription<std_msgs::msg::Int32>(
+            // Stop a usual commandline program
+            stop_single_subscriber = this->create_subscription<penguin_interface_package::msg::Single>(
                 "penGUIn/stop_single",
                 10,
-                std::bind(&PenGUInController::stopSingleNodeCallBack, this, std::placeholders::_1)
+                std::bind(&PenGUInController::stopSingleProgramCallback, this, std::placeholders::_1)
             );
             RCLCPP_INFO(this->get_logger(), "All subscribers have been started");
         }
     private:
-        struct ProcInfo {
-            pid_t pid;
-            bool alive;
-            int repetitions;
+        using Clock = std::chrono::steady_clock;
+
+        // Possible stages of each process
+        enum class Stage {
+            running,
+            stopping_process,
+            running_stop_process,
+            stopping_stop_process
         };
 
-        void launchSingleNodeCallBack(const penguin_interface_package::msg::Single::SharedPtr msg) {
+        // Information about each child process
+        struct ProcInfo {
+            pid_t pid{-1};
+            Stage stage{Stage::running};
+            std::string custom_stop_cmd;
+            Clock::time_point deadline{};
+            bool sigkill_sent{false};
+            rclcpp::TimerBase::SharedPtr timer;
+        };
+
+        // Callback for launching a new cmd program
+        void launchSingleProgramCallBack(const penguin_interface_package::msg::Single::SharedPtr msg) {
             std::string cmd = msg ->cmd;
             int id = msg->id;
             RCLCPP_WARN(this->get_logger(), "Id: %i", id);
 
-            if (cmd.empty()) {
-                RCLCPP_WARN(this->get_logger(), "ERROR: Unprocessable values");
+            // Return if the command is empty
+            if (msg->cmd.empty()) {
+                RCLCPP_WARN(this->get_logger(), "ERROR: Unprocessable command");
                 return;
             }
 
             // Return if a prozess with the same id already exists
-            if (procs.count(id) && procs[id].alive) {
+            if (procs_.find(msg->id) != procs_.end()) {
                 RCLCPP_WARN(this->get_logger(), "Prozess with id '%i' already running", id);
                 return;
             }
 
-            pid_t ppid_before_fork = getpid();
-            pid_t pid = fork();
+            // Launch a new child process
+            const pid_t pid = launchProcess(msg->id, msg->cmd);
             if (pid < 0) {
-                RCLCPP_ERROR(get_logger(), "Fork failed");
                 return;
             }
 
+            // Store the pid of that process
+            procs_.emplace(msg->id, ProcInfo{});
+            procs_.at(msg->id).pid = pid;
+
+            // Update the information of this process
+            procs_.at(msg->id).stage = Stage::running;
+
+            RCLCPP_INFO(get_logger(), "Started id=%d pid=%d", msg->id, pid);
+        }
+
+        // Launch a new child process
+        pid_t launchProcess(int id, const std::string &cmd) {
+            const pid_t parent_pid = getpid();
+            const pid_t pid = fork();
+
+            // Return if the pid is invalid
+            if (pid < 0) {
+                RCLCPP_ERROR(get_logger(), "Fork failed for id=%d", id);
+                return -1;
+            }
+
+            // Move on if pid is fine
             if (pid == 0) {
-                // Child process
                 // Make sure all prozesses stop after this node being stopped
                 prctl(PR_SET_PDEATHSIG, SIGTERM);
-                
-                // Check if this node already exited
-                if (getppid() != ppid_before_fork) {
-                    exit(1);
+
+                // Stop this child process if the parent terminates within fork() & prctl()
+                if (getppid() != parent_pid) {
+                    _exit(1);
                 }
-                
+
                 // Apply a certain process group
                 setpgid(0, 0);
 
-                const char* argv[] = {"bash", "-lc", cmd.c_str(), nullptr};
-                execv("/bin/bash", (char* const*)argv);
+                // Launch this process
+                char *const argv[] = {const_cast<char *>("bash"), const_cast<char *>("-lc"), const_cast<char *>(cmd.c_str()), nullptr};
+                execv("/bin/bash", argv);
                 _exit(127);
-            } else {
-                // Parent process
-                procs[id] = ProcInfo{pid, true, 0};
-                RCLCPP_INFO(get_logger(), "Started id='%i' pid=%d", id, pid);
             }
+
+            // Return and apply the parent group
+            setpgid(pid, pid);
+            return pid;
         }
 
-        void stopSingleNodeCallBack(const std_msgs::msg::Int32::SharedPtr msg) {
-            int id = msg->data;
-
-            // Find the process using the id
-            auto it = procs.find(id);
-            // If it's no longer running return
-            if (it == procs.end() || !it->second.alive) {
-                RCLCPP_WARN(this->get_logger(), "No running process for id=%i", id);
+        // Callback for stopping a cmd program
+        void stopSingleProgramCallback(const penguin_interface_package::msg::Single::SharedPtr msg) {
+            // Check whether there's such a process
+            auto it = procs_.find(msg->id);
+            if (it == procs_.end()) {
+                RCLCPP_WARN(get_logger(), "No registered process for id=%d", msg->id);
                 return;
             }
 
-            // Reset timer counter
-            it->second.repetitions = 0;
+            // Return if this process is already about to be canceled
+            ProcInfo &proc = it->second;
+            if (proc.stage != Stage::running) {
+                RCLCPP_WARN(get_logger(), "A stop sequence is already active for id=%d", msg->id);
+                return;
+            }
 
-            // Cancel old timer
-            cancelTimer(id);
+            // Terminate this process
+            proc.custom_stop_cmd = msg->cmd;
+            proc.stage = Stage::stopping_process;
+            beginTermination(msg->id, proc);
 
-            // Kill the process (Strg + C)
-            pid_t pid = it->second.pid;
-            RCLCPP_INFO(this->get_logger(), "Stopping id=%i pid=%d", id, pid);
-            kill(-pid, SIGINT);
+            // Create a timer, which is shared over the whole termination process
+            proc.timer = create_wall_timer(100ms, [this, id = msg->id]() {
+                processStateMachine(id);
+            });
+        }
 
-            // Check whether it stopped every 100ms
-            auto timer = this->create_wall_timer(
-                std::chrono::milliseconds(100),
-                [this, id, pid]() {
-                    // Make sure the process exists
-                    auto it2 = procs.find(id);
-                    if (it2 == procs.end()) {
-                        cancelTimer(id);
+        // Try to terminate via SIGTERM
+        void beginTermination(int id, ProcInfo &proc) {
+            // Send SIGTERM (Strg+C) first
+            RCLCPP_INFO(get_logger(), "Sending SIGTERM for id=%d pid=%d", id, proc.pid);
+            if (kill(-proc.pid, SIGTERM) < 0 && errno != ESRCH) {
+                RCLCPP_ERROR(get_logger(), "SIGTERM failed for id=%d pid=%d: %s", id, proc.pid, strerror(errno));
+            }
+
+            // Update the ProcInfo of this certain process
+            proc.deadline = Clock::now() + 5s;
+            proc.sigkill_sent = false;
+        }
+
+        // Track the current stage of the process and handle it
+        void processStateMachine(int id) {
+            // Check whether the given id is within _procs
+            auto it = procs_.find(id);
+            if (it == procs_.end()) {
+                return;
+            }
+
+            // Get the ProcInfo of this process
+            ProcInfo &proc = it->second;
+
+            // Handle each state a process migth have
+            switch (proc.stage) {
+                // If it's running move on
+                case Stage::running:
+                    break;
+                // If it's about to be terminated
+                case Stage::stopping_process:
+                    // If the process finished, move on
+                    if (reapIfFinished(id, proc)) {
+                        // Return if there's no command, that's supposed to be launched
+                        if (proc.custom_stop_cmd.empty()) {
+                            finishSequence(id);
+                            return;
+                        }
+
+                        // Launch the given cancel command
+                        const pid_t custom_pid = launchProcess(id, proc.custom_stop_cmd);
+                        if (custom_pid < 0) {
+                            finishSequence(id);
+                            return;
+                        }
+
+                        // Reset the ProcInfo for this process
+                        proc.pid = custom_pid;
+                        proc.stage = Stage::running_stop_process;
+                        proc.deadline = Clock::now() + 10s;
+                        proc.sigkill_sent = false;
+
+                        RCLCPP_INFO(get_logger(), "Started a cancel command for id=%d pid=%d", id, custom_pid);
                         return;
                     }
 
-                    // Cancel this timer if the process stopped
-                    if (!checkRunningState(id, pid)) {
-                        cancelTimer(id);
-                    } else {
-                        it2->second.repetitions += 1;
-
-                        // After 1s kill the process
-                        if (it2->second.repetitions >= 10) {
-                            RCLCPP_WARN(this->get_logger(), "SIGINT didn't stop id=%i -> SIGKILL", id);
-                            kill(-pid, SIGKILL);
-                            (void)waitpid(pid, nullptr, 0);
-                            procs[id].alive = false;
-                            cancelTimer(id);
-                        }
+                    // Otherwise kill the process
+                    sendSigkillIfDue(id, proc);
+                    break;
+                // If a cancel command is run, clean everything up
+                case Stage::running_stop_process:
+                    // Check whether the process already terminated
+                    if (reapIfFinished(id, proc)) {
+                        finishSequence(id);
+                        return;
                     }
-                }
-            );
-            pending_stop_kill_timers[id] = timer;
+
+                    // Terminate the process after a while
+                    if (Clock::now() >= proc.deadline) {
+                        proc.stage = Stage::stopping_stop_process;
+                        beginTermination(id, proc);
+                    }
+                    break;
+                // If the cancel command was asked to terminate, enforce it does so
+                case Stage::stopping_stop_process:
+                    // Check whether the process already terminated
+                    if (reapIfFinished(id, proc)) {
+                        finishSequence(id);
+                        return;
+                    }
+
+                    // Kill the process
+                    sendSigkillIfDue(id, proc);
+                    break;
+            }
         }
 
-        bool checkRunningState(int id, pid_t pid) {
+        // Check whether a certain process alread stopped or not
+        bool reapIfFinished(int id, ProcInfo &proc) {
             int status = 0;
-            pid_t w = waitpid(pid, &status, WNOHANG);
-            // Handle the waitpid Output
-            if (w == 0) {
-                // It didn't stop yet
-                return true;
-            } else if (w == pid) {
-                // Check the childs exit status
+            const pid_t result = waitpid(proc.pid, &status, WNOHANG);
+
+            // Return failed, if the process is still running
+            if (result == 0) {
+                return false;
+            }
+
+            // Return succes, if the process exited successfully
+            if (result == proc.pid) {
                 if (WIFEXITED(status)) {
-                    RCLCPP_INFO(this->get_logger(), "Child exited with status %d", WEXITSTATUS(status));
+                    RCLCPP_INFO(get_logger(), "Child for id=%d exited with status %d", id, WEXITSTATUS(status));
                 } else if (WIFSIGNALED(status)) {
-                    RCLCPP_INFO(this->get_logger(), "Child killed by signal %d", WTERMSIG(status));
+                    RCLCPP_INFO(get_logger(), "Child for id=%d was terminated by signal %d", id, WTERMSIG(status));
                 }
-                // It successfully stopped
-                procs[id].alive = false;
-                return false;
-            } else {
-                // Throw an error and finish
-                RCLCPP_ERROR(this->get_logger(), "ERROR: Wait pid returned %d\n for child %i with the pid %i",  w, id, pid);
-                procs[id].alive = false;
-                return false;
+                return true;
+            }
+
+            // Handle upcoming errors
+            if (result < 0) {
+                // Something interrupted this call
+                if (errno == EINTR) {
+                    return false;
+                }
+
+                // Return success, if the child was already stopped
+                if (errno == ECHILD) {
+                    RCLCPP_WARN(get_logger(), "Child for id=%d was already reaped", id);
+                    return true;
+                }
+
+                RCLCPP_ERROR(get_logger(), "waitpid() failed for id=%d: %s", id, strerror(errno));
+
+            }
+
+            // waitpid() shouldn't return the pid of another process
+            RCLCPP_ERROR(get_logger(), "waitpid() returned unexpected pid=%d for id=%d (expected %d)", result, id, proc.pid);
+            return false;
+        }
+
+        // Clean everythinng up and delete the process
+        void finishSequence(int id) {
+            // Return if this process doesn't exist
+            auto it = procs_.find(id);
+            if (it == procs_.end()) {
+                return;
+            }
+
+            // Cancel the timer
+            if (it->second.timer) {
+                it->second.timer->cancel();
+            }
+
+            // Remove the process from procs_
+            procs_.erase(it);
+            RCLCPP_INFO(get_logger(), "Stop sequence finished for id=%d", id);
+        }
+
+        // Kill a process via SIGTERM
+        void sendSigkillIfDue(int id, ProcInfo &proc) {
+            if (!proc.sigkill_sent && Clock::now() >= proc.deadline) {
+                RCLCPP_WARN(get_logger(), "SIGTERM did not stop id=%d pid=%d; sending SIGKILL", id, proc.pid);
+
+                // Handle upcoming errors
+                if (kill(-proc.pid, SIGKILL) < 0 && errno != ESRCH) {
+                    RCLCPP_ERROR(get_logger(), "SIGKILL failed for id=%d pid=%d: %s", id, proc.pid, strerror(errno));
+                }
+
+                // Update the process information
+                proc.sigkill_sent = true;
             }
         }
 
-        void cancelTimer(int id) {
-            auto old = pending_stop_kill_timers.find(id);
-            if (old != pending_stop_kill_timers.end() && old->second) {
-                old->second->cancel();
-                pending_stop_kill_timers.erase(old);
-            }
-        }
-
-        std::unordered_map<int, ProcInfo> procs; // id -> pid
+        std::unordered_map<int, ProcInfo> procs_; // id -> pid
         rclcpp::Subscription<penguin_interface_package::msg::Single>::SharedPtr launch_single_subscriber;
-        rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr stop_single_subscriber;
-        std::unordered_map<int, rclcpp::TimerBase::SharedPtr> pending_stop_kill_timers;
-        rclcpp::TimerBase:: SharedPtr reap_timer;
+        rclcpp::Subscription<penguin_interface_package::msg::Single>::SharedPtr stop_single_subscriber;
 };
 
 int main(int argc, char **argv) {
@@ -182,4 +325,3 @@ int main(int argc, char **argv) {
     rclcpp::shutdown();
     return 0;
 }
-

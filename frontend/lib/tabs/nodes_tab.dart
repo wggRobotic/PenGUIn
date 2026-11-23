@@ -44,7 +44,7 @@ class _NodesTabState extends State<NodesTab> {
                 onPressed: () {
                   // Run or stop a node
                   if (node.isRunning) {
-                    connector.stopNode(context, index);
+                    connector.stopNode(context, index, node.customCancelCMD);
                   } else {
                     connector.startSingleNode(context, node.executableName, node.packageName, node.customCMD, index);
                   }

@@ -40,7 +40,7 @@ class _ManageNodeButtonState extends State<ManageNodeButton> {
 
         // Start/Stop the node
         if(isRunning) {
-          connector.stopNode(context, position);
+          connector.stopNode(context, position, nodeList[position].customCancelCMD);
           setState(() {
             isRunning = false;
           });
