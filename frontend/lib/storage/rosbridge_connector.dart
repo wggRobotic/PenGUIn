@@ -60,7 +60,7 @@ class RosbridgeConnector {
     if (!context.mounted) return;
     context.read<NodeProvider>().runNode(id, true);
   }
-  void stopNode(BuildContext context, int id) async {
+  void stopNode(BuildContext context, int id, String cmd) async {
     // Make sure to connect with the server
     if (!isConnected) {
       if (!context.mounted) return;
@@ -74,8 +74,11 @@ class RosbridgeConnector {
     final json = {
       "op": "publish",
       "topic": "penGUIn/stop_single",
-      "type": "std_msgs/msg/Int32",
-      "msg": {"data": id}
+      "type": "penguin_interface_package/msg/Single",
+      "msg": {
+        "cmd": cmd,
+        "id": id
+      },
     };
     channel.sink.add(jsonEncode(json));
 
