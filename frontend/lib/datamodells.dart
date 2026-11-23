@@ -5,6 +5,7 @@ class NodeDatamodell {
   String description;
   String documentationLink;
   String customCMD;
+  String customCancelCMD;
   bool isSelected;
   bool isRunning;
 
@@ -15,6 +16,7 @@ class NodeDatamodell {
     this.description = "",
     this.documentationLink = "",
     this.customCMD = "",
+    this.customCancelCMD = "",
     this.isSelected = false,
     this.isRunning = false,
   });

@@ -6,6 +6,7 @@
         "description": "",
         "documentationLink": "",
         "customCMD": "",
+        "customCancelCMD": "",
         "isSelected": false
     }
 ]
