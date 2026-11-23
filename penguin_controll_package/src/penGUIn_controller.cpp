@@ -200,7 +200,7 @@ class PenGUInController : public rclcpp::Node {
                         // Reset the ProcInfo for this process
                         proc.pid = custom_pid;
                         proc.stage = Stage::running_stop_process;
-                        proc.deadline = Clock::now() + 3s;
+                        proc.deadline = Clock::now() + 10s;
                         proc.sigkill_sent = false;
 
                         RCLCPP_INFO(get_logger(), "Started a cancel command for id=%d pid=%d", id, custom_pid);
